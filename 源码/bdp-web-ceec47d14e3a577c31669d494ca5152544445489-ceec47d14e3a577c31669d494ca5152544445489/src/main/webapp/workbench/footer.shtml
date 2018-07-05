@@ -1,0 +1,42 @@
+
+	<div class="footerbox">
+		<div class="footer">
+			<div class="about fl">
+				<span>关于平台</span>|<span>案例展示</span>|<span>咨询分享</span>|<span>联系我们</span><!-- |<span id="grounBtn">分组字段</span> -->
+			</div>
+			<!-- <div class="Copyright fr">京ICP 14007766 ©1996-2020 ALL Rights Reserved 京公网安备 11010802013522号</div>	 -->	
+		</div>
+	</div>
+	
+<div class="fixTop">
+	<a class="return" href="#return"></a>
+</div>
+<script>
+/* $(function(){
+   $("#grounBtn").click(function(){   
+		top.layer.open({
+			title:'新字段',
+			closeBtn: 2, 
+			type:2,
+			area:['550px','410px'],
+			shadeClass:true,
+			content:"../metadata/GroupShow.html",
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			success: function(layero, index){
+			},
+			yes: function(index, layero){
+	    		//按钮【确定】的回调
+	    		var doc = $(layero).find("iframe")[0].contentWindow.document;
+	    		var radio = $(doc).find('input:radio:checked').val();
+	    		//var parent = $(layero).find("iframe")[0].contentWindow;
+	    		if(addOrUpdate(parent,doc,radio) == 1)
+	    			return;
+	    			
+	    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		  	}
+		});
+	})
+}) */
+</script>

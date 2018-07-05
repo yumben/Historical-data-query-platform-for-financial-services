@@ -1,0 +1,51 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: bdp-metadata-service
+  name: bdp-metadata-service
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bdp-metadata-service
+  template:
+    metadata:
+      labels:
+        app: bdp-metadata-service
+    spec:
+      containers:
+      - name: bdp-metadata-service
+        image: 192.168.31.72:5000/bdp-metadata-service:version	
+        ports:
+        - containerPort: 8793
+          protocol: TCP
+        volumeMounts: 
+            - name: timezone-pv 
+              mountPath: /etc/timezone
+            - name: localtime-pv 
+              mountPath: /etc/localtime
+      volumes:
+        - name: timezone-pv
+          hostPath:
+           path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: localtime-pv
+          hostPath:
+           path: /etc/localtime
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: bdp-metadata-service
+  name: bdp-metadata-service
+  namespace: test
+spec:
+  type: NodePort
+  ports:
+  - port: 8793
+    targetPort: 8793
+    nodePort: 30303
+  selector:
+    app: bdp-metadata-service

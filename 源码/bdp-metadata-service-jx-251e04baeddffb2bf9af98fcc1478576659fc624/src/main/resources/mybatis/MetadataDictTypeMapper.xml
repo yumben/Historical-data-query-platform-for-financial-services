@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetadataDictTypeMapper">
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.Metadata">
+		<id column="metadata_id" property="metadataId" />
+		<result column="metadata_code" property="metadataCode" />
+		<result column="metadata_name" property="metadataName" />
+		<result column="parent_metadata" property="parentMetadata" />
+		<result column="catalog_id" property="catalogId" />
+		<result column="class_id" property="classId" />
+		<result column="notshow" property="notshow" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+
+	<select id="selectMetadataDictTypeByIds" resultType="java.util.HashMap">
+		select * from metadata_dict_type where id in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="selectParameterListByIds" resultType="java.util.HashMap">
+		SELECT para_type , para_value as value,para_name as label,'' as parent
+		FROM parameter_list where para_type in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		order by para_type,para_value
+	</select>
+	<select id="selectMetadataDictType" resultType="java.util.HashMap">
+		select * from
+		metadata_dict_type where dicti_type=#{dicti_type}
+	</select>
+
+	<select id="selectParameterList" resultType="java.util.HashMap">
+		SELECT
+		para_type,para_value as value,para_name as label,'' as parent FROM
+		parameter_list order by para_type,para_value
+	</select>
+</mapper>

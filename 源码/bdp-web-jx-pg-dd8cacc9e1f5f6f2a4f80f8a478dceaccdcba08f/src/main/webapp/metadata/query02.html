@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>灵活查询</title>
+
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<!-- wrap star -->	
+	<div class="wrap">
+	    <div class="contentbox">
+	       <!-- <div class="title-query">
+				<em>查询条件</em>
+			</div> -->
+			<div class="obj-search">                
+                <h5 class="obj-title"><i class="showbtnico fa fa-angle-double-up"></i>查询条件</h5>
+                <div class="search_form obj-search-form" id="searchtop">
+                </div>
+            </div>
+            <form id="excel"  method="post">
+                <!-- <input type="text" name="name_user" /> --> 
+            </form>
+            <div class="item pt prtext" id="prtext" flag="1" flagQueryAndTrans >              
+              <a id="btn-search-class" class="btn btn-primary" onclick="businSave('query');"><i class="fa fa-search"  ></i> 查询</a> 
+              <a id="btn-search-class"  class="btn btn-primary"   onclick="businSave('export');"><i class="fa fa-external-link"></i> 导出</a>
+              <!-- <a id="btn-search-class" class="btn btn-primary" onclick="businSave('transpose');"><i class="fa fa-search"></i> 行列转换</a> -->              
+              <!-- <a class="btn btn-primary" id="save_check"><i class="fa fa-check"></i>保存</a> -->
+            </div>
+            <div class="table-form scorll-x" id="table-form-out">               
+                <table id="table" data-id-field="tasks_code" class="table table-striped alltable tableborder" name="table-form-out">
+                   <thead>
+                       <tr id="headList">
+                       </tr>
+                   </thead>
+                   <tbody id="tbody1">
+                   </tbody>
+               </table>
+            </div>
+            <div class="pageCon"></div>
+			
+	    </div>       
+	</div>	
+    <!-- wrap end -->	
+    
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+<script type="text/javascript" src="../resource/js/json4Table3.js"></script>	
+<script type="text/javascript">
+var tempflag=null;
+var numFlag=0;
+	function businSave(flag) {
+	//行列转换切换
+    var numFlag= $("#prtext").attr("flag");
+    if(flag=="transpose"){
+        if(numFlag=="1"){
+         $("#prtext").attr("flag","2");
+        }else if(numFlag=="2"){
+          flag="query";
+          $("#prtext").attr("flag","1");
+        }
+    }else if(flag=="query"){
+       $("#prtext").attr("flag","1");
+    }
+    
+    //标识是点击查询还是行列转换
+    if(flag!="export"){
+         $("#prtext").attr("flagQueryAndTrans",flag);
+    }
+    if($("#prtext").attr("flagQueryAndTrans")==""){
+        alert("请先选择查询！");
+        return;
+    }
+		if (mtRelationId != "") {
+			var params = {
+				"mtRelationId" : mtRelationId
+			};
+			var listMsg = null;
+			var tempFlag=null;
+			var businessObjectId=null;
+			var  propertyid=null;
+			var  propertyParentId=null;
+			var  outPropertyId=null;
+			var  outPropertyParentId=null;
+			var  outCode=null;
+			var  computing_component=null;
+			var array_businessObjectId=new Array();
+			var array_propertyid=new Array();
+			var array_propertyParentId=new Array();
+			var array_outPropertyId=new Array();
+			var array_outPropertyParentId=new Array();
+			var array_outCode=new Array();
+			var array_computing_component=new Array();
+			var tablelist = new Array();
+			var conditionlist = new Array();
+			ajaxSend("/pms-web/ajax/ajaxQueryInquiryInitAction", params,
+					function initVOs(data) {
+						listMsg = data.listMsg;
+						tempFlag=data.tempFlag;
+					});
+			listMsg.forEach(function(e,i){
+			    businessObjectId = e.businessObjectId;
+			       //条件属性id
+			     propertyid = e.propertyid;
+			      // alert(e.propertyid);
+			       //对于的父id
+			     propertyParentId=e.propertyParentId;
+			      // alert(e.propertyParentId);
+			       //输出属性id
+			     outPropertyId=e.outPropertyId;
+			      // alert(e.outPropertyId);
+			       //输出父id
+			     outPropertyParentId= e.outPropertyParentId;
+			     //  alert(e.outPropertyParentId);
+			        outCode =e.outPropertyCode;
+			        computing_component=e.computing_component;
+			});		
+			  array_businessObjectId = businessObjectId.split(",");		
+			  array_propertyid = propertyid.split(",");		
+			  array_propertyParentId = propertyParentId.split(",");		
+			  array_outPropertyId = outPropertyId.split(",");	
+			  array_outPropertyParentId = outPropertyParentId.split(",");	
+			  array_outCode = outCode.split(",");	
+			  array_computing_component = computing_component.split(",");	
+ 		       for ( var i = 0; i < array_businessObjectId.length; i++) {
+				    var object = new Object();
+				    outPropertyId="";
+				    businessObjectId="";
+				  for ( var j = 0; j < array_outPropertyParentId.length; j++) {
+				  
+				  //判断业务对象id等于父条件属性的id就把对应的条件属性id存起来
+				//  alert(array_businessObjectId[i]+"::::"+array_outPropertyParentId[j]);
+					if(array_businessObjectId[i]==array_outPropertyParentId[j]){
+                        var params={"flag":"getmetacode","id":array_outPropertyId[j]};
+ 
+					    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function getmetacode(data){
+					     var slectString=data.slectString;
+					     outPropertyId+=slectString+",";
+					    }); 
+					}
+					   
+				}	        //去最后逗号
+				            outPropertyId = outPropertyId.substring(0, outPropertyId.length - 1);
+				            //alert(outPropertyId);
+							//alert(cc[0]);
+					       //组装tablelist
+							object["tableid"]=array_businessObjectId[i];
+							object["pro_value"] = outPropertyId;
+							if(i==0){
+							    object["ifzhubiao"] = "Y";
+							}else{
+								object["ifzhubiao"] = "N";
+							}
+							tablelist.push(object);
+			}	 
+
+	//获取条件符号
+	var condsymbol=[];
+	$("select[name='filter_conn']").each(function() {
+	    condsymbol.push($(this).val());
+	});
+	//逻辑符号
+/*     var logic=[];
+    logic.push("");
+	$("select[name='filterconn']").each(function() {
+	    logic.push($(this).val());
+	}); */
+	//文本框
+	var text=[];
+    var text2=[];
+	$("input[name='filter_star']").each(function() {
+   		//alert($(this).val());
+ 		text.push($(this).val());
+	});
+	$("input[name='filter_end']").each(function() {
+   		//alert($(this).val());
+ 		text2.push($(this).val());
+	});
+	
+	   for(var v=0;v<array_propertyid.length;v++){
+	   if(array_propertyid[v]!=null&&array_propertyid[v]!=""&&array_propertyid[v]!="undefined"&&array_propertyid[v]!="无"){
+	       if(text[v]==null||text[v]==""){
+	          alert("请输入第"+(v+1)+"个条件的值：");
+	          return;
+	       }
+	       if(condsymbol[v]=="between"||condsymbol[v]=="not between"){
+	            if( text2[v]==null||text2[v]==""){
+	               alert("请输入第"+(v+1)+"个条件的值：");
+	               return;
+	            }
+	      }   
+	}
+}
+
+	
+   var symbol="";
+   var condition1="";
+   var condition2="";
+	for ( var c = 0; c < array_propertyid.length; c++) {
+	if(array_propertyid!=""&&array_propertyid!=null){
+		var object = new Object();
+		propertyParentId="";
+		propertyid="";
+		var params={"flag":"metacode","id":array_propertyParentId[c]};
+		ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function getmetacode(data){
+		       var metadataVO=data.metadataVO;
+		       propertyParentId=metadataVO.code;
+		}); 
+		var params={"flag":"metacode","id":array_propertyid[c]};
+		ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function getmetacode(data){
+		       var metadataVO=data.metadataVO;
+		       propertyid=metadataVO.code;
+		});   
+	    object["table"]=propertyParentId;
+	    object["field"] = propertyid;
+	    object["symbol"] = condsymbol[c];
+	    symbol+=condsymbol[c]+",";
+	    if(c==0){
+	      object["logic"] = "";
+	    }else{
+	      object["logic"] = "and";
+	    }
+	    object["condition1"] = text[c];
+	    object[ "condition2"] = text2[c];
+	    condition1+=text[c]+",";
+	    condition2+=text2[c]+",";
+        conditionlist.push(object);
+	}
+	}
+		var param = {
+			"tablelist" : tablelist,
+			"conditionlist" : conditionlist,
+			"attrlist" : outCode,
+			"mtTemplateId":mtRelationId
+		};
+		var newJSONtext = JSON.stringify(param);
+		
+		var params = {
+			"jsonString" : newJSONtext,
+			"flags":flag
+		};
+		var mapExport=null;
+	var temp=false;	
+	if(flag=="export"){
+	
+	        var main = $("#attrshow");
+		layer.open({
+			title:'导出文件',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','280px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			
+		   var	flieName= $("#flieName").val();
+		   if(flieName==""){
+		   alert("请输入文件名！");
+		   return;
+		   }
+		   	
+		   
+		    var	flieAddress= $("#flieAddress").val();
+			var fileType=$("input[name='isnull']:checked").val();
+			var  param={"jsonString" : newJSONtext,"flags":"export","fileName":flieName,"fileType":fileType,"flieAddress":flieAddress};
+	    	var tempFlag=$("#prtext").attr("flagQueryAndTrans");
+	    	//导出
+	    	var par={
+	    	"conditionlist" : conditionlist
+	    	}
+	
+	    	var newJSON = JSON.stringify(par);
+	    	//$("#excel").attr("action","/pms-web/ajax/ajaxCaculateBusinessAction");
+			 $("#excel").attr("action","/pms-web/ajax/ajaxExportAction?fileName="+flieName+"&fileType="+fileType+"&mtRelationId="+mtRelationId+"&symbols="+symbol+"&condi1="+condition1+"&condi2="+condition2+"&flags="+tempFlag);
+			  $("#excel").submit();
+			//var url="/pms-web/ajax/ajaxCaculateBusinessAction?jsonString="+newJSONtext+"&flags=export&fileName="+flieName+"&fileType="+fileType+"&flieAddress="+flieAddress;
+				//$.post(url,form_value);
+		 /* ajaxSend("/pms-web/ajax/ajaxCaculateBusinessAction",param,function getmetacode(data){
+	    	// mapExport =data.mapExport;
+	    	 var result=data.result;
+	    	 alert(result);  
+	    	}); */ 
+	     /* jsonpAjax("http://127.0.0.1:8070"+"/genFileTwo",mapExport,"callBack",function(json){
+                     var data = string4jsonObject(json);
+                     alert(data.msg);
+		 }); */	 
+		    
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			   $("#flieName").val("")
+			   $("#flieAddress").val("");
+	           $("input[name='isnull']:eq(0)").prop("checked",true); 
+			   $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+				$("#flieName").val("");
+				$("#flieAddress").val("");
+	            $("input[name='isnull']:eq(0)").prop("checked",true);
+			},
+			cancel: function(index, layero){ 
+			$("#flieName").val("");
+			$("#flieAddress").val("");
+	        $("input[name='isnull']:eq(0)").prop("checked",true);  
+	           
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	
+	}else if(flag=="transpose"){
+
+	     //行列转置
+	     var param = {
+			"jsonString" : newJSONtext,
+			"flags":flag
+		};
+	      /* ajaxSend("/pms-web/ajax/ajaxCaculateBusinessAction",param,function transpose(data){
+	          
+	      }); */
+	      _json4Table.drewTable(param);
+	}
+	else{
+	        //点击查询后出现行列置换
+	   	    //判断是否是两个输出属性并且有没有分组字段
+
+	     if(array_computing_component.length==2){
+	          if(array_computing_component[0]=="null"){
+	              $('a[name="tran"]').remove();
+	              var a=$("<a id='btn-search-class' name='tran' class='btn btn-primary' onclick='businSave(\"transpose\");'><i class='fa fa-search'></i> 行列转换</a>");
+	          }
+	     }else if(array_computing_component.length>=3){
+	              $('a[name="tran"]').remove();
+	              var a=$("<a id='btn-search-class' name='tran' class='btn btn-primary' onclick='businSave(\"transpose\");'><i class='fa fa-search'></i> 行列转换</a>");
+	     }
+	   
+	   
+	    $("#prtext").append(a);
+           _json4Table.drewTable(params);
+                  
+    }
+	
+	}
+	 
+	}
+
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxCaculateBusinessAction",
+		formatter : operateFormatter
+	});
+	
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="数据信息">',
+				'<i class="glyphicon glyphicon-edit">数据信息</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+	
+	
+	
+</script>	
+	
+	
+<script>
+	var mtRelationId;
+	
+/*     $(document).on('change','.section-control',function(){
+      var val = $(this).val();
+      var input = $(this).siblings('.search-item');
+      //alert(input);
+      var input01 = input.children('.input01');
+      var input02 = input.children('.input02');
+      var equal = input.children('.equal');
+     // alert(val);
+      if(val == '=' || val == '!=' || val == '>'|| val == '<'||val == '>=' || val == '<='){
+        //alert("1111")
+        input01.val("");
+        input02.val("");
+        input02.hide();
+        equal.hide();
+      }else if(val == 'between'|| val == 'not between'){
+        //alert("222")
+      	input01.val("");
+        input02.val("");
+        input02.show();
+        equal.show();
+      }
+   }); */
+   
+  function InitInquiry(){
+  		mtRelationId = GetQueryString("mtRelationId");
+  		if(mtRelationId!=""){
+			var params = {
+				"mtRelationId" : mtRelationId
+			};
+			///pms-web/ajax/ajaxQueryInquiryInitAction
+			var parentName=null;
+  			ajaxSend("/pms-web/ajax/ajaxQueryInquiryInitAction", params, function initVO(data){
+  					var MetaQueryMsg = data.metaQueryMsgVO;
+                     parentName=data.parentName;
+  					var arr_property = new Array();
+  					var arr_out_property = new Array();
+  					var arr_outPropertyAlias=new Array();  ///////
+  					var arr_outPropertyType = new Array();
+  					var arr_parentName = new Array();
+  					if(MetaQueryMsg!=null&&MetaQueryMsg!=""){
+  						var property = MetaQueryMsg.property;
+  						var outProperty = MetaQueryMsg.outProperty;
+  						var outPropertyType = MetaQueryMsg.outPropertyType;
+  						var outPropertyAlias = MetaQueryMsg.out_property_alias;/////
+  					}
+  						arr_property = property.split(",");
+  						arr_out_property = outProperty.split(",");
+  						arr_outPropertyType = outPropertyType.split(",");
+  						arr_outPropertyAlias = outPropertyAlias.split(",");
+  						//arr_parentName = parentName.split(",");
+  					if(arr_property.length>0){
+	  					var strHtml =   '<div class="item display_term" name="check_filter">'
+	  								  + ' <span>查询属性：</span>'
+	  								  +	'<input type="text" class="form-control" name="check_filter_property" disabled="disabled" value="" title="">'
+	  								  + '<select class="form-control section-control" name="filter_conn">'
+	  								  + '<option value="=" values="=">等于</option>'
+	  								  + '<option value="!=" values="!=">不等于</option>'
+	  								  + '<option value=">" values=">">大于</option>'
+	  								  + '<option value="<" values="<">小于</option>'
+	  								  + '<option value=">=" values=">=">大于等于</option>'
+	  								  + '<option value="<=" values="<=">小于等于</option>'
+	  								  + '<option selected="" value="between" values="yes">区间</option>'
+	  								  + '<option value="not between" values="no">不在区间</option>'
+	  								  + '</select>'
+	  								  + '<span class="search-item">'
+	  								  + '<input type="text" class="form-control input-interva input01"  name="filter_star" id="datatype">'
+	  								  + '<em class="equal">~</em>'
+	  								  + '<input type="text" class="form-control input-interva input02" name="filter_end"  id="datatype2">'
+	  								  + '</span>' + '</div>';
+	  					 var strHtml2 =   '<div class="item display_term" name="check_filter">'
+	  								  + ' <span>查询属性：</span>'
+	  								  +	'<input type="text" class="form-control" name="check_filter_property" disabled="disabled" value="">'
+	  								  + '<select class="form-control section-control" name="filter_conn">'
+	  								  + '<option selected="" value="=" values="=">等于</option>'
+	  								  + '<option value="!=" values="!=">不等于</option>'
+	  								  + '<option value="like" values="like">包含</option>'
+	  								  + '<option value="not like" values="not like">不包含</option>'
+	  								  + '<option value="start" values="start">开头包含</option>'
+	  								  + '<option value="end" values="end">结尾包含</option>'
+	  								  + '</select>'
+	  								  + '<span class="search-item">'
+	  								  + '<input type="text" class="form-control input-interva input01" name="filter_star" >'
+	  								  + '<em class="equal"  style="display:none" >~</em>'
+	  								  + '<input type="text" style="display:none" class="form-control input-interva input02" name="filter_end" >'
+	  								  + '</span>' + '</div>';  
+	  						var strHtml3 = '<div class="item display_term" name="check_filter">'
+	  								  + ' <span>查询属性：</span>'
+	  								  +	'<input type="text" class="form-control" name="check_filter_property" disabled="disabled" value="" title="">'
+	  								  + '<select class="form-control section-control" name="filter_conn">'
+	  								//  + '<option value="=" values="=">等于</option>'
+	  								//  + '<option value="!=" values="!=">不等于</option>'
+	  								//  + '<option value=">" values=">">大于</option>'
+	  								//  + '<option value="<" values="<">小于</option>'
+	  								//  + '<option value=">=" values=">=">大于等于</option>'
+	  								//  + '<option value="<=" values="<=">小于等于</option>'
+	  								  + '<option selected="" value="between" values="yes">时间范围</option>'
+	  								  //+ '<option value="not between" values="no">不在区间</option>'
+	  								  + '</select>'
+	  								  + '<span class="search-item">'
+	  								  + '<input type="text" class="form-control input-interva input01 datepicker" readonly="readonly" name="filter_star" id="datatype">'
+	  								  + '<em class="equal">~</em>'
+	  								  + '<input type="text" class="form-control input-interva input02 datepicker" readonly="readonly" name="filter_end"  id="datatype2">'
+	  								  + '</span>' + '</div>'; 					
+  						for(var i=0; i < arr_property.length; i++){
+  						//判断字段类型（字符型没有区间）
+  						 var  temp=arr_outPropertyType[i].charAt(arr_outPropertyType[i].length - 1);
+  						 if(temp=="2"){//字符型
+  						    $("#searchtop").append(strHtml2);
+  							$("#searchtop").find("div[name='check_filter']").eq(i).find("input[name='check_filter_property']").val(arr_property[i].trim());
+  							if(parentName!=null){
+  							 
+  						   	$("#searchtop").find("div[name='check_filter']").eq(i).find("input[name='check_filter_property']").attr("title",parentName[i].trim());
+  						    
+  						     }
+  						 }else if(temp=="3"){//数值
+
+  						   $("#searchtop").append(strHtml);
+  						   $("#searchtop").find("div[name='check_filter']").eq(i).find("input[name='check_filter_property']").val(arr_property[i].trim());
+                           if(parentName!=null){
+  						    	$("#searchtop").find("div[name='check_filter']").eq(i).find("input[name='check_filter_property']").attr("title",parentName[i].trim());
+  						   }
+  						   				     
+  						   }else if(temp=="1"){//日期
+  						  $("#searchtop").append(strHtml3);
+  						   $("#searchtop").find("div[name='check_filter']").eq(i).find("input[name='check_filter_property']").val(arr_property[i].trim());
+                           if(parentName!=null){
+  						    	$("#searchtop").find("div[name='check_filter']").eq(i).find("input[name='check_filter_property']").attr("title",parentName[i].trim());
+  						   }
+  						  
+  						       initDate();  
+  						  
+  						   }
+
+  						}
+  					}
+  					//当没有查询条件的时候清空第一条查询条件输入
+  					if(arr_property==""||arr_property==null){
+  					    $("#searchtop").empty();
+  					}
+  					//表头返显遍历
+  					var  arrayIndex=new Array();
+  					
+  					var headList = document.getElementById("headList");
+						headList.innerHTML= "";
+					if(arr_out_property.length>0){
+					
+					for(var j=0;j<arr_outPropertyAlias.length;j++){
+					// var  temp=arr_outPropertyAlias[j].charAt(arr_outPropertyAlias[j].length - 1)
+					var temp= arr_outPropertyAlias[j].replace(/[^0-9]/ig,"");
+						for(var i=0;i<arr_out_property.length;i++){
+						if(temp==i){
+						arrayIndex.push(arr_out_property[i]);
+						}
+						
+							/* var oTh = document.createElement('th');
+							    oTh.innerHTML = arr_out_property[i].trim();
+							    headList.appendChild(oTh); */
+						}
+					}/////	
+					for(var k=0;k<arrayIndex.length;k++){
+					var oTh = document.createElement('th');
+							    oTh.innerHTML = arrayIndex[k].trim();
+							    headList.appendChild(oTh);
+					}
+					
+						
+					} 
+				
+  			});
+  		}
+  }
+   
+	$(function(){
+  		mtRelationId = GetQueryString("mtRelationId");
+  		if(mtRelationId!=""&&mtRelationId!=null){
+  			InitInquiry();
+	
+  		}
+	});
+	
+		//日期初始化
+	function   initDate(){
+	   //日期初始化
+		$('.datepicker').datetimepicker({ 
+		　　minView: "month", //选择日期后，不会再跳转去选择时分秒 
+		　　format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式 
+		　　language: 'zh-CN', //汉化 
+		　　autoclose:true //选择日期后自动关闭 
+		});
+	}
+	
+
+
+		
+</script>	
+</body>
+</html>
+<div class="dialog-defin" id="attrshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">       
+       <tr>
+         <th>选择导出类型:</th>
+         <td>
+         <label class="radio-inline" id="pl"><input type="radio" value=".csv" name="isnull" checked="checked" >csv</label>
+         <label class="radio-inline" id="al"><input type="radio" name="isnull" value=".txt">txt</label>
+         <label class="radio-inline" id="bl"><input type="radio" name="isnull" value=".xls">xls</label>
+         <label class="radio-inline" id="bcl"><input type="radio" name="isnull" value="json">json</label>
+         </td>
+       </tr>
+        <tr>
+         <th>输入文件名:</th>
+         <td>
+			<input type="text" class="form-control" id="flieName">
+         </td>
+<!--        </tr>
+         <tr>
+         <th>输入文件存放地址:</th>
+         <td>
+			<input type="text" class="form-control" id="flieAddress">
+         </td>
+       </tr> -->
+<!--        <tr>
+         <th>属性描述:</th>
+         <td><textarea rows="3" class="form-control"></textarea></td>
+       </tr> -->
+     </table>
+  </div>
+</div>
+
+<div id="load"><span class="checkshow"><img src="../resource/img/loading-2.gif"><em>正在查询,请稍后。。。</em></span></div>
+

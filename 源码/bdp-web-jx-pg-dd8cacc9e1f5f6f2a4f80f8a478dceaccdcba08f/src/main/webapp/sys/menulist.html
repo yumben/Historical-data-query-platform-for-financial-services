@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>菜单管理</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap">
+		<!-- asider start -->
+		<div class="asider queryasider">
+			<div id="tree"></div>
+		</div>
+		<!-- asider end -->
+		<!-- content start -->
+		<div class="section">
+			<div class="content">
+				<div class="title-query">
+					<em>菜单管理</em>
+				</div>
+				<div class="search-form-model">
+					<div class="item">
+						<span>菜单名称：</span><input id="menu_Name" class="form-control"
+							placeholder="菜单名称" />
+					</div>
+					<div class="item">
+						<button id="btn-search" class="btn btn-primary">
+							<img src="../resource/images/search.png">查询
+						</button>
+					</div>
+					<div class="item">
+						<button id="btnadd" class="btn btn-success">+ 新增</button>
+					</div>
+				</div>
+				<div class="table-form">
+					<table id="table" class="table table-striped"
+						data-id-field="menu_code">
+						<thead>
+							<tr>
+								<th data-field="menu_code">ID</th>
+								<th data-field="menu_name">菜单名称</th>
+								<th data-field="menu_url">菜单url</th>
+								<th data-field="menu_image">菜单图像</th>
+								<th data-field="identify">标识</th>
+								<th data-field="parent_id">父级菜单</th>
+								<th data-field="desc">备注</th>
+								<th data-field="" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+
+	<script type="text/javascript" src="../resource/js/jsonp4Table.js"></script>
+	<script type="text/javascript">
+	//var menuurl="http://192.168.31.251:8070/";
+	
+		var _json4Table = new $.jsonp4Table({
+			action : "/bdp-web/sysMenu/selectMenu",
+			formatter : operateFormatter
+		});
+		$(document).ready(function() {
+			$("#btnadd").click(function() {
+				qiao.bs.dialog({
+					url : 'add_menu.html',
+					title : '新增',
+					qubtn : '取消',
+					btn : true,
+					okbtn : '保存',
+					callback : function() {
+						var param = {
+							"pageSize" : 999
+						};
+						initDeskTypeOption(); //加载菜单类型
+						ajaxSendCloud("/bdp-web/sysMenu/selectMenu", param, function(data) {
+							$("#parentId").html("");
+							var options = "<option value='0'>无</option>";
+							$.each(data.list, function(i, obj) {
+								options += "<option value='" + obj["menu_code"] + "'>" + obj["menu_name"] + "</option>";
+							});
+							$("#parentId").html(options);
+						});
+					}
+				},
+					function() {
+						var menuCode = $("#menuCode").val();
+						var menuName = $("#menuName").val();
+						var menuUrl = $("#menuUrl").val();
+						var menuImage = $("#menuImage").val();
+						var identify = $("#identify").val();
+						var orderId = $("#orderId").val();
+						var parentId = $("#parentId").val();
+						var desc = $("#desc").val();
+						var deskType = $("#deskType").val();
+						var params = {
+							"menu_code" : menuCode,
+							"menu_name" : menuName,
+							"menu_url" : menuUrl,
+							"menu_image" : menuImage,
+							"identify" : identify,
+							"menu_order" : orderId,
+							"parent_id" : parentId,
+							"menu_desc" : desc,
+							"desk_type" : deskType
+						};
+						ajaxSend("/bdp-web/sysMenu/addMenu", {
+							"json" : JSON.stringify(params)
+						}, callfunction);
+						return true;
+					});
+			});
+			$("#btn-search").click(function() {
+				var menu_Name = $("#menu_Name").val();
+				var params = {
+					"menuName" : menu_Name
+				};
+				_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+			});
+			var params = {};
+			_json4Table.drewTable(params);
+		});
+	
+		function operateFormatter(id) {
+			return [
+				'<a class="edit" href="javascript:edit(\'' + id
+				+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+				+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+		}
+		var parentList = "";
+		function edit(id) {
+			qiao.bs.dialog({
+				url : 'add_menu.html',
+				title : '编辑',
+				qubtn : '取消',
+				btn : true,
+				okbtn : '保存',
+				callback : function() {
+					var params = {
+						"menuCode" : id
+					};
+					var param = {
+						"pageSize" : 9999
+					};
+	
+					initDeskTypeOption(); //加载菜单类型
+					ajaxSendCloud("/bdp-web/sysMenu/selectMenu", param, function(data) {
+						$("#parentId").html("");
+						var options = "<option value='0'>无</option>";
+						$.each(data.list, function(i, obj) {
+							options += "<option value='" + obj["menu_code"] + "'>" + obj["menu_name"] + "</option>";
+						});
+						$("#parentId").html(options);
+						ajaxSendCloud("/bdp-web/sysMenu/getMenu", params, initVO);
+					});
+				}
+			}, function() {
+				var menuCode = $("#menuCode").val();
+				var menuName = $("#menuName").val();
+				var menuUrl = $("#menuUrl").val();
+				var menuImage = $("#menuImage").val();
+				var identify = $("#identify").val();
+				var orderId = $("#orderId").val();
+				var parentId = $("#parentId").val();
+				var desc = $("#desc").val();
+				var deskType = $("#deskType").val();
+				var params = {
+					"menu_code" : menuCode,
+					"menu_name" : menuName,
+					"menu_url" : menuUrl,
+					"menu_image" : menuImage,
+					"identify" : identify,
+					"menu_order" : orderId,
+					"parent_id" : parentId,
+					"menu_desc" : desc,
+					"desk_type" : deskType
+				};
+	
+				ajaxSend("/bdp-web/sysMenu/updateMenu", {
+					"json" : JSON.stringify(params)
+				}, callfunction);
+				return true;
+			});
+		}
+	
+		//加载菜单类型
+		function initDeskTypeOption() {
+			var params = {
+				"flag" : "showDictionaries",
+				"type" : "工作台"
+			};
+			ajaxSend("/bdp-web/dictionary/ajaxAddDictionariesAction", params, function(data) {
+				$("#deskType").html("");
+				var options = "<option value=''>请选择</option>";
+				$.each(data.listDictionaryVO, function(i, obj) {
+					options += "<option value='" + obj["dictionaryValue"] + "'>" + obj["dictionaryName"] + "</option>";
+				});
+				$("#deskType").html(options);
+	
+			});
+	
+		}
+		function initVO(data) {
+			if (data.flag != null || data.msg != null) {
+				alert("加载失败！");
+			} else {
+				$("#menuCode").val(data.menu_code);
+				$("#menuName").val(data.menu_name);
+				$("#menuUrl").val(data.menu_url);
+				$("#menuImage").val(data.menu_image);
+				$("#identify").val(data.identify);
+				$("#orderId").val(data.menu_order);
+				$("#parentId").val(data.parent_id);
+				$("#desc").val(data.menu_desc);
+				$("#deskType").val(data.desk_type);
+			}
+		}
+	
+		function remove(id) {
+			qiao.bs.confirm({
+				msg : "是否确认删除？"
+			}, function() {
+				var params = {
+					"menu_code" : id
+				};
+				ajaxSend("/bdp-web/sysMenu/deleteMenu", params, callfunction);
+			}, function() {});
+		}
+	
+		function callfunction(data) {
+			if (data.code != null && (data.code != 0 || data.code != "0")) {
+				alert("操作失败！");
+			} else {
+				alert("操作成功！");
+				var params = {};
+				_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+			}
+			var params = {};
+			_json4Table.drewTable(params);
+		}
+	</script>
+
+	<script type="text/javascript">
+		var $tree = $("#tree");
+		$(function() {
+			var params = {
+				"parentId" : "0"
+			};
+			var param = {
+				"pageSize" : 999
+			};
+			ajaxSend("/bdp-web/sysMenu/selectMenu",
+				param, inittree);
+		});
+		function inittree(data) {
+			var treedata = list2Json3(data.list);
+			$tree.treeview({
+				showBorder : false,
+				enableLinks : true,
+				data : treedata
+			});
+		}
+		function treeclick(field, value) {
+			if (field == "" && value == "") {
+				var params = {};
+				_json4Table.drewTable(params);
+			} else {
+				var params = {
+					"parent_id" : value
+				};
+				_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+			}
+		}
+	</script>
+</body>
+</html>

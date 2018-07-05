@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+<script type="text/javascript">
+ function  businSave(){
+    //判断是否选择了业务对象
+      if(id==null||id==""||id==undefined){
+           alert("请选择业务对象");
+           return;
+      }
+     
+	//获取所选表的元数据
+	//var metaid=[];
+	//quMap["downinput"];
+	var pro_value="";
+	if(quMap["downinput"]!=null&&quMap["downinput"].length!=0){
+	for(var x=0;x<quMap["downinput"].length;x++){
+	    pro_value+=quMap["downinput"][x]+",";
+	  }
+	}else{
+	//当选择了业务对象没有选择查询属性时默认查询所有的属性
+	 var params={"id":id,"flag":"ObjectChange"};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       listProMetadataVO =data.listProMetadataVO;
+        $.each(listProMetadataVO,function(i,vo){
+             pro_value+=vo.code+",";
+        });
+     });
+	    
+	}
+	pro_value = pro_value.substring(0, pro_value.length - 1);
+	var tablelist = new Array();
+	var conditionlist = new Array();
+	var object = new Object();
+	object["tableid"]=id;
+	object["pro_value"] = pro_value;
+	object["ifzhubiao"] = "Y";
+	tablelist.push(object);
+	var tabledindex=[];
+	if(queryMap["downinput"]!=null&&queryMap["downinput"].length!=0){
+	    for(var x=0;x<queryMap["downinput"].length;x++){
+	          tabledindex.push(queryMap["downinput"][x]);
+	      }
+	}else{
+	    //当没有选择查询条件的时候，查询查询所有的属性当作列表头
+	var params={"id":id,"flag":"ObjectChange"};
+    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       listProMetadataVO =data.listProMetadataVO;
+        $.each(listProMetadataVO,function(i,vo){
+             tabledindex.push(vo.name);
+        });
+    });
+	}
+	
+	$("select[name='msg_business_object']").each(function() {
+ 		//alert($(this).attr("id"));
+ 		var ids = $("#"+$(this).attr("id")+" option:selected").attr("id");
+ 		var num= $(this).attr("id").replace(/[^0-9]/ig,"");
+ 		var pro_value1="";
+ 		//alert(quMap["downinput"]);
+ 		if(quMap["downinput"+num]!=null&&quMap["downinput"+num].length!=0){
+ 		   for(var x=0;x<quMap["downinput"+num].length;x++){
+	          pro_value1+=quMap["downinput"+num][x]+",";
+	        }
+	    }else{
+	         //当选择了业务对象没有选择查询属性时默认查询所有的属性
+	    var params={"id":ids,"flag":"ObjectChange"};
+        ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+            listProMetadataVO =data.listProMetadataVO;
+            if(listProMetadataVO!=null&&listProMetadataVO!=""){
+           $.each(listProMetadataVO,function(i,vo){
+               pro_value1+=vo.code+",";
+            });
+            }
+        });
+	    }
+ 		pro_value1 = pro_value1.substring(0, pro_value1.length - 1);
+ 		
+ 		if(queryMap["downinput"+num]!=null&&queryMap["downinput"+num].length!=0){
+ 		   for(var j=0;j<queryMap["downinput"+num].length;j++){
+	         tabledindex.push(queryMap["downinput"+num][j]);
+	       }
+        }else{
+             var params={"id":ids,"flag":"ObjectChange"};
+           ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+              listProMetadataVO =data.listProMetadataVO;
+              if(listProMetadataVO!=null&&listProMetadataVO!=""){
+             
+           $.each(listProMetadataVO,function(i,vo){
+             tabledindex.push(vo.name);
+              });
+            }
+            });
+        };
+        if(pro_value1!=null&&pro_value1!=""){
+ 		 var object = new Object();
+	     object["tableid"]=ids;
+	     object["pro_value"] = pro_value1;
+	     object["ifzhubiao"] = "N";
+	     tablelist.push(object);
+	     }
+	});
+	
+	
+	//获取条件参数
+	//对象代码
+	var conobject=[];
+	$("select[name='filter_business_object']").each(function() {
+	    //var ids = $("#"+$(this).attr("id")+" option:selected").val();
+	    var ids=$(this).val();
+	   conobject.push(ids);
+	});
+	//alert(conobject);
+	//字段代码
+	var fifterpro=[];
+	$("select[name='filter_con']").each(function() {
+	   // var ids = $("#"+$(this).attr("id")+" option:selected").val();
+	    var ids=$(this).val();
+	   fifterpro.push(ids);
+	});
+    //alert(fifterpro);
+    //条件符号
+	var condsymbol=[];
+	$("select[name='filter_conn']").each(function() {
+	    condsymbol.push($(this).val());
+	});
+	//alert(condsymbol);
+    //逻辑符号
+    var logic=[];
+    logic.push("");
+	$("select[name='filterconn']").each(function() {
+	    logic.push($(this).val());
+	});
+	//alert(logic);
+	//文本框
+	var text=[];
+    var text2=[];
+    //text = $("#text").val();
+	//text2 = $("#text2").val();
+	
+	$("input[name='filter_star']").each(function() {
+   		//alert($(this).val());
+ 		text.push($(this).val());
+	});
+	
+	$("input[name='filter_end']").each(function() {
+   		//alert($(this).val());
+ 		text2.push($(this).val());
+ 		
+	});
+
+ 	 for(var v=0;v<conobject.length;v++){
+	   if(conobject[v]!=null&&conobject[v]!=""&&conobject[v]!="undefined"&&conobject[v]!="无"){
+	       if(text[v]==null||text[v]==""){
+	          alert("请输入第"+(v+1)+"个条件的值：");
+	          return;
+	       }
+	       if(condsymbol[v]=="between"||condsymbol[v]=="not between"){
+	            if( text2[v]==null||text2[v]==""){
+	               alert("请输入第"+(v+1)+"个条件的值：");
+	               return;
+	            }
+	      }   
+	}
+} 
+	//根据表对象代码循环增加个个参数的对象
+	for(var c=0;c<conobject.length;c++){
+	if(conobject[c]!="无"){
+	    var object = new Object();
+	    object["table"]=conobject[c];
+	    object["field"] = fifterpro[c];
+	    object["symbol"] = condsymbol[c];
+	    object["logic"] = logic[c];
+	    object["logic"] = logic[c];
+	    object["condition1"] = text[c];
+	    object[ "condition2"] = text2[c];
+        conditionlist.push(object);
+	}
+	}
+	
+	var param = {
+			"tablelist" : tablelist,
+			"conditionlist" : conditionlist
+		};
+		var newJSONtext = JSON.stringify(param);
+		//return;
+		var params = {
+			"jsonString" : newJSONtext
+		};
+      //动态生成表头
+      $("#thead").empty();
+	  for(var i =0;i<tabledindex.length;i++){
+			  strHead = "<th>"+tabledindex[i]+"</th>"	;  
+			  $("#thead").append(strHead);          
+	  }
+		_json4Table.drewTable(params);
+	}
+
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxCaculateBusinessAction",
+		formatter : operateFormatter
+	});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="数据信息">',
+				'<i class="glyphicon glyphicon-edit">数据信息</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+	
+	function contains(arr, obj) {
+		var i = arr.length;
+		while (i--) {
+			if (arr[i] === obj) {
+			   return true;
+			}
+		}
+		  return false;
+	}
+</script>
+</head>
+<body>
+<a name="return"></a>
+<header>
+    <div class="personal">
+        <div class="w1170">
+            <span>当前时间：2016/01/01 10:10:10 星期三</span> <span class="username"> 欢迎您，wuli凯凯！ <span class="exit">[退出]</span> </span>
+        </div>
+    </div>
+    <div class="w1170">
+        <nav>
+            <ul id="ulmenu" class="clearfix">
+            	<li><a href="/pms-web/workbench/index.html">首页</a></li>
+            	<li><a href="/pms-web/workbench/menu.html?index=2">工作台</a></li>
+            	<li><a href="/pms-web/workbench/menu.html?index=3">标签工厂</a></li>
+            	<li><a href="/pms-web/workbench/menu.html?index=4">营销与服务</a></li>
+            	<li><a href="/pms-web/report/report_commodity.html">分析</a></li>
+            	<li><a href="/pms-web/sys/task_scheduling.html">系统管理</a></li>
+            	<li class="current"><a href="/pms-web/customer/customer.html">信用评价</a></li>
+            	<li><a href="/pms-web/metadata/metadata-index.html">元数据管理</a></li>
+            </ul>
+        </nav>
+    </div>
+    
+</header>
+<div class="menuBar">
+	<div id="menu2" class="w1170"></div>
+</div>
+<div id="all">
+    <div id="main" class="w1170 clearfix">
+        <div class="content box minheight">
+            <div class="obj-search">                
+                <h5 class="obj-title"><i class="showbtnico fa fa-angle-double-up"></i>查询内容筛选</h5>
+                <div class="search_form obj-search-form obj-search-formtop" id="searchtop">
+                   <button type="button" class="btn btn-warning" id="addObject1"><i class="fa fa-plus-circle"></i> 增加查询内容</button>
+                   <div class="obj-search-block" name="check_msg">
+	                    <div class="item" style="min-width:270px">
+	                    	<span>业务对象：</span>
+	                    	    <button type="button" class="btn btn-primary" id="object">请选择业务对象</button>
+	                    </div> 
+	                    <div class="item"><span class="fl">查询属性：</span><div class="downbox">
+	                            <button type="button" class="form-control downinput" type="text" id="downinput" name="msg_downinput">请选择属性</button><em class="glyphicon glyphicon-triangle-bottom"></em>
+	                            <ul class="downlist" id="pro">                              
+	                            </ul>
+	                        </div>                        
+	                    </div>
+	                    <!-- <span class="close-form01">删除</span> -->
+	                    <div style="clear:both"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="obj-search">                
+                <h5 class="obj-title"><i class="showbtnico fa fa-angle-double-up"></i>查询过滤</h5>
+                <div class="search_form obj-search-form" id="searchForm">
+                    <button type="button"  class="btn btn-warning" id="addObject"><i class="fa fa-plus-circle"></i> 增加过滤条件</button>                    
+                    <div class="item display_term" name="check_filter">
+                        <span>业务对象：</span>
+	                        <select class="form-control" name="filter_business_object" id="conobj" onchange="condobject();">
+	                        </select>
+                        <span>过滤属性：</span>
+	                        <select class="form-control" id="filter" name="filter_con"  onchange="filterpro();">                          
+	                        </select>
+	                        <select class="form-control section-control" name="filter_conn" id="numselsects">
+								<option value="=" values="=" >等于</option>
+								<option value="!=" values="!=" >不等于</option>
+								<option value=">" values=">" >大于</option>
+								<option value="<" values="<" >小于</option>
+								<option value=">=" values=">=" >大于等于</option>
+								<option value="<=" values="<=" >小于等于</option>
+								<option selected="" value="between" values="yes" >区间</option>
+								<option value="not between" values="no" >不在区间</option>
+	                        </select>
+                        <span class="search-item">
+                        	<input type="text"  class="form-control input-interva input01" id="text" name="filter_star">
+                        		<em class="equal">~</em>
+                        	<input type="text"  class="form-control input-interva input02" id="text2" name="filter_end">
+                        </span>
+                        <!-- <span class="close-form">删除</span> -->
+                    </div>
+                </div>
+            </div>
+            <div class="item pt prtext">
+            	<a id="btn-search-class" class="btn btn-primary"  onclick="businSave();"><i class="fa fa-search" ></i> 查询</a>
+            	<a class="btn btn-primary" id="save_check"><i class="fa fa-check"></i> 保存</a>
+            </div>
+            <div class="table-form scorll-x" >               
+                <table id="table"  class="table table-striped" >
+                    <thead>
+                        <tr id="thead">                                                 
+                        </tr>
+                    </thead>
+                    <tbody id="tbody1" >
+                        
+                    </tbody>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <div class="page">
+                    <nav>                      
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value="" id="templateType">
+</div>
+<footer>
+    <div class="w1170">
+        <div class="about">
+            <span>关于平台</span> | <span>案例展示</span> | <span>咨询分享</span> | <span>联系我们</span>
+        </div>
+        <div class="Copyright">京ICP 14007766 &copy;1996-2020 INFOHOLD ALL
+            Rights Reserved 京公网安备 11010802013522号</div>
+    </div>
+</footer>
+<div class="fixTop">
+    <a class="mss"></a> <a class="return" href="#return"></a>
+</div>
+<script type="text/javascript">
+    //var arr = [];
+    //var arrs=[];
+    var queryMap = new Object();
+    //保存代码code;
+    var quMap = new Object();
+    var qumap=null;
+    var strHead = "";
+    var value=null;
+    
+    var mtRelationId;
+    
+    
+    $(function(){
+        $(document).on("click",".downinput",function(event){    
+        //$(".downinput").click(function(event){
+            event.stopPropagation();
+            var sibling = $(this).siblings('ul');
+            if(sibling.is(":hidden")){
+               $(".downlist").hide();               
+               sibling.show();
+            }else{
+                sibling.hide(); 
+            }
+        });
+        $(document).on('click', '.downlist li > span', function(event) {   
+            event.stopPropagation();
+            var that = $(this);
+            var Val = that.attr("value");
+            var text = that.html();
+            var btn = that.closest('.downlist').siblings('.downinput');
+            var btnId = $(btn).attr("id");
+  //          alert(btnId)
+              value = queryMap[btnId];//值
+              qumap = quMap[btnId];//值
+            // alert("hahah="+queryMap[btnId]);
+            var code= that.attr("id"); 
+            if(!value){
+                value = [];
+                qumap=[];
+                queryMap[btnId] = value;
+                quMap[btnId] = qumap;
+                
+            }
+            if(Val == "0"){ 
+             //arrs.splice(0,arrs.length);   
+                that.attr("value","1");
+                that.siblings('i').show();                
+                value.push(text);
+                qumap.push(code);
+               // arrs.push(code);  
+                btn.text(value);
+                
+                /*value.each(function(){
+                    strHead = "<th>"+arr[i]+"</th>"
+                })
+                $("#thead").append(strHead);*/
+                /* for(var i =0;i<value.length;i++){
+			        strHead = "<th>"+value[i]+"</th>"	           
+				}
+				$("#thead").append(strHead); */
+              
+            }else if(Val == "1"){
+               
+                that.attr("value","0");
+				that.siblings('i').hide();
+				value.splice($.inArray(text,value),1);
+				qumap.splice($.inArray(code,qumap),1);
+			//	arrs.splice($.inArray(code,arrs),1);
+				//$(".downinput").text(arr);
+				 btn.text(value);
+				 
+				/* var thLen = $("#thead th");
+				thLen.each(function(){
+					if($(this).html() == that.html()){							
+					     $(this).remove();
+					}
+				}); */
+
+            }
+            
+			if(value.length == 0){
+			 btn.text("请选择属性");
+			}
+        });
+        $(document).click(function(){
+            $(".downlist").hide(); 
+           // $(".downlist li").find('i').hide(); 
+        });
+       
+    })
+   
+    $("#save_check").click(function() {  
+    	var flag =true;  
+    	if(mtRelationId!="" && mtRelationId!=null){					
+					//获取灵活查询页面的数据
+			   	 	var checkMsg="";
+			   	 	var	dataMsg1 = new Array();
+			   	 	var checkMsgId="";
+			   	 	//获取查询内容筛选部分数据
+					$("#searchtop").find("div[name='check_msg']").each(function(i,o) {
+						if(i==0){
+							var mbo = $("#object").text();
+					//		if((mbo==""||mbo==null)&&mbo=="请选择业务对象"){
+							if(mbo=="请选择业务对象"||mbo==""||mbo==null){
+								alert("请选择业务对象！");
+								flag=false;
+								return false;
+							}else{
+								dataMsg1[0] = mbo;
+							}
+							var mdi = $("div[name='check_msg']").eq(0).find("button[name='msg_downinput']").text();
+							if(mdi=="请选择属性"||mdi==null||mdi==""){
+								dataMsg1[1] = "";
+						//		alert("请选择查询属性！");
+						//		flag=false;
+						//		return false;
+							}else{
+								var arr_temp = new Array();
+									arr_temp = mdi.split(",");
+								for(var i =0;i<arr_temp.length;i++){
+									if(arr_temp[i].length == 0) arr_temp.splice(i,1);
+								}
+								mdi = arr_temp.toString();
+								dataMsg1[1] = mdi;
+							}
+							checkMsg += dataMsg1.toString()+";";
+							
+							if(mdi!="请选择属性"&&mdi!=null&&mdi!=""){
+								var pro_value="";
+								for(var x=0;x<quMap["downinput"].length;x++){
+								    pro_value+=quMap["downinput"][x]+",";
+								}
+								pro_value = pro_value.substring(0, pro_value.length - 1);
+								
+								var arr_temp = new Array();
+									arr_temp = pro_value.split(",");								
+								for(var i =0;i<arr_temp.length;i++){
+									if(arr_temp[i].length == 0) arr_temp.splice(i,1);
+								}
+								pro_value = arr_temp.toString();
+								checkMsgId += pro_value.toString()+";";	
+							}else{
+									checkMsgId +="null"+";";
+							}
+														
+						}else{
+							var mbo = $("div[name='check_msg']").eq(i).find("select[name='msg_business_object']").val();
+							if(mbo=="请选择业务对象"||mbo==""||mbo==null){
+								alert("请选择业务对象！");
+								flag=false;
+								return false;
+							}else{
+								dataMsg1[0] = mbo;
+							}
+							var mdi = $("div[name='check_msg']").eq(i).find("button[name='msg_downinput']").text();
+							if(mdi=="请选择属性"||mdi==null||mdi==""){
+								dataMsg1[1] = "";
+						//		alert("请选择查询属性！");
+						//		flag=false;
+						//		return false;
+							}else{
+								dataMsg1[1] = mdi;
+							}
+							checkMsg += dataMsg1.toString()+";";	
+							
+							if(mdi!="请选择属性"&&mdi!=null&&mdi!=""){
+								$("select[name='msg_business_object']").each(function() {
+							 		var num= $(this).attr("id").replace(/[^0-9]/ig,"");
+							 		var pro_value1="";
+							 		for(var x=0;x<quMap["downinput"+num].length;x++){
+								    	pro_value1+=quMap["downinput"+num][x]+",";
+								    }
+							 		pro_value1 = pro_value1.substring(0, pro_value1.length - 1);
+							 		
+									var arr_temp = new Array();
+										arr_temp = pro_value1.split(",");								
+									for(var i =0;i<arr_temp.length;i++){
+										if(arr_temp[i].length == 0) arr_temp.splice(i,1);
+									}
+									pro_value1 = arr_temp.toString();
+							 		checkMsgId += pro_value1.toString()+";";							 		
+								});
+							}else{
+									checkMsgId +="null"+";";
+							}
+														
+						}
+					});
+					
+					if(flag){
+						var filterMsg ="";
+						var dataMsg2 = new Array();
+						//获取查询过滤部分数据
+						$("#searchForm").find("div[name='check_filter']").each(function(i,o) {
+							var fcor = $("div[name='check_filter']").eq(i).find("select[name='filterconn']").val();
+							dataMsg2[0] = fcor;
+							var fbo = $("div[name='check_filter']").eq(i).find("select[name='filter_business_object']").val();
+							if(fbo==""||fbo==null||fbo=="无"){
+						//			alert("请选择业务对象！");
+						//			flag=false;
+						//			return false;
+									dataMsg2[1] = "";
+									dataMsg2[2] = "";
+									dataMsg2[3] = "";
+									dataMsg2[4] = "";
+									dataMsg2[5] = "";
+							}else{
+								dataMsg2[1] = fbo;
+								
+								var fc = $("div[name='check_filter']").eq(i).find("select[name='filter_con']").val();
+								if(fc==""||fc==null||fc=="无"){
+									alert("请选择过滤属性！");
+									flag=false;
+									return false;
+								}else{
+									dataMsg2[2] = fc;
+								}
+								var fcn = $("div[name='check_filter']").eq(i).find("select[name='filter_conn']").val();
+								dataMsg2[3] = fcn;
+	
+								var fs = $("div[name='check_filter']").eq(i).find("input[name='filter_star']").val();
+								var fe = $("div[name='check_filter']").eq(i).find("input[name='filter_end']").val();							
+								if(fcn == 'between'|| fcn == 'not between'){
+									if(fs==""||fs==null||fe==""||fe==null){
+										alert("请输入区间值！");
+										flag=false;
+										return false;
+									}else{
+										dataMsg2[4] = fs;
+										dataMsg2[5] = fe;										
+									}
+								}else{
+									if(fs==""||fs==null){
+										alert("请输入区间值！");
+										flag=false;
+										return false;
+									}else{
+										dataMsg2[4] = fs;
+									}
+								}
+							}
+							filterMsg += dataMsg2.toString()+";";
+						});
+					}
+					
+					if(flag){
+					var templateId = null;
+						top.layer.open({
+							title:'保存为模板',
+							closeBtn:2,
+							type:2,
+							area:['500px','400px'],
+							shadeClass:true,
+							content:"metaquerytemplate-add.html?mtRelationId"+mtRelationId,
+							btn:['确定','取消'],
+							btnAlign:'c',
+							closeBtn:1,
+							success: function(layero, index){
+								var params={"mtRelationId": mtRelationId};	
+								ajaxSend("/pms-web/ajax/ajaxQueryTemplateInitAction", params ,function(data){
+									var metaQueryTemplateVO = data.metaQueryTemplateVO;
+									var doc=$(layero).find("iframe")[0].contentWindow.document;
+									$(doc).find("input[id='templateCode']").val(metaQueryTemplateVO.queryCode);
+									$(doc).find("input[id='templateName']").val(metaQueryTemplateVO.queryName);
+									$(doc).find("textarea[id='templateDes']").val(metaQueryTemplateVO.queryDes);
+									templateId = metaQueryTemplateVO.id;
+								});
+							},
+							yes: function(index, layero){
+							
+								var doc=$(layero).find("iframe")[0].contentWindow.document;
+								var code = $(doc).find("input[id='templateCode']").val();
+								var name = $(doc).find("input[id='templateName']").val();
+								var des = $(doc).find("textarea[id='templateDes']").val();
+								var type = GetQueryString("templateType");
+								if(code==""||code==null){
+									alert("请输入模板代码！");
+									flag=false;
+									return false;
+								}
+								if(name==""||name==null){
+									alert("请输入模板名称！");
+									flag=false;
+									return false;
+								}
+								if(des==""||des==null){
+									alert("请输入描述内容！");
+									flag=false;
+									return false;
+								}
+								var params = {
+										"operate" : "check",
+										"templateCode" : code,
+										"templateId": templateId
+								};
+								var listcode =null;
+								ajaxSend("/pms-web/ajax/saveQueryMeta",params,function call(data){
+					       			listcode=data.metaQueryTemplateVOs;
+					  			});
+					  			if(listcode!=null){
+								    if(listcode.length!=0){
+								         alert("模板代码已存在，请重新输入！");
+								         flag = false;
+								         return;
+								    }							  			
+					  			}
+
+								if(flag){
+										var	params = {
+											"operate" : "edit",
+											"metadataId" : metadataId,
+											"templateCode" : code,
+											"templateName" : name,
+											"templateType" : type,
+											"templateDes" : des,
+											"checkMsg" : checkMsg,
+											"filterMsg" : filterMsg,
+											"checkMsgId" : checkMsgId,
+											"mtRelationId" : mtRelationId
+										};
+										console.log(params)
+										///pms-web/ajax/saveQueryMeta
+										ajaxSend("/pms-web/ajax/saveQueryMeta",params,callfunction);
+										top.layer.close(index);
+								}
+							},
+							btn2: function(index, layero){
+						    		//按钮【取消】的回调
+								},
+							cancel: function(index){
+							  		//【右上角关闭】的回调
+							  	}
+							});								
+						
+					}		
+    	}else{
+						//获取灵活查询页面的数据
+				   	 	var checkMsg="";
+				   	 	var	dataMsg1 = new Array();
+				   	 	var checkMsgId="";
+				   	 	//获取查询内容筛选部分数据
+						$("#searchtop").find("div[name='check_msg']").each(function(i,o) {
+							if(i==0){
+								var mbo = $("#object").text();
+								if(mbo=="请选择业务对象"||mbo==""||mbo==null){
+									alert("请选择业务对象！");
+									flag=false;
+									return false;
+								}else{
+									dataMsg1[0] = mbo;
+								}
+								var mdi = $("div[name='check_msg']").eq(0).find("button[name='msg_downinput']").text();
+								if(mdi=="请选择属性"||mdi==null||mdi==""){
+									dataMsg1[1] = "";
+							//		alert("请选择查询属性！");
+							//		flag=false;
+							//		return false;
+								}else{
+									dataMsg1[1] = mdi;
+								}
+								checkMsg += dataMsg1.toString()+";";
+								
+								if(mdi!="请选择属性"&&mdi!=null&&mdi!=""){
+									var pro_value="";
+									for(var x=0;x<quMap["downinput"].length;x++){
+									    pro_value+=quMap["downinput"][x]+",";
+									}
+									pro_value = pro_value.substring(0, pro_value.length - 1);
+									checkMsgId += pro_value.toString()+";";	
+								}else{
+									checkMsgId +="null"+";";
+								}
+							}else{
+								var mbo = $("div[name='check_msg']").eq(i).find("select[name='msg_business_object']").val();
+								if(mbo=="请选择业务对象"||mbo==""||mbo==null){
+									alert("请选择业务对象！");
+									flag=false;
+									return false;
+								}else{
+									dataMsg1[0] = mbo;
+								}
+								var mdi = $("div[name='check_msg']").eq(i).find("button[name='msg_downinput']").text();
+								if(mdi=="请选择属性"||mdi==null||mdi==""){
+									dataMsg1[1] = "";
+							//		alert("请选择查询属性！");
+							//		flag=false;
+							//		return false;
+								}else{
+									dataMsg1[1] = mdi;
+								}
+								checkMsg += dataMsg1.toString()+";";	
+								
+								if(mdi!="请选择属性"&&mdi!=null&&mdi!=""){
+									$("select[name='msg_business_object']").each(function() {
+								 		var num= $(this).attr("id").replace(/[^0-9]/ig,"");
+								 		var pro_value1="";
+								 		for(var x=0;x<quMap["downinput"+num].length;x++){
+									    	pro_value1+=quMap["downinput"+num][x]+",";
+									    }
+								 		pro_value1 = pro_value1.substring(0, pro_value1.length - 1);
+								 		checkMsgId += pro_value1.toString()+";";							 		
+									});	
+								}else{
+									checkMsgId +="null"+";";
+								}						
+							}
+						});
+						if(flag){
+							var filterMsg ="";
+							var dataMsg2 = new Array();
+							//获取查询过滤部分数据
+							$("#searchForm").find("div[name='check_filter']").each(function(i,o) {
+								var fcor = $("div[name='check_filter']").eq(i).find("select[name='filterconn']").val();
+								dataMsg2[0] = fcor;
+								var fbo = $("div[name='check_filter']").eq(i).find("select[name='filter_business_object']").val();
+								if(fbo==""||fbo==null||fbo=="无"){
+						//			alert("请选择业务对象！");
+						//			flag=false;
+						//			return false;
+									dataMsg2[1] = "";
+									dataMsg2[2] = "";
+									dataMsg2[3] = "";
+									dataMsg2[4] = "";
+									dataMsg2[5] = "";
+								}else{
+									dataMsg2[1] = fbo;
+									var fc = $("div[name='check_filter']").eq(i).find("select[name='filter_con']").val();
+									if(fc==""||fc==null||fc=="无"){
+										alert("请选择过滤属性！");
+										flag=false;
+										return false;
+									}else{
+										dataMsg2[2] = fc;
+									}
+									var fcn = $("div[name='check_filter']").eq(i).find("select[name='filter_conn']").val();
+									dataMsg2[3] = fcn;
+		
+									var fs = $("div[name='check_filter']").eq(i).find("input[name='filter_star']").val();
+									var fe = $("div[name='check_filter']").eq(i).find("input[name='filter_end']").val();							
+									if(fcn == 'between'|| fcn == 'not between'){
+										if(fs==""||fs==null||fe==""||fe==null){
+											alert("请输入区间值！");
+											flag=false;
+											return false;
+										}else{
+											dataMsg2[4] = fs;
+											dataMsg2[5] = fe;										
+										}
+									}else{
+										if(fs==""||fs==null){
+											alert("请输入区间值！");
+											flag=false;
+											return false;
+										}else{
+											dataMsg2[4] = fs;
+										}
+									}									
+								}
+								filterMsg += dataMsg2.toString()+";";
+							});
+						}
+			if(flag){
+				top.layer.open({
+					title:'保存为模板',
+					closeBtn:2,
+					type:2,
+					area:['500px','400px'],
+					shadeClass:true,
+					content:"metaquerytemplate-add.html",
+					btn:['确定','取消'],
+					btnAlign:'c',
+					closeBtn:1,
+					success: function(layero, index){
+					},
+					yes: function(index, layero){
+				    		//按钮【确定】的回调	
+							//获取弹出框数据
+							
+							var doc=$(layero).find("iframe")[0].contentWindow.document;
+							var code = $(doc).find("input[id='templateCode']").val();
+							var name = $(doc).find("input[id='templateName']").val();
+							var des = $(doc).find("textarea[id='templateDes']").val();
+							var type = GetQueryString("templateType");
+							if(code==""||code==null){
+								alert("请输入模板代码！");
+								flag=false;
+								return false;
+							}
+							if(name==""||name==null){
+								alert("请输入模板名称！");
+								flag=false;
+								return false;
+							}
+							if(des==""||des==null){
+								alert("请输入描述内容！");
+								flag=false;
+								return false;
+							}
+
+							var params = {
+									"operate" : "check",
+									"templateCode" : code
+							};
+							var listcode =null;
+							ajaxSend("/pms-web/ajax/saveQueryMeta",params,function call(data){
+				       			listcode=data.metaQueryTemplateVOs;
+				  			});
+						    if(listcode.length!=0){
+						         alert("模板代码已存在，请重新输入！");
+						         flag = false;
+						         return;
+						    }
+							if(flag){
+								var	params = {
+									"operate" : "add",
+									"metadataId" : metadataId,
+									"templateCode" : code,
+									"templateName" : name,
+									"templateType" : type,
+									"templateDes" : des,
+									"checkMsg" : checkMsg,
+									"filterMsg" : filterMsg,
+									"checkMsgId" : checkMsgId
+								};
+								console.log(params);
+								///pms-web/ajax/saveQueryMeta
+								ajaxSend("/pms-web/ajax/saveQueryMeta",params,callfunction);
+							}
+				    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+					  	},
+					btn2: function(index, layero){
+				    		//按钮【取消】的回调
+						},
+					cancel: function(index){
+					  		//【右上角关闭】的回调
+					  	}
+					});
+				}    
+		  }
+	});
+   
+var metadataId=null;    
+    //增加
+$("#object").on("click",function(){
+   	//var main = $("#addcon");
+	flag = "add";
+	/* if(metadataId != null && metadataId != ""){
+		alert("子级元数据请在右边页面进行添加！");
+		return;
+	} */
+	top.layer.open({
+		title:'选择查询对象',
+		closeBtn:2,
+		type:2,
+		area:['750px','450px'],
+		shadeClass:true,
+		content:"flexiblequery-add.html",/* ?catalogId="+catalogId+
+		"&metaParentId="+metaParentId+"&flag="+flag+"&classType="+classType, */
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+		},
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		var doc = $(layero).find("iframe")[0].contentWindow.document;
+    		var parent = $(layero).find("iframe")[0].contentWindow;
+    		 metadataId = $(doc).find('input:radio[name="metadataVO"]:checked').val();
+    		var name = $(doc).find('input:radio[name="metadataVO"]:checked').parent("li").text().trim();
+    		$("#object").text(name);
+    		var params={"flag":"ObjectChange","id":metadataId};
+  			ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,showDictionaries);
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  	}
+	});
+
+});
+	var id=null;
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+	}
+
+function showDictionaries(data){
+    var listProMetadataVO=data.listProMetadataVO;
+    id=data.id;
+    ObjectPro(listProMetadataVO);  
+    initSelectss();
+    //$("#proo").empty();
+    $("ul[name='msg_downlist']").each(function() {
+  		var ul = $(this);
+  		ul.empty();
+  		 
+	});
+	//清空查询内容属性
+	 if(value!=null){
+	queryMap=new Object();
+	value=[];
+	}
+	$(".downinput").text("请选择属性"); 
+	
+	
+	//添加条件业务对象
+	condinitsele();
+	
+	//清空过滤条件属性
+	
+	$("select[name='filter_con']").each(function() {
+  		var select = $(this);
+  		select.empty(); 
+	});
+}
+
+  //初始化对象属性
+  var listVO = null;
+  function ObjectPro(listProMetadataVO){
+      var ul = $("#pro");
+      ul.empty();
+      listVO = listProMetadataVO;
+      //alert(listProMetadataVO.length);
+      if(listProMetadataVO!=null){
+         $.each(listProMetadataVO,function(i,vo){
+         var li=$("<li id="+vo.id+"><i class='glyphicon glyphicon-ok'></i><span value='0' id="+vo.code+" >"+vo.name+"</span></li>");
+         li.appendTo(ul);
+      });
+        
+    }
+    
+  }
+
+  //增加的业务对象
+    function initSelects(){
+     var listid=[];
+     listid.push(id);
+     $("select[name='msg_business_object']").each(function() {
+           var select = $(this);
+           var id = $("#"+select.attr("id")+" option:selected").attr("id");
+
+            if(id!="无"||id!=null){
+  	        listid.push(id); 
+  	    }
+             
+    }); 
+    var listMetadataVO=null;
+    var params={"listid":listid,"flag":"querycont"};
+    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       listMetadataVO =data.listMetadataVO;
+    });
+  	$("select[name='msg_business_object']").each(function() {
+  		var select = $(this);
+  	  //alert(select.val());
+  	 // alert("bb"+select.attr("id"));
+  		if(select.val() == "无" || select.val() == null){
+  			select.empty();
+  			var option = $("<option  value='无'>无</option>");
+        	select.append(option);
+        	if(listMetadataVO!=null){
+        	
+  			$.each(listMetadataVO,function(i,vo){
+  			  var flag = true;
+  			  
+  		     if(listid!=null){
+  			 for(var j=1;j<listid.length;j++){
+  			 if(vo.id==listid[j]){
+  			      	flag = false;
+  			      }
+  			 }
+  			 
+  			  }
+            $.each(listMetadataVO,function(j,vo1){
+  			 	if(j==i)
+  			 		return false;
+  				 if(vo.id==vo1.id){
+  			      	flag = false;
+  			      }
+  	
+  			 });
+  		
+  			if(flag==true){
+  			var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           		select.append(option);
+           		
+  			}
+        	});
+        	}
+  		}
+	});
+  }
+  
+/*   function initSelectss(){
+
+    var listMetadataVO=null;
+    var params={"id":metadataId,"flag":"querycont"};
+    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       listMetadataVO =data.listMetadataVO;
+    });
+  	$("select[name='msg_business_object']").each(function() {
+  		var select = $(this);
+  		//if(select.val() == "无" || select.val() == null){
+  			select.empty();
+  			var option = $("<option  value='无'>无</option>");
+        	select.append(option);
+        	if(listMetadataVO!=null){
+        
+  			$.each(listMetadataVO,function(i,vo){
+          		var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           		select.append(option);
+           		//option.appendTo();
+        	});
+  			}//}
+	});
+  	
+  } */
+     function initSelectss(){
+     var listid=[];
+     listid.push(id);
+    /*  $("select[name='msg_business_object']").each(function() {
+           var select = $(this);
+           var id = $("#"+select.attr("id")+" option:selected").attr("id");
+                      alert("haha "+id);
+           if(id!="无"||id!=null){
+  	        listid.push(id);
+  	    }
+             
+    });  */
+    var listMetadataVO=null;
+    var params={"listid":listid,"flag":"querycont"};
+    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       listMetadataVO =data.listMetadataVO;
+    });
+  	$("select[name='msg_business_object']").each(function() {
+  		var select = $(this);
+  	  //alert(select.val());
+  	 // alert("bb"+select.attr("id"));
+  		//if(select.val() == "无" || select.val() == null){
+  			select.empty();
+  			var option = $("<option  value='无'>无</option>");
+        	select.append(option);
+        	if(listMetadataVO!=null){
+        	
+  			$.each(listMetadataVO,function(i,vo){
+  			  var flag = true;
+  			  
+  		     if(listid!=null){
+  			  	 for(var j=1;j<listid.length;j++){
+  			 if(vo.id==listid[j]){
+  			      	flag = false;
+  			      }
+  			 }
+  			  }
+  		
+  			if(flag==true){
+  			var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           		select.append(option);
+           		
+  			}
+        	});
+        	}
+  		//}
+	});
+  
+  }
+  
+  
+ var last_option = null; 
+ function selectMetada(intn){
+ //清空属性
+   queryMap["downinput"+intn]=null;
+   $("#downinput"+intn).text("请选择属性");
+   /*if(value!=null){
+	queryMap=new Object();
+	value=[];
+	} */
+	//$(".downinput").text("请选择属性");
+   
+     var idss = $("#theme"+intn+" option:selected").attr("id");
+     //alert(idss+"=hhhhhhhhhhhhh");  
+     var idint = "theme"+intn;
+     var intt = new Array();
+     var intts = new Array();
+     var inttss = new Array();
+     inttss.push(id);
+       $("select[name='msg_business_object']").each(function() {
+           var select = $(this).attr("id");
+           var ids = $("#"+select+" option:selected").attr("id");
+           intt.push(select);
+           intts.push(ids);
+     });  
+   //alert(intt);
+   var ints=null;
+     for(var int=0;int<=intt.length-1;int++){
+     	//alert(intt[int]+":"+idint);
+     	 inttss.push(intts[int]);
+     	if(intt[int]==idint && int == 0){
+     		//alert(intt.length +"changdu");
+     		break;
+     	}
+         else if(intt[int]==idint){
+               ints=int;
+               break;
+          }
+     } 
+
+     
+     var initListMetadataVO = null;
+    // alert(inttss);
+     var params={"listid":inttss,"flag":"querycont"};
+    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       initListMetadataVO =data.listMetadataVO;
+    });
+    // alert("啊啊啊="+ints);
+    // alert("啊啊啊="+intt.length);
+     for(var int=ints+1;int<=intt.length-1;int++){
+        $("#"+intt[int]).empty();
+          
+	   //var num = parseInt(intt[int]);
+	   //var num = parseInt(intt[int].substring(1).substring(1).substring(1));
+	   var num= intt[int].replace(/[^0-9]/ig,"");
+       $("#downinput"+num).empty();
+       queryMap["downinput"+num]=null;
+       $("#proo"+num).empty();
+       $("#downinput"+num).text("请选择属性");
+           
+          var option = $("<option  value='无'>无</option>");
+        	 $("#"+intt[int]).append(option);
+        	if(initListMetadataVO!=null){
+        
+  			$.each(initListMetadataVO,function(i,vo){
+  	
+  			var flag = true;
+  			 for(var j=1;j<inttss.length;j++){
+  			 	// alert(vo.id+":"+inttss[j]);
+  			      if(vo.id==inttss[j]){
+  			      	flag = false;
+  			      }
+  			 }
+  			 
+  			 $.each(initListMetadataVO,function(j,vo1){
+  			 	if(j==i)
+  			 		return false;
+  				 if(vo.id==vo1.id){
+  			      	flag = false;
+  			      }
+  	
+  			 });
+  			  
+  			if(flag == true){
+  				var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           	    $("#"+intt[int]).append(option);
+  			}
+          		
+        	});
+  			}//}
+          
+     }
+    // var id = $("#theme"+int+" option:selected").attr("id");
+     var params={"flag":"ObjectChange","id":idss};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        ObjectPros(data.listProMetadataVO,intn);
+       //$("#pro").empty();
+       //$(".downinput").empty();
+       //arr.splice(0,arr.length);
+      // arrs.splice(0,arrs.length);
+     });
+     
+ 	condinitsele();
+ }
+ 
+   //var listVO = null;
+  function ObjectPros(listProMetadataVO,intn){
+  //alert("3");
+      var ul = $("#proo"+intn);
+
+      ul.empty();
+      listVO = listProMetadataVO;
+     // alert(listProMetadataVO);
+      if(listProMetadataVO!=null){
+         $.each(listProMetadataVO,function(i,vo){
+         var li=$("<li id="+vo.id+"><i class='glyphicon glyphicon-ok'></i><span value='0' id="+vo.code+" >"+vo.name+"</span></li>");
+         li.appendTo(ul);
+      });
+        
+    }
+
+	//清空查询内容属性
+	//if(value!=null){
+	//queryMap=new Object();;
+	//value.splice(countint,value.length);
+	//}
+	//$(".downinput").text("请选择属性");
+  }
+  
+  
+  //查询过滤（查询对象）
+  var listmeta=null;
+  function condinitsele(){
+ // alert("1");
+     var objectcond =$("#object").val();
+     var listid=[];
+     listid.push(id);
+     $("select[name='msg_business_object']").each(function() {
+  		var select = $(this);
+  	    //alert("bb"+select.attr("id"));
+  	    var id = $("#"+select.attr("id")+" option:selected").attr("id");
+  	    if(id!="无"||id!=null){
+  	        listid.push(id);
+  	    }
+  	    
+	});
+	var listMetadataVO=null;
+	var params={"listid":listid,"flag":"querylistid"};
+      ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function shows(data){
+         listMetadataVO=data.listMetadataVO;
+      });
+      listmeta=listMetadataVO;
+      $("select[name='filter_business_object']").each(function() {
+  		var select = $(this);
+  	    //alert(select.val());
+  		//if(select.val() == "无" || select.val() == null){
+  			select.empty();
+  			var option = $("<option  value='无'>无</option>");
+        	select.append(option);
+        	/* option=$("<option id="+id+" value="+objectcond+">"+objectcond+"</option>");
+        	select.append(option); */
+        	if(listMetadataVO!=null){
+        	
+  			 $.each(listMetadataVO,function(i,vo){
+          		var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           		select.append(option);
+           		//option.appendTo();
+        	}); 
+  		}//}
+	});
+	//清空过滤属性
+       	$("select[name='filter_con']").each(function() {
+  		var select = $(this);
+  		select.empty(); 
+	});
+	
+	//清空输入框
+       	$("input[name='filter_star']").each(function() {
+  		var input = $(this);
+  		input.val(""); 
+	});
+	$("input[name='filter_end']").each(function() {
+  		var input = $(this);
+  		input.val(""); 
+	});
+  }
+  
+  //查询过滤（业务属性）
+  function condobject(){
+      var id = $("#conobj option:selected").attr("id");
+     //alert(id);
+     var params={"flag":"ObjectChange","id":id};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        ObjectP(data.listProMetadataVO);
+       //$("#pro").empty();
+       //$(".downinput").empty();
+       //arr.splice(0,arr.length);
+      // arrs.splice(0,arrs.length);
+     });
+  
+  }
+  
+  function condobjectInit(id){
+     var params={"flag":"ObjectChange","id":id};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        ObjectP(data.listProMetadataVO);
+       //$("#pro").empty();
+       //$(".downinput").empty();
+       //arr.splice(0,arr.length);
+      // arrs.splice(0,arrs.length);
+     });
+  
+  }  
+  
+  //查询过滤（业务属性）
+  function ObjectP(listProMetadataVO){
+ // alert("3");
+      var se = $("#filter");
+      se.empty();
+      listVO = listProMetadataVO;
+      if(listProMetadataVO!=null){
+      /* var option = $("<option  value='无'>无</option>");
+       option.appendTo(se); */
+         $.each(listProMetadataVO,function(i,vo){
+
+           option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           option.appendTo(se);
+        });
+        
+    }
+    //清空输入框
+    $("#text").val("");
+    $("#text2").val("");
+  }
+   //增加过滤条件
+     function initSelect(){
+       	$("select[name='filter_business_object']").each(function() {
+  		var select = $(this);
+  	  //alert(select.val());
+  	 // alert("bb"+select.attr("id"));
+  		if(select.val() == "无" || select.val() == null){
+  			select.empty();
+  			var option = $("<option  value='无'>无</option>");
+        	select.append(option);
+        	if(listmeta!=null){
+        	
+  			$.each(listmeta,function(i,vo){
+          		var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           		select.append(option);
+           		//option.appendTo();
+        	});
+  		}}
+	});
+    
+    }
+    //选择某个业务对象后形成属性下拉框
+    function selectbusiness(count){
+    var id = $("#business"+count+" option:selected").attr("id");
+     var params={"flag":"ObjectChange","id":id};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        business(data.listProMetadataVO,count);
+       //$("#pro").empty();
+       //$(".downinput").empty();
+       //arr.splice(0,arr.length);
+      // arrs.splice(0,arrs.length);
+     });
+    
+    }
+    
+    function selectbusinessInit(count,id){
+     var params={"flag":"ObjectChange","id":id};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        business(data.listProMetadataVO,count);
+       //$("#pro").empty();
+       //$(".downinput").empty();
+       //arr.splice(0,arr.length);
+      // arrs.splice(0,arrs.length);
+     });
+    
+    }    
+     function business(listProMetadataVO,count){
+      var se = $("#businesspro"+count);
+      se.empty();
+      listVO = listProMetadataVO;
+      if(listProMetadataVO!=null){
+      var option = $("<option  value='无'>无</option>");
+       option.appendTo(se);
+         $.each(listProMetadataVO,function(i,vo){
+         option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+        option.appendTo(se);
+      });
+        
+    }
+     empty(count);
+     }
+     //清空过滤条件第一条输入框
+   function  filterpro(){
+     $("#text").val("");
+     $("#text2").val("");
+   }
+   //清空输入框
+    function empty(count){
+      var inputstar=$("#star"+count);
+      var inputend=$("#end"+count);
+      inputstar.val("");
+      inputend.val("");
+      
+   }
+   //改变某个过滤属性清空后面的输入框
+   function filterPro(count){
+      empty(count);
+   }
+   
+  function InitInquiry(){
+  		var mtRelationId = GetQueryString("mtRelationId");
+  		if(mtRelationId!=""){
+			var params = {
+				"mtRelationId" : mtRelationId
+			};
+			///pms-web/ajax/ajaxQueryInquiryInitAction
+  			ajaxSend("/pms-web/ajax/ajaxQueryInquiryInitAction", params, function initVO(data){
+	  			var listMsg = data.listMsg;
+	  			var listFilter = data.listFilter;
+	  			metadataId = data.metadataId;
+	  			if(listMsg.length>1){
+	  				for(i=1; i < listMsg.length; i++){
+					   var strHtml = '<div class="obj-search-block" name="check_msg">'			              
+							               +'<div class="item">'
+								               +'<span>业务对象：</span>'
+								               +'<select class="form-control" name="msg_business_object" id="theme'+i+ '"onchange="selectMetada('+i+')">'
+								               +'</select>'
+							               +'</div>'
+							               +'<div class="item">'
+								               +'<span class="fl">查询属性：</span>'
+								               +'<div class="downbox">'
+									               +'<button type="button" class="form-control downinput" type="text" id="downinput'+i+'" name="msg_downinput">请选择属性</button>'
+								                   +'<em class="glyphicon glyphicon-triangle-bottom"></em>'
+								                   +'<ul class="downlist" name="msg_downlist" id="proo'+i+'">'
+								                   +'</ul>'
+							                   +'</div>'
+						                   +'</div>'
+						                   +'<span class="close-form01">删除</span>'
+						                   +'<div style="clear:both"></div>'
+					                   +'</div>';					   
+					   $("#searchtop").append(strHtml);	  				
+	  				}
+	  			}
+	  			if(listFilter.length>1){
+	  				for(i=1; i < listFilter.length; i++){
+				    	var str = '<div class="item display_term" name="check_filter">'
+						    		+'<select class="form-control section-control" name="filterconn">'
+						            +'<option value="and">and</option>'
+						            +'<option value="or">or</option>'
+						            +'</select>'			    		
+				    		          +'<span>业务对象：</span>'
+				    		          +'<select class="form-control" name="filter_business_object"  id="business'+i+'" onchange="selectbusiness('+i+')">'
+				    		           +'</select>'
+				    	              +'<span>过滤属性：</span>'
+				    	              +'<select class="form-control" name="filter_con" id="businesspro'+i+'"  onchange="filterPro('+i+')">'    	                
+				    	              +'</select>'
+				    	              +'<select class="form-control section-control" name="filter_conn" id="numselsects">'
+				    	                +'<option value="=">等于</option>'
+				    	                +'<option value="!=">不等于</option>'
+				    	                +'<option value=">">大于</option>'
+				    	                +'<option value="<">小于</option>'
+				    	                +'<option value=">=">大于等于</option>'
+				    	                +'<option value="<=">小于等于</option>'
+				    	                +'<option selected="" value="yes">区间</option>'
+				    	                +'<option value="no">不在区间</option>'
+				    	              +'</select>'
+				    	              +'<span class="search-item">'
+					    	              +'<input type="text"  class="form-control input-interva input01" name="filter_star" id="star'+i+'">'
+					    	              +'<em class="equal">~</em>'
+					    	              +'<input type="text"  class="form-control input-interva input02" name="filter_end" id="end'+i+'">'
+				    	              +'</span>'
+				    	              +'<span class="close-form">删除</span>'
+				    	            +'</div>';
+				        $("#searchForm").append(str);
+	  				}
+	  			}
+
+	  			var params={"flag":"ObjectChange","id":metadataId};
+  				ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,showDictionaries);				
+
+				$.each(listMsg,function(i,o) {
+					if(i==0){
+						$("#object").text(o.businessObject);
+						if(o.property!=null&&o.property!=""&&o.property!="null"){
+							$("div[name='check_msg']").eq(0).find("button[name='msg_downinput']").text(o.property);
+						}
+					}else{		
+					    $("div[name='check_msg']").eq(i).find("select[name='msg_business_object']").val(o.businessObject);
+					    selectMetada(i);
+						if(o.property!=null&&o.property!=""&&o.property!="null"){
+							$("div[name='check_msg']").eq(i).find("button[name='msg_downinput']").text(o.property);
+						}
+					}
+								
+					var arr = new Array();
+					var str = o.propertyid;
+					arr = str.split(",");
+					
+					var arr2 = new Array();
+					var str2 = o.property;		
+						arr2 = str2.split(",");
+						
+					$("ul[class='downlist']").find("li").each(function(j,o) {
+					var propertyid = $("ul[class='downlist']").find("li").eq(j).find("span").attr("id");
+						if(contains(arr,propertyid)){
+					//		$("ul[class='downlist']").find("li").eq(j).find("span[id='"+propertyid+"']").attr("value")
+							$("ul[class='downlist']").find("li").eq(j).find("span").attr("value","1");
+							$("ul[class='downlist']").find("li").eq(j).find("i").attr("style","display: inline;");				
+						}	
+					});
+						
+					var obj = $("#searchtop").find("button[name='msg_downinput']").eq(i);
+					var str = $(obj).attr("id");
+				    value = queryMap[str];
+	              	qumap = quMap[str];
+		            if(!value){
+		                value = [];
+		                qumap=[];
+		                queryMap[str] = value;
+		                quMap[str] = qumap; 
+		            }
+	                qumap.push(arr);
+	                for(i=0; i < arr2.length; i++){
+	                	value.push(arr2[i]);
+	                }						
+				});
+						
+				$.each(listFilter,function(i,o) {
+					if(i==0){
+						$("div[name='check_filter']").eq(i).find("select[name='filter_business_object']").val(o.businessObject);
+						var sid = $("#conobj option:selected").attr("id");
+						condobjectInit(sid);
+						$("div[name='check_filter']").eq(i).find("select[name='filter_con']").val(o.filterCon);
+						$("div[name='check_filter']").eq(i).find("select[name='filter_conn']").val(o.filterConn);							
+						
+					}else{
+						$("div[name='check_filter']").eq(i).find("select[name='filterconn']").val(o.filterConnOr);
+						$("div[name='check_filter']").eq(i).find("select[name='filter_business_object']").val(o.businessObject);
+						var sid = $("select[name='filter_business_object'] option:selected").attr("id");
+						selectbusinessInit(i,sid);
+						$("div[name='check_filter']").eq(i).find("select[name='filter_con']").val(o.filterCon);
+						$("div[name='check_filter']").eq(i).find("select[name='filter_conn']").val(o.filterConn);							
+					}				
+					$(".section-control").change();						
+				});
+				
+				$.each(listFilter,function(i,o) {
+					if(i==0){
+						$("div[name='check_filter']").eq(0).find("input[name='filter_star']").val(o.filterStar);
+						$("div[name='check_filter']").eq(0).find("input[name='filter_end']").val(o.filterEnd);						
+					}else{
+						$("div[name='check_filter']").eq(i).find("input[name='filter_star']").val(o.filterStar);
+						$("div[name='check_filter']").eq(i).find("input[name='filter_end']").val(o.filterEnd);					
+					}				
+				})
+				
+  			});
+  		}	
+  }
+  
+  $(function(){
+  		mtRelationId = GetQueryString("mtRelationId");
+  		if(mtRelationId!=""&&mtRelationId!=null){
+  			InitInquiry();	
+	
+  		}	
+  });
+  //点击删除后的联动
+ function selectMetada2(intn,idss){
+// alert("3");
+ //清空属性
+/*    queryMap["downinput"+intn]=null;
+   $("#downinput"+intn).text("请选择属性"); */
+   /*if(value!=null){
+	queryMap=new Object();
+	value=[];
+	} */
+	//$(".downinput").text("请选择属性");
+   
+    // var idss = $("#theme"+intn+" option:selected").attr("id");
+     //alert(idss+"=hhhhhhhhhhhhh");  
+    /*  var idint = "theme"+intn; */
+/*      var intt = new Array();
+     var intts = new Array();
+     var inttss = new Array(); */
+    // inttss.push(id);
+/*        $("select[name='msg_business_object']").each(function() {
+           var select = $(this).attr("id");
+           var ids = $("#"+select+" option:selected").attr("id");
+           //下拉框Id
+           //intt.push(select);
+           //选中的Id
+           intts.push(ids);
+     });  
+  // alert(intt);
+   //var ints=0;
+     for(var int=0;int<=intt.length-1;int++){
+     	//alert(intt[int]+":"+idint);
+     	 inttss.push(intts[int]);
+     	if(intt[int]==idint && int == 0){
+     		//alert(intt.length +"changdu");
+     		break;
+     	}
+         else if(intt[int]==idint){
+               ints=int;
+               break;
+          }
+     }  */
+
+     
+     var initListMetadataVO = null;
+   // alert(inttss);
+     var params={"listid":inttss,"flag":"querycont"};
+    ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function showDictionarie(data){
+       initListMetadataVO =data.listMetadataVO;
+    });
+   // alert("啊啊啊="+ints);
+  //  alert("啊啊啊="+intt.length);
+     for(var int=ints+1;int<=intt.length-1;int++){
+        $("#"+intt[int]).empty();
+       //   alert("啊哈哈哈"+intt[int]);
+	   var num= intt[int].replace(/[^0-9]/ig,"");
+	   //清空属性
+       $("#downinput"+num).empty();
+       queryMap["downinput"+num]=null;
+       $("#proo"+num).empty();
+       $("#downinput"+num).text("请选择属性");
+          var option = $("<option  value='无'>无</option>");
+       $("#"+intt[int]).append(option);
+        	if(initListMetadataVO!=null){
+        
+  			$.each(initListMetadataVO,function(i,vo){
+  	
+  			var flag = true;
+  			 for(var j=1;j<inttss.length;j++){
+  			 	// alert(vo.id+":"+inttss[j]);
+  			      if(vo.id==inttss[j]){
+  			      	flag = false;
+  			      }
+  			 }
+  			  
+  			if(flag == true){
+  				var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           	    $("#"+intt[int]).append(option);
+  			}
+          		
+        	});
+  			}//}
+          
+     }
+    // var id = $("#theme"+int+" option:selected").attr("id");
+     var params={"flag":"ObjectChange","id":idss};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        ObjectPros(data.listProMetadataVO,intn);
+     });
+     
+     //刷新过滤条件的业务对象
+ 	condinitsele();
+ }
+ 
+ var inttss = new Array();
+ var intts = new Array();
+ var intt = new Array();
+ var ints=0;
+ function  initObject(clickId){
+      inttss = new Array();
+        intts = new Array();
+        intt = new Array();
+        ints=0;
+      inttss.push(id);
+      var idint = "theme"+clickId;
+      $("select[name='msg_business_object']").each(function() {
+           var select = $(this).attr("id");
+           var ids = $("#"+select+" option:selected").attr("id");
+           intt.push(select);
+           intts.push(ids);
+     }); 
+      
+     for(var i=0;i<=intt.length-1;i++){
+     	
+     	if(intt[i]==idint && i == 0){
+     		break;
+     	}
+         else if(intt[i]==idint){
+               ints=i;
+               break;
+          }else{
+              inttss.push(intts[i]);
+          }
+     }
+ 
+ }
+
+
+</script>
+</body>
+</html>

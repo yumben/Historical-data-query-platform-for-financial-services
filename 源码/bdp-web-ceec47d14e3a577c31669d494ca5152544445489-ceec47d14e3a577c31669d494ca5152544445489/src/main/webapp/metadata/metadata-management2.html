@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+
+<script type="text/javascript">
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryMetadataListAction",
+		formatter : operateFormatter
+	});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:details(\'' + id
+						+ '\')" title="详情">',
+				'<i class="glyphicon glyphicon-edit">详情</i>',
+				'</a>  ' ]
+				.join('');
+	}	
+		
+	function details(id){
+		window.location.href="/pms-web/metadata/metadata-infor2.html?metadataId="+id;
+	}
+	
+	$(document).ready(function($) {		
+		var classType = GetQueryString("classType");
+		var parentId = GetQueryString("parentId");
+		
+		if(classType == "null"){
+			$(".btn-primary").click(function(){
+				var codeOrName=$("#codeOrName").val();
+				codeOrName = codeOrName.trim();
+				if(codeOrName == null || codeOrName==""){
+					alert("请输入元数据代码或名称");
+					return;
+				}
+				var params = {
+					"codeOrName" : codeOrName
+				};
+				_json4Table.drewTable(params);
+			});
+		}
+	});
+	
+</script>
+</head>
+<body style="min-width:auto;">
+
+    <div class="content box">
+        <div class="title-query">
+          <em>模型定义</em>                  
+       </div>
+        <div class="search-form-model">
+            <div class="item"><span>代码/名称：</span><input class="form-control" id="codeOrName" placeholder="元数据代码/名称"></div>
+            <div class="item pt"><a class="btn btn-primary"><i class="fa fa-search"></i> 全文检索</a></div>
+        </div>
+        <!-- <div class="metaset">根据时间动态显示元数据操作信息 </div>-->
+        <div class="table-form">
+             <table id="table" data-id-field="id" class="table table-striped alltable">
+                 <thead>
+                     <tr>         				
+                     	 <th><input class="selectinput" type="checkbox" value="0">全选</th> 
+                         <th data-field="model_id">模型ID</th>
+                         <th data-field="model_name">模型名称</th>
+                         <th data-field="model_style">所属类型</th>
+                         <th data-field="add_time">发布时间</th>
+                         <th data-field="model_des">模型描述</th>
+                         <th data-field="create_by">创建人</th>
+                         <th data-field="create_time">创建时间</th>
+                         <th data-field="" data-formatter="operateFormatter">操作</th>        
+                     </tr>
+                 </thead>
+                 <!-- <tbody id="table_data"></tbody> -->
+             </table>
+       </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.VMetadataPropertyMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.VMetadataProperty">
+		<result column="metadata_property_id" property="metadataPropertyId" />
+		<result column="parent_metadata" property="parentMetadata" />
+		<result column="metadata_id" property="metadataId" />
+		<result column="class_property_id" property="classPropertyId" />
+		<result column="property_value" property="propertyValue" />
+		<result column="property_code" property="propertyCode" />
+		<result column="property_name" property="propertyName" />
+		<result column="iscannull" property="iscannull" />
+		<result column="isshow" property="isshow" />
+		<result column="inheritance" property="inheritance" />
+		<result column="datatype_id" property="datatypeId" />
+		<result column="metadata_code" property="metadataCode" />
+		<result column="metadata_name" property="metadataName" />
+		<result column="catalog_id" property="catalogId" />
+		<result column="class_id" property="classId" />
+	</resultMap>
+
+<select id="getAuthData" resultType="String">
+SELECT
+	bb.object_code
+FROM
+	auth_privilege aa,
+	auth_privilege_object bb,
+	auth_token cc
+WHERE
+	aa.privilege_id = bb.privilege_id
+AND cc.user_id = aa.privilege_master_id
+AND cc.token = #{token}
+</select>
+</mapper>

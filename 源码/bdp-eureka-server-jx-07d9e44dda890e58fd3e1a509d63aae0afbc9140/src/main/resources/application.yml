@@ -1,0 +1,7 @@
+server:
+  port: 8767                    # 指定该Eureka实例的端口
+spring:
+  application:
+    name: eureka-server
+  profiles: 
+    active: master

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>查询入口</title>
+
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+
+	<!-- wrap star -->
+	<div class="wrap">
+
+		<!-- asider start -->
+		<div class="asider queryasider">
+			<div id="tree"></div>
+		</div>
+		<!-- asider end -->
+
+		<!-- content start -->
+		<div class="section">
+			<div class="content">
+				<div class="title-query">
+					<p class="btnquery">
+						<button type="button" class="btn btn-primary btn-defin"
+							id="btncheck">
+							<img src="../resource/img/query-ico4.png"> 查询定义
+						</button>
+					</p>
+					<em>查询入口</em>
+				</div>
+				<div class="table-form">
+					<div class="scorll-x">
+						<table id="table" data-id-field="id"
+							class="table table-striped alltable" data-toolbar="#toolbar"
+							data-striped="true" data-show-refresh="true" data-search="true"
+							data-pagination="true" data-show-export="true"
+							data-url="sale.json">
+							<thead>
+								<tr>
+									<th data-field="queryCode">查询代码</th>
+									<th data-field="queryName">查询名称</th>
+									<th data-field="queryTypeName">分类</th>
+									<th data-field="queryDes">查询描述</th>
+									<th data-field="" data-formatter="operateFormatter">操作</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- content end -->
+
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+
+	<script type="text/javascript" src="../resource/js/tags.js"></script>
+	<script type="text/javascript"
+		src="../resource/js/init_product_tree.js"></script>
+
+	<script type="text/javascript">
+		var idIndex = null;
+		var classType = GetQueryString("classType");
+		var metadataId = 0;
+		var classId = null;
+		var lastIndex = null;
+		$(document).on('click', 'li[newNode="true"] > h5', function() {
+			var p = $(this);
+			var li = p.parent('li');
+			var id = li.attr("id");
+			metadataId = li.attr("metadataId");
+			classId = li.attr("classId");
+			var type = li.attr("type");
+	
+			if (type == "catalog") {
+				if (li.children('ul').hasClass('unstyled')) {
+					p.children("i").addClass("fa-plus-square").removeClass("fa-minus-square");
+					//隐藏
+					//li.children('ul').css('display','block');
+					//清空ul
+					li.children('ul').remove();
+				} else {
+					//点击菜单为指标约束条件的时候
+					p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+	
+					var params = {
+						"parentId" : id,
+						"metadataId" : metadataId,
+						"classId" : classId
+					};
+					initLeftMenu(params);
+				}
+			}
+	
+		})
+	
+	
+		var _json4Table = new $.json4Table({
+			//action : "/pms-web/ajax/ajaxQueryEditorTemplateFindAction",
+			action : "/bdp-web/metaqueryChartTemplateController/queryChartTemplate",
+			formatter : operateFormatter
+		});
+	
+		function operateFormatter(id) {
+			return [
+				'<a class="edit" href="javascript:edit(\'' + id + '\')" title="查看数据">',
+				'<i class="glyphicon glyphicon-edit">查看数据</i>', '</a>',
+				'<a class="remove" href="javascript:remove(\'' + id + '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>'
+			]
+				.join('');
+		}
+	
+	
+		function edit(id) {
+			var menuCode = GetQueryString("menuCode");
+			//window.location.href="/pms-web/metadata/onlineInquiry01.html?identify=sel&index=4&mtRelationId="+id;
+			//window.open("/pms-web/metadata/onlineInquiry01.html?identify=sel&index=4&mtRelationId="+id);
+			//window.open("/pms-web/metadata/query02.html?identify=sel&index=4&mtRelationId="+id);
+			window.location.href = "/bdp-web/chart/chart_edit.html?index=4&mtRelationId=" + id + "&classType=" + classType + "&menuCode=" + menuCode;
+		//window.location.href = "chart_edit.html?identify=sel&index=4&classType="+classType;
+		}
+	
+	
+		$(document).ready(function() {
+			var params = {};
+			_json4Table.drewTable(params);
+	
+			initLeftMenu(null);
+	
+		})
+		function initLeftMenu(params) {
+			if (params == null) {
+				params = {};
+			}
+			ajaxSend("/bdp-web/metaqueryChartTemplateController/queryChartTemplateMenu", params, function(data) {		
+				$tree.treeview({
+					showBorder : false,
+					data : data.catalogBeans
+				});
+				$tree.on('nodeSelected', function(event, data) {
+					var idkey = data.key;
+					params = {
+						"idkey" : idkey
+					};
+					_json4Table.drewTable(params);
+				});
+				$tree.on('nodeUnselected', function(event, data) {
+					params = {};
+					_json4Table.drewTable(params);
+				});
+				$tree.on('nodeCollapsed ', function(event, data) {})
+			});
+		}
+	</script>
+
+	<script type="text/javascript">
+		var menuCode = GetQueryString("menuCode");
+		var $table = $("#table"),
+			$tree = $("#tree");
+		$(function() {
+			$("#btnadd").click(function() {
+				window.location.href = "onlineInquiry01.html?identify=sel&index=4";
+			});
+			$("#btncheck").click(function() {
+				window.location.href = "chart_edit.html?index=4&menuCode=" + menuCode;
+			});
+		});
+		window.operateEvents = {
+			'click .edit' : function(e, value, row, index) {
+				window.location.href = "/pms-web/metadata/onlineInquiry01.html?identify=sel&index=4&id=" + row.id;
+			}
+		};
+	
+	
+		function itemOnclick(obj) {
+			var nodeid = $(obj).attr("data-nodeid");
+			var tree = $("#tree");
+			//获取当前节点对象
+			var node = tree.treeview("getNode", nodeid);
+	
+			//		alert("node.nodeId--------"+node.nodeId);
+	
+		}
+	
+	
+		function remove(id) {
+			top.layer.confirm('是否确认删除？', {
+				btn : [ '确定', '取消' ]
+			}, function(index) {
+				var params = {
+					"operate" : "del",
+					"metadataId" : id
+				};
+				//ajaxSend("/pms-web/ajax/AjaxQueryChartTemplateSaveAction2", params,callfunction);
+				ajaxSend("/bdp-web/metaqueryChartTemplateController/delChartTemplate", params, callfunction);
+				top.layer.close(index); //如果设定了yes回调，需进行手工关闭	
+				_json4Table.drewTable(params);
+			}, function() {});
+		}
+	
+		function callfunction(data) {
+			if (data.errorCode != null || data.errorMessage != null) {
+				alert("操作失败！");
+			} else {
+				alert("操作成功！");
+			}
+		}
+	</script>
+</body>
+</html>

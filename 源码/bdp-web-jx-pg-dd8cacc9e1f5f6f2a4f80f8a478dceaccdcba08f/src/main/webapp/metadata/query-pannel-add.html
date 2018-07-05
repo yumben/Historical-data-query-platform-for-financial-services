@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>灵活查询</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->	
+	<!-- wrap star -->	
+	<div class="wrap">	    
+	    <!-- asider start -->
+	   <div class="asider queryasider">
+	        <div class="navmenu">
+	           <h5 class="query-pannel-title">仪表盘</h5>	           
+	           <ul id="nav-left">
+	           </ul>
+	        </div>
+	    </div>
+	    <!-- asider end -->
+	    
+	    <!-- content start -->
+	    <div class="section">
+	        <div class="content">
+                <div class="title-query">
+             	  <button type="button" class="btn btn-primary fr saveshowbox"><i class="fa fa-bar-chart"></i> 保存</button>
+                  
+                  <button type="button" class="btn btn-primary fr addshowbox"><i class="fa fa-bar-chart"></i> 新建图表</button>              
+                  <em>网站订单分析</em>
+               </div>
+               <div class="pannelbox" id="pannelbox"> 
+               		<div class="pannel-addbox addshowbox" id="addshowbox"><span><em><img src="../resource/img/panneladdico.png"></em><b>新增图表</b></span></div>              		
+               </div>
+	        </div>
+	    </div>
+	    <!-- content end -->
+	</div>
+    <!-- wrap end -->	
+    
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+    
+    <!-- 选择图表类型 -->
+    <div class="showbox" id="showbox" style="display: none;">
+		<div class="show-form">
+			<dl class="add-head">
+				<dt>请选择图表类型</dt>
+				<dd>
+					<ul id="typeChart" class="typeChart">
+						<li class="current" id="tubiao" value="1"><span><i class="fa fa-bar-chart"></i>图表</span></li>
+						<li id="指标" value="2"><span><i class="fa fa-bar-chart-o"></i>指标</span></li>
+						<li id="表格" value="3"><span><i class="fa fa-line-chart"></i> 表格</span></li>
+					</ul>
+				</dd>
+			</dl>
+			<dl class="add-head">
+				<dt>请选择工作表</dt>
+				<dd class="navmenu">
+				   <div class="search-query">
+	            <input id="pro_search" type="text" class="form-control search-input" placeholder="输入关键字" ><span><img src="../resource/img/query-ico.png"></span>
+	          </div>
+					<ul id="nav-left">
+						<li>
+							<h5 class="current"><i class="glyphicon glyphicon-plus"></i> 仪表盘示列</h5>
+							<ul style="display:none">
+								<li><p><label><input type="radio" name="pannelModel" value="1"> 仪表盘示列</label></p></li>
+								<li><p><label><input type="radio" name="pannelModel" value="2"> 环保报表</label></p></li>
+							</ul>
+						</li>
+						<li><h5><i class="glyphicon glyphicon-plus"></i> 环保报表</label></h5>
+							<ul style="display:none">
+								<li><p><label><input type="radio" name="pannelModel" value="3"> 仪表盘示列</label></p></li>
+								<li><p><label><input type="radio" name="pannelModel" value="4"> 环保报表</label></p></li>
+							</ul>
+						</li>
+					</ul>
+				</dd>
+			</dl>
+		</div>
+    </div>
+    
+    <script type="text/javascript" src="../resource/js/drag-arrange.js"></script>
+    <script>
+    
+    	 //左边菜单
+    	var pannelType = "1";
+    	var liHtml = "";
+		var param = {"catalogType":"5"};
+		ajaxSendCloud("/pms-web/ajax/distributionAction", {
+			"param" : JSON.stringify(param),
+			"menuUrl" : matadataUrl + 'metadata/getMetadataJsonById'
+		}, function(data) {
+			console.log(data.list);
+			var json = string4jsonObject(data.list);
+			$.each(json,function(index,title){
+				if(title.children == ""){
+					liHtml += "<li><p><i class='fa fa-file-text-o'></i> "+ title.metadataName +"</p></li>";
+				}else{
+					liHtml += "<li><h5><i class='glyphicon glyphicon-plus'></i> "+ title.metadataName +"</h5>";
+					liHtml += "<ul style='display:none'>";
+					var child = title.children;
+					$.each(child,function(count,name){
+						liHtml += "<li><p><i class='fa fa-file-text-o'></i> "+ name.metadataName +"</p></li>";
+					});
+					liHtml += "</ul></li>";
+				}
+			});
+			$("#nav-left").html(liHtml);
+		
+		});
+	  
+		/* var liHtml = "";
+		$.getJSON("/pms-web/resource/data/pannel.json",function(data){		    
+			$.each(data,function(index,title){
+				if(title.child == ""){
+					liHtml += "<li><p><i class='fa fa-file-text-o'></i> "+ title.name +"</p></li>";
+				}else{
+					liHtml += "<li><h5><i class='glyphicon glyphicon-plus'></i> "+ title.name +"</h5>";
+					liHtml += "<ul style='display:none'>";
+					var child = title.child;
+					$.each(data,function(count,name){
+						liHtml += "<li><p><i class='fa fa-file-text-o'></i> "+ name.name +"</p></li>";
+					});
+					liHtml += "</ul></li>";
+				}
+			});
+			$("#nav-left").html(liHtml);			
+		})
+		 */
+		//新建弹窗
+		$(function(){
+		    $(".addshowbox").click(function(){
+				var main = $("#showbox");
+				layer.open({
+					title:'新建图表',
+					closeBtn: 2, 
+					type:1,
+					area:['auto','auto'],
+					shadeClass:true,
+					content:main,
+					btn:['确定','取消'],
+					btnAlign:'c',
+					closeBtn:1,	
+					yes: function(index, layero){
+					 
+					  	var itemHtml = assemblyPage();//获取到html
+					    $("#pannelbox").append(itemHtml);
+						layer.close(index); //如果设定了yes回调，需进行手工关闭	
+						$("#addshowbox").hide();//关闭窗口
+						pannelType = "1";//图标类型。全局变量恢复到初始状态
+						columnArrangeable();//拖拽功能
+					},
+					btn2:function(index, layero){
+						$(".attrshow").hide();
+					},
+					cancel: function(index, layero){ 			 
+						layer.close(index);
+					}	
+				});
+			})
+			
+			//组装页面
+			function assemblyPage(){
+				 if(pannelType == ""){
+					  	alert("请选择图表类型");
+					  	return;
+					  }
+					  var pannelModel = $("input[name='pannelModel']:checked").val();
+					  if(pannelModel == null || pannelModel == ""){
+					  	alert("请选择模型");
+					  	return;
+					  }
+				 var itemHtml = ""; 
+				 if("1" == pannelModel){
+					  	itemHtml += "<div class='item' type='text' pannelModel='"+pannelModel+"' pannelType='"+pannelType+"'>"
+									+"<div>"
+										+"<h5>test1</h5>"
+										+"<span>500<strong>万元</strong></span>"
+										+"<p>环比增长<em><i class='fa fa-angle-up'></i>20%</em></p>"
+									+"</div>"
+									+"<i class='fa fa-arrows-alt'></i>"
+								 +"</div>";
+					  }else if("2" == pannelModel){
+					  	itemHtml += "<div class='item' pannelModel='"+pannelModel+"' pannelType='"+pannelType+"' >"
+									+"<div>"
+										+"<span>图表哈哈</span>"
+									+"</div>"
+									+"<i class='fa fa-arrows-alt'></i>"
+								 +"</div>";
+					  }else{
+					  	itemHtml += "<div class='item'  pannelModel='"+pannelModel+"' pannelType='"+pannelType+"'>"
+									+"<div>"
+										+"<span>图表</span>"
+									+"</div>"
+									+"<i class='fa fa-arrows-alt'></i>"
+								 +"</div>";
+					  }
+					  
+					  return itemHtml;
+			}
+			
+			//拖拽功能
+			function columnArrangeable(){
+				//拖拽div
+						$('.item').arrangeable();
+						//改变div大小
+					   var con = document.getElementById('pannelbox');
+					   var iList = con.getElementsByTagName('i');
+					    //点击小圆点
+						for(var i=0;i<iList.length;i++){
+							iList[i].onmousedown = function(ev){
+								var ev = ev || window.event;
+								ev.stopPropagation();
+								var parentElem = this.parentNode;
+								var disX = ev.clientX;
+								var disY = ev.clientY;
+								var disW = parentElem.offsetWidth; // 获取拖拽前div的宽  
+								var disH = parentElem.offsetHeight; // 获取拖拽前div的高 
+								console.log('宽：'+disW+' 高：'+disH);
+								document.onmousemove = function(ev){
+									var ev = ev || window.event;
+									ev.stopPropagation();
+									var W =  ev.clientX - disX + disW;  
+						    		var H =  ev.clientY - disY + disH;
+						    		if(W<220){  
+						                W = 220;  
+						            }  
+						            if(W>915){  
+						                W =915;  
+						            }  
+						            if(H<140){  
+						                H = 140;  
+						            }  
+						            if(H>700){  
+						                H = 700;  
+						            }  
+						            parentElem.style.width =W +'px';// 拖拽后物体的宽  
+						            parentElem.style.height = H +'px';// 拖拽后物体的高 
+								}
+								document.onmouseup = function () {  
+						            document.onmousemove = null;  
+						            document.onmouseup = null; 		                
+						        } 
+							}
+						}	 
+				
+			}
+			
+			$(".saveshowbox").click(function(){
+				var item=$("div.item");
+				if(item.length == 0){
+					alert("请选择模型");
+					return;
+				}
+				var proArr = [];
+	            for(i=0,len=item.length;i<len;i++){
+	                 var arr = {};
+	                 arr["item_type"] = $(item[i]).attr("pannelType");
+	                 arr["item_modelid"] = $(item[i]).attr("pannelModel");
+	                 arr["item_width"] = $(item[i]).width()+"";
+	                 arr["item_height"] = $(item[i]).height()+"";
+	                 arr["item_orderby"] = i+1+"";
+	                 proArr.push(arr);
+	                /*  alert(i+"***pannelModel = "+$(item[i]).attr("pannelModel")+"***pannelType"
+	                 +$(item[i]).attr("pannelType")+"**heigth="+$(item[i]).height()+"***width="+$(item[i]).width()); */
+	            }
+	            console.log(proArr)
+        })
+			//图表类型选择
+			$(document).on("click","#typeChart li",function(){
+				$(this).addClass("current").siblings().removeClass("current");
+				pannelType = $(this).val();
+			})
+			
+			
+		})
+
+	</script>	
+</body>
+</html>
+
+
+
+
+
+

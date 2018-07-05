@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+	<script>
+		$(document).on('click', 'li[newNode="true"] > h5', function() {
+			var p = $(this);
+			var li = p.parent('li');
+			var id = li.attr("id");
+			var classId = li.attr("classId");
+			if (classId != null) {
+				$("#metadataType").attr("value", $(p).text());
+				$("#classId").attr("value", classId);
+				var param = {
+					"classId" : classId,
+					"flag" : "metamodelClassPropertyVO"
+				};
+				ajaxSendService(metadataControl, param, "metadata/ajaxQueryMetamodelPropertyAction", showProperty);
+			} else {
+				p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+				if (li.children('ul').hasClass('unstyled')) {
+					li.children('ul').remove();
+					p.children("i").addClass("fa-plus-square").removeClass("fa-minus-square");
+				} else {
+					var params;
+					if (classType == "null") {
+						params = {
+							"isshow" : "是",
+							"parentId" : id,
+							"classId" : classId
+						};
+					} else {
+						params = {
+							"isshow" : "是",
+							"parentId" : id,
+							"classId" : classId,
+							"type" : classType
+						};
+					}
+					initLeftMenu(params);
+				}
+			}
+		});
+	
+		var classType;
+		$(document).ready(function($) {
+	
+			var catalogId = GetQueryString("catalogId");
+			var metaParentId = GetQueryString("metaParentId");
+	
+			if (catalogId == 0) {
+				$("#metadata-radio").hide();
+				$("#metaList").attr("checked", "checked");
+				$(".metdDiv").slideDown();
+				$(".metdDiv1").slideUp();
+			}
+			classType = GetQueryString("classType");
+			var param = {
+				"id" : catalogId
+			};
+			ajaxSendService(metadataControl, param, "metadataCatalog/getMetadataCatalogById", success);
+			var params;
+			if (classType == "null") {
+				params = {
+					"isshow" : "是"
+				};
+			} else {
+				params = {
+					"isshow" : "是",
+					"type" : classType
+				};
+			}
+			initLeftMenu(params);
+	
+		});
+	
+		function initLeftMenu(params) {
+			ajaxSendService(metadataControl, params, "metamodelClass/ajaxQueryModelMenuAction", calFun);
+		}
+	
+		function success(data) {
+			$("#parentId").attr("value", data.vo.contextCatalog);
+			$("#contextCatalog").attr("value", data.vo.contextCatalog);
+		}
+	
+		var propertyId = new Array();
+		var propertyId2 = new Array();
+		var metadataPropertyVOList = new Array();
+		function showProperty(data) {
+			var mList = data.mList;
+			var table = $("#property");
+			table.empty();
+			propertyId.length = 0;
+			metadataPropertyVOList = data.metadataPropertyVOList;
+			var dictionaryVOList = data.dictionaryVOList;
+			var dbFlag = data.dbFlag;
+			$.each(mList, function(i, metamodelClassPropertyVO) {
+				propertyId.push(metamodelClassPropertyVO.propertyId);
+				var tr = $("<tr></tr>");
+				tr.appendTo(table);
+				var th = $("<th>" + metamodelClassPropertyVO.propertyName + ":</th>");
+				th.appendTo(tr);
+				var td = $("<td>" + "</td>");
+				td.appendTo(tr);
+				if (dbFlag != null && dbFlag == "db") { //数据库
+					if (metamodelClassPropertyVO.editcontrolName == "下拉框") {
+						var select;
+						var options;
+						select = $("<select class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "'  iscannull='" + metamodelClassPropertyVO.iscannull + "' id='pro-" + metamodelClassPropertyVO.propertyId + "' isshow=" + metamodelClassPropertyVO.isshow + "  name='" + metamodelClassPropertyVO.name + "' >" + "</select>");
+						$.each(dictionaryVOList, function(j, e) {
+							options = $("<option value='" + e.value + "'>" + e.valuedescribe + "</option>");
+							select.append(options);
+						});
+						select.appendTo(td);
+					} else {
+						if ("是" == metamodelClassPropertyVO.ispassword) {
+							var input = $("<input type='password' iscannull='" + metamodelClassPropertyVO.iscannull + "' code='" + metamodelClassPropertyVO.propertyCode + "' name=" + metamodelClassPropertyVO.propertyName + " iscannull=" + metamodelClassPropertyVO.iscannull + " isshow=" + metamodelClassPropertyVO.isshow + " maxlength='" + metamodelClassPropertyVO.lengths + "' "
+								+ " class='form-control'  id='pro-" + metamodelClassPropertyVO.propertyId + "' value='" + "'>" + "</input>");
+	
+						} else {
+							var input = $("<input type='text' iscannull='" + metamodelClassPropertyVO.iscannull + "' code='" + metamodelClassPropertyVO.propertyCode + "' name=" + metamodelClassPropertyVO.propertyName + " iscannull=" + metamodelClassPropertyVO.iscannull + " isshow=" + metamodelClassPropertyVO.isshow + " maxlength='" + metamodelClassPropertyVO.lengths + "' "
+								+ " class='form-control'  id='pro-" + metamodelClassPropertyVO.propertyId + "' value='" + "'>" + "</input>");
+	
+						}
+						input.appendTo(td);
+					}
+				} else if (dbFlag != null && dbFlag == "filed") { //字段
+					if (metamodelClassPropertyVO.editcontrolName == "下拉框") {
+						var select;
+						var options;
+						select = $("<select disabled='disabled' class='form-control' filedType='filedType' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' id='" + metamodelClassPropertyVO.propertyId + "' isshow=" + metamodelClassPropertyVO.isshow + "  name='" + metamodelClassPropertyVO.propertyName + "' >" + "</select>");
+						$.each(dictionaryVOList, function(j, e) {
+							options = $("<option value='" + e.value + "#" + e.type + "'>" + e.valuedescribe + "</option>");
+							select.append(options);
+						});
+						select.appendTo(td);
+						showRetMsg(metamodelClassPropertyVO.propertyId, metadataPropertyVOList);
+					} else if (metamodelClassPropertyVO.propertyName == "字段长度") {
+						var input = $("<input readonly type='text' "
+							+ "class='form-control' code='" + metamodelClassPropertyVO.propertyName + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' isshow=" + metamodelClassPropertyVO.isshow + " id='" + metamodelClassPropertyVO.propertyId + "'>" + "</input>");
+						input.appendTo(td);
+					} else if (metamodelClassPropertyVO.propertyName == "字段备注") {
+						var input = $("<input type='text' "
+							+ "class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' isshow=" + metamodelClassPropertyVO.isshow + " id='" + metamodelClassPropertyVO.propertyId + "'>" + "</input>");
+						input.appendTo(td);
+					} else if (metamodelClassPropertyVO.propertyName == "字段名") {
+						var input = $("<input type='text' "
+							+ "class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' isshow=" + metamodelClassPropertyVO.isshow + " id='" + metamodelClassPropertyVO.propertyId + "'>" + "</input>");
+						input.appendTo(td);
+					} else {
+						var select;
+						var options;
+						select = $("<select disabled='disabled' class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' id='" + metamodelClassPropertyVO.propertyId + "' isshow=" + metamodelClassPropertyVO.isshow + "  name='" + metamodelClassPropertyVO.propertyName + "' >" + "</select>");
+						options = $("<option value=''>请选择</option><option value='Y'>是</option><option value='N'>否</option>");
+						select.append(options);
+						select.appendTo(td);
+						showRetMsg(metamodelClassPropertyVO.propertyId, metadataPropertyVOList)
+					}
+				} else { //其他
+					var input = $("<input type='text' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' name=" + metamodelClassPropertyVO.propertyName + " iscannull=" + metamodelClassPropertyVO.iscannull + " isshow=" + metamodelClassPropertyVO.isshow + " maxlength='" + metamodelClassPropertyVO.lengths + "' "
+						+ " class='form-control'  id='" + metamodelClassPropertyVO.propertyId + "' value='" + "'>" + "</input>");
+					input.appendTo(td);
+				}
+			});
+		}
+	
+		//下拉框返显示
+		function showRetMsg(metamodelClassPropertyVOId, metadataPropertyVOList) {
+			$.each(metadataPropertyVOList, function(i, metadataPropertyVO) {
+				if (metamodelClassPropertyVOId == metadataPropertyVO.classPropertyId) {
+					var leg = $("#pro-" + metamodelClassPropertyVOId + " option");
+					var text = metadataPropertyVO.propertyValue;
+					$.each(leg, function(index, el) {
+						var val = $(this).val();
+						console.log(val);
+						if (text == val) {
+							$(this).prop("selected", true);
+						}
+					});
+				}
+	
+			});
+		}
+	
+		function calFun(data) {
+			var parentId = data.parentId;
+			var classId = data.classId;
+			var curent;
+			if (parentId == null && classId == null) {
+				curent = $("#nav-left");
+			} else if (parentId != null) {
+				curent = $('#' + parentId);
+			}
+			var ul = $("<ul class='unstyled'></ul>");
+			var packageList = data.packageList;
+			if (packageList.length > 0) {
+				packageList.forEach(function(e, i) {
+					var li = $("<li id=" + e.packageId + "><h5><i class='fa fa-plus-square'></i> " + e.packageName + "</h5></li>");
+					li.attr("newNode", "true");
+					ul.append(li).appendTo(curent);
+				});
+			}
+			var classList = data.classList;
+			if (classList.length > 0) {
+				classList.forEach(function(e, i) {
+					var li = $("<li classId=" + e.classId + "><h5><i class='fa fa-file-text-o'></i> " + e.className + "</h5></li>");
+					li.attr("newNode", "true");
+					ul.append(li).appendTo(curent);
+				});
+			}
+	
+	
+	
+		}
+		function Keypress_err_1() {
+			if (!(event.keyCode == 46) && !(event.keyCode == 8) && !(event.keyCode == 37) && !(event.keyCode == 39))
+				if (!((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105)))
+					event.returnValue = false;
+		}
+	</script>
+</body>
+</html>
+<!-- 左边菜单增加 -->
+<div class="dialog" id="addcon">
+	<p class="showMeta">
+		<span>请选择结构类型:</span> <label class="radio-inline"><input
+			type="radio" name="name" id="metaList" value="catalogue">分类目录</label>
+		<label id="metadata-radio" class="radio-inline"><input
+			type="radio" name="name" id="metaList1" value="metadata">元数据</label>
+	</p>
+	<div class="metdDiv">
+		<table class="metadata_Add_type">
+			<tr>
+				<th>分类目录代码:</th>
+				<td><input type="text" id="code" class="form-control"></td>
+				<th>分类目录名称:</th>
+				<td><input type="text" id="name" class="form-control"></td>
+			</tr>
+			<tr>
+				<th>上下文路径:</th>
+				<td><input type="text" id="parentId" value="" placeholder=""
+					readonly="readonly" class="form-control"></td>
+			</tr>
+		</table>
+	</div>
+	<div class="metdDiv1">
+		<div class="metadata_Add">
+			<h3 class="title-basic">
+				<em>模型信息</em>
+			</h3>
+			<div class="metadata_Add_Scroll">
+				<div class="navmenu" id="nav-left"></div>
+			</div>
+
+		</div>
+		<div class="metadata_Add">
+			<h3 class="title-basic">
+				<em>属性信息</em>
+			</h3>
+			<div class="metadata_Add_Scroll">
+				<table id="property"></table>
+			</div>
+			<!-- <div class="atrshow"></div> -->
+		</div>
+		<div class="metadata_Add">
+			<h3 class="title-basic">
+				<em>基本信息</em>
+			</h3>
+			<div class="metadata_Add_Scroll">
+				<table>
+					<tr>
+						<th>元数据代码:</th>
+						<td><input type="text" id="metadataCode" class="form-control"></td>
+					</tr>
+					<tr>
+						<th>元数据名称:</th>
+						<td><input type="text" id="metadataName" class="form-control"></td>
+					</tr>
+					<tr>
+						<th>元数据类型:</th>
+						<td><input type="text" class="form-control" id="metadataType"
+							readonly> <input type="hidden" id="classId" value=""></td>
+					</tr>
+					<tr>
+						<th>上下文路径:</th>
+						<td><input type="text" id="contextCatalog" readonly
+							class="form-control"> <input type="hidden"
+							id="metadataParentId" value=""></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</div>

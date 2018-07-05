@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetadataCatalogMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetadataCatalog">
+		<id column="catalog_id" property="catalogId" />
+		<result column="catalog_code" property="catalogCode" />
+		<result column="catalog_name" property="catalogName" />
+		<result column="parent_catalog" property="parentCatalog" />
+		<result column="catalog_type" property="catalogType" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+<!-- <select id="selectCatalogByCatalogType" resultType="cn.com.infohold.entity.MetadataCatalog">
+	SELECT
+	catalog_id AS catalogId ,
+	catalog_code AS catalogCode ,
+	catalog_name AS catalogName ,
+	catalog_type AS catalogType ,
+	create_date AS createDate
+	
+	FROM metadata_catalog 
+	WHERE
+	catalog_type = #{catalogType}
+</select> -->
+<select id="selectCatalogByClassId" resultType="cn.com.infohold.entity.MetadataCatalog">
+SELECT catalog_id AS catalogId ,
+	catalog_code AS catalogCode ,
+	catalog_name AS catalogName ,
+	catalog_type AS catalogType ,
+	parent_catalog AS parentCatalog,
+	catalog_type AS catalogType,
+	create_name AS createName
+FROM metadata_catalog
+WHERE catalog_id IN(SELECT
+                      catalog_id
+                    FROM metadata
+                    WHERE class_id = #{classId})
+</select>
+
+</mapper>

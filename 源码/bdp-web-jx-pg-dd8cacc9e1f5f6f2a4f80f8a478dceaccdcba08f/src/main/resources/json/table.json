@@ -1,0 +1,23 @@
+[
+	{
+		"number":"1",
+		"fullName":"王武",
+		"age":"25",
+		"sex":"男",
+		"nationa":"广西"
+	},
+	{
+		"number":"2",
+		"fullName":"李媛",
+		"age":"22",
+		"sex":"女",
+		"nationa":"广西"
+	},
+	{
+		"number":"3",
+		"fullName":"小花",
+		"age":"18",
+		"sex":"女",
+		"nationa":"广西"
+	}
+]

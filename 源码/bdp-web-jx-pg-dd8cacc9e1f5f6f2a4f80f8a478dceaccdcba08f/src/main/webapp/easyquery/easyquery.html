@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>灵活查询</title>
+	<!-- 头部引入的公共文件不可删 -->
+	<!--#include virtual="/bdp-web/workbench/header-file.shtml"-->	
+</head>
+<body style="background:#fff">	
+	<div class="easy-tab-box">
+		<div class="easy-tab-menu" id="easyTabMenu">			
+			<!-- 数据筛选start -->
+			<div id="conditions" class="easy-menu rule-con" >
+				<!-- <p>数据筛选：</p> -->
+				<div class="rule-con-list easy-menu-listhide" style="height:24px;"></div>
+				<em><!-- <i class="glyphicon glyphicon-chevron-down"></i> --><b>展开</b></em>
+			</div>
+			<!-- 数据筛选end -->
+			
+			<!-- 维度选择start -->
+			<div id="dimenFiled" class="easy-menu rule-con" style="display: none;">
+				<!-- <p>口径：</p> -->
+				<div class="rule-con-list easy-menu-listhide" style="height:24px;"></div>
+				<em><!-- <i class="glyphicon glyphicon-chevron-down"></i> --><b>展开</b></em>
+			</div>
+			<!-- 维度选择end -->
+			<!-- 中间内容 -->
+			<div class="rule-title" style="border-top:0">
+				<!-- <span id="query_name"></span> -->
+				<p class="btnquery  btnquery-sce">
+					
+					<button type="button" class="btn btn-default searchBtn" id="searchBtn"><!-- 
+						<i class="fa fa-search"></i>  -->查询</button>
+					<button type="button" class=" btn btn-default cleatConditionBtn" id="cleatCondition"><!-- 
+						<i class="fa fa-cog"></i>  -->重置</button>
+					<button type="button" class="btn btn-default  exportBtn" id="exportBtn"><!-- 
+						<i class="fa fa-reply-all"></i>  -->导出</button>
+					<!-- <button type="button" class="btn btn-default" id="btnback">
+						<img src="../resource/img/query-ico7.png"> 返回
+					</button> -->
+				</p>
+			</div>
+			<!-- 中间内容end -->
+			<!-- 设置显示字段start -->
+			<div class="easy-tab-con-head">
+				<ul>
+					<li>显示字段<!-- ：<i class="fa fa-angle-double-down"></i> --></li>
+				</ul>
+				<div class="rankBox">启用排名 ： 前<input class="form-control rank" name="first_limit" value="100">名</div>				
+				<input type="hidden" value="" name="is_summary">
+				<div class="unitBox"><span>金额单位</span>
+				<select class="form-control unit">
+				<option value="1">元</option>
+				<option value="2">千元</option>
+				<option value="3">万元</option>
+				<option value="4">亿元</option>
+				</select>
+				</div>
+				<div class="removeBox"><label><input type="checkbox" name="is_remove">包含村镇银行</label></div>				
+				<div class="page pageEasy"></div>
+				<p>
+					<span>每页  <input type="text" class="form-control" id="selectPage" value="100"> 行</span>
+				<!-- <span>前 <input type="text" class="form-control" id="pageSizeLimit" value=""> 行</span> -->
+				</p>
+			</div>				
+		</div>
+		<div class="easy-tab-con" id="easyTabCon">
+			<!-- 设置显示字段start -->
+			<div><!-- filedText -->
+				<div class="easy-select-filed" id="money_class"><span><label><input type="checkbox" value="0"> <i class="fa fa-money"></i> 金额类</label></span><div></div>
+				</div>
+				<div class="easy-select-filed" id="date_class"><span><label><input type="checkbox" value="0"> <i class="fa fa-calendar"></i> 日期类</label></span><div></div>
+				</div>
+				<div class="easy-select-filed" id="customer_class"><span><label><input type="checkbox" value="0"> <i class="fa fa-user"></i> 客户号</label></span><div></div>
+				</div>
+				<div class="easy-select-filed" id="loan_number_class"><span><label><input type="checkbox" value="0"> <i class="fa fa-newspaper-o"></i> 借据号</label></span><div></div>
+				</div>
+				<div class="easy-select-filed" id="other_class"><span><label><input type="checkbox" value="0"> <i class="fa fa-file-text"></i> 其他</label></span><div></div>
+				</div>
+			</div>
+			<!-- 设置显示字段end -->
+		</div> 
+	</div>
+	
+	<div class="table-form tableBox" id="tableBox">		
+		<ul id="thTitle"  class="titleTable"></ul>
+		<div id="tbodyCon"  class="table-scroll scroll-preview">			
+			<table id="table" data-id-field="metadataId" class="table table-striped alltable easyTable table-hover table-striped">
+				<thead>
+					<tr id="thFiled">
+					</tr>
+				</thead>
+				<tbody id="tdData">
+				</tbody>
+				<tfoot id="tfData"></tfoot>
+			</table>
+		</div>	
+	</div>
+	<!-- <div class="table-form scrollTable">
+            <table id="table" data-id-field="metadataId" class="table table-striped alltable easyTable">
+                <thead>
+                    <tr id="thFiled">			                        
+                    </tr>
+                </thead>
+                <tbody id="tdData">
+                </tbody>
+            </table>
+      </div> -->
+    <!-- <div class="page pageEasy"></div> -->
+    <!-- 遮罩 -->
+	<div id="load"><span class="checkshow"><img src="../resource/img/load-mon.gif"><em>请稍后，数据处理中....</em></span></div>
+</body>
+</html>
+<script type="text/javascript" src="../resource/js/attrModel.js"></script>
+<script type="text/javascript" src="../resource/js/easy/drapPublic.js"></script>
+<script type="text/javascript" src="../resource/js/check.js"></script>
+<script type="text/javascript" src="../resource/js/easy/easyquery.js"></script>

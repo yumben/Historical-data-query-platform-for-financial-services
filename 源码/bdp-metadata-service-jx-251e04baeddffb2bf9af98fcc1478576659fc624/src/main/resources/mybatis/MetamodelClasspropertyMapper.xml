@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelClasspropertyMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelClassproperty">
+		<id column="property_id" property="propertyId" />
+		<result column="datatype_id" property="datatypeId" />
+		<result column="class_id" property="classId" />
+		<result column="property_code" property="propertyCode" />
+		<result column="property_name" property="propertyName" />
+		<result column="inheritance" property="inheritance" />
+		<result column="iscannull" property="iscannull" />
+		<result column="isshow" property="isshow" />
+		<result column="isedit" property="isedit" />
+		<result column="ispassword" property="ispassword" />
+		<result column="lengths" property="lengths" />
+		<result column="default_value" property="defaultValue" />
+		<result column="display_order" property="displayOrder" />
+		<result column="editcontrol_name" property="editcontrolName" />
+		<result column="inheritance_id" property="inheritanceId" />
+		<result column="parent_property_id" property="parentPropertyId" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+
+
+<select id="queryModelClassPropertyByClassId" resultType="cn.com.infohold.entity.MetamodelClassproperty">
+SELECT
+	a.property_id AS propertyId,
+	a.datatype_id AS datatypeId,
+	a.class_id AS classId,
+	a.property_code AS propertyCode,
+	a.property_name AS propertyName,
+	a.inheritance AS inheritance,
+	a.iscannull AS iscannull,
+	a.isshow AS isshow,
+	a.isedit AS isedit,
+	a.ispassword AS ispassword,
+	a.lengths AS lengths,
+	a.default_value AS defaultValue,
+	a.display_order AS displayOrder,
+	a.Editcontrol_name AS EditcontrolName,
+	a.create_date AS createDate,
+	a.create_name AS createName,
+	a.edit_date AS editDate,
+	a.edit_name AS editName,
+	b.class_code AS classCode,
+	b.class_name AS className,
+	c.datatype_code AS datetypeCode,
+	c.datatype_name AS datetypeName
+FROM
+	metamodel_classproperty a,
+	metamodel_class b,
+	metamodel_datatype c
+WHERE
+	a.class_id = b.class_id
+AND a.datatype_id = c.datatype_id
+AND a.class_id = #{classId}
+
+</select>
+
+<select id="queryByPropertyIDResultInfoAttr" resultType="cn.com.infohold.entity.MetamodelClassproperty">
+SELECT
+	a.property_id AS propertyId,
+	a.datatype_id AS datatypeId,
+	a.class_id AS classId,
+	a.property_code AS propertyCode,
+	a.property_name AS propertyName,
+	a.inheritance AS inheritance,
+	a.iscannull AS iscannull,
+	a.isshow AS isshow,
+	a.isedit AS isedit,
+	a.ispassword AS ispassword,
+	a.lengths AS lengths,
+	a.default_value AS defaultValue,
+	a.display_order AS displayOrder,
+	a.Editcontrol_name AS EditcontrolName,
+	a.create_date AS createDate,
+	a.create_name AS createName,
+	a.edit_date AS editDate,
+	a.edit_name AS editName,
+	b.datatype_name AS datetypeName
+FROM
+	metamodel_classproperty a,
+	metamodel_datatype b
+WHERE
+	a.datatype_id = b.datatype_id
+AND a.property_id = #{propertyId}
+
+</select>
+
+
+</mapper>

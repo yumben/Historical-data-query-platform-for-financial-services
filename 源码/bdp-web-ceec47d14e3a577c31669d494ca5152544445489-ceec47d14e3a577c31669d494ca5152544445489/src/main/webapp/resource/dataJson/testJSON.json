@@ -1,0 +1,57 @@
+[{
+	"testname": "test1",
+	"child":[{
+		"target_catalog_id": "2",
+		"target_code": "TARGET0002",
+		"target_name": "客户借款指标1",
+		"target_template_id": "2"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174584427141.406579914404834",
+		"target_name": "客户借款指标2",
+		"target_template_id": "056899b4-9205-4b7f-a2d5-1a05fa56c44b"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174654968447.423983262312785",
+		"target_name": "客户借款指标3",
+		"target_template_id": "d1a15645-8f7a-4bf3-abc2-926265fc99c8"
+	}]
+}, {
+	"testname": "test2",
+	"child":[{
+		"target_catalog_id": "2",
+		"target_code": "15174657804547.9492016381509565",
+		"target_name": "客户借款指标4",
+		"target_template_id": "4779fe6f-bf94-4ed9-b6a7-68d616248640"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174661323327.955529633794583",
+		"target_name": "客户借款指标5",
+		"target_template_id": "2234bd96-d2b0-44d3-b820-728235f242d1"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174666627229.290028679169069",
+		"target_name": "客户借款指标6",
+		"target_template_id": "d665b6d0-4c00-4fa8-84bd-8bae68ec0777"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174669335691.9146889088772856",
+		"target_name": "客户借款指标7",
+		"target_template_id": "f518005e-1144-4669-aa5a-675c5079ab5b"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174674136104.455618633148602",
+		"target_name": "客户借款指标8",
+		"target_template_id": "4e704e03-9225-4a71-8878-4729d17d4ada"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174676148130.6540882167566409",
+		"target_name": "客户借款指标9",
+		"target_template_id": "41353259-f4d2-4990-b3f7-060bb096caf6"
+	}, {
+		"target_catalog_id": "2",
+		"target_code": "15174677955439.416617583904504",
+		"target_name": "客户借款指标10",
+		"target_template_id": "c40ba7d3-400f-4063-b332-a856cfac5e4b"
+	}]
+}]

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>仪表盘</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<!-- wrap star -->
+	<div class="wrap">
+		<!-- asider start -->
+		<div class="asider queryasider">
+			<p class="metadataleftbtn position" style="border:0;">
+				<span id="addCatalog" class="add-data" title="增加"><i class="fa fa-plus-square-o"></i></span>
+			</p>
+			<div class="navmenu">
+				<h5 class="query-pannel-title">仪表盘</h5>
+				<ul id="nav-left">
+				</ul>
+			</div>
+		</div>
+		<!-- asider end -->
+
+		<!-- content start -->
+		<div class="section">
+			<div class="content">
+				<div class="title-query">
+					<button type="button" style="display:none"
+						class="btn btn-primary fr addshowbox eleShow">
+						<i class="fa fa-bar-chart"></i> 新建图表
+					</button>
+					<button type="button" id="saveEle" style="display:none;margin-right:10px;"
+						class="btn btn-primary fr eleShow">
+						<i class="fa fa-bar-chart"></i> 保存
+					</button>
+					<em id="dashboardName"></em>
+					<em id="dashboardId" style="display:none"></em>
+					<em id="dashboardCode" style="display:none"></em>
+				</div>
+				<div class="pannelbox" id="pannelbox">
+					<!-- <div class="pannel-addbox addshowbox" id="initAddShow" style="display:none" ><span><em><img src="../resource/img/panneladdico.png"></em><b>新增图表</b></span></div> -->
+				</div>
+			</div>
+		</div>
+		<!-- content end -->
+	</div>
+	<!-- wrap end -->
+
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+	<!-- 选择图表类型 -->
+	<div class="showbox" id="showbox" style="display: none;">
+		<div class="show-form">
+			
+			<dl class="add-head">
+				<dt>请选择图表类型</dt>
+				<dd>
+					<ul id="typeChart" class="typeChart">
+						<li value="1"><span><i class="fa fa-bar-chart"></i> 图表</span></li>
+						<!-- <li value="2"><span><i class="fa fa-bar-chart-o"></i>
+								指标</span></li> -->
+						<li value="3"><span><i class="fa fa-line-chart"></i>
+								表格</span></li>
+					</ul>
+				</dd>
+			</dl>
+			<dl class="add-head">
+				<dt>请选择工作表</dt>
+				<dd class="navmenu">
+					<!-- <div class="search-query">
+						<input id="pro_search" type="text"
+							class="form-control search-input" placeholder="输入关键字"><span><img
+							src="../resource/img/query-ico.png"></span>
+					</div> -->
+					<ul id="nav-left01">
+						<li>
+							<h5 class="current">
+								<i class="glyphicon glyphicon-plus"></i> 仪表盘示列
+							</h5>
+							<ul style="display:none" id="modelList">
+							</ul>
+						</li>
+
+					</ul>
+				</dd>
+			</dl>
+		</div>
+	</div>
+
+	<div class="showAddMetabox" id="showbox" style="display: none;">
+		<div class="show-form">
+			<dl class="add-head">
+				<span>图表名称：</span>
+				<input id="dashboard_name1"></input>
+			</dl>
+
+		</div>
+	</div>
+	<!-- 弹窗 -->
+	<div class="dialog" id="addcon" style="display:none">
+		<div class="metdDiv" style="display:block">
+			<table>
+				<tr>
+					<th>页面名称:</th>
+					<td><input type="text" id="dashboard_name" class="form-control" value=""></td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+	<!-- 弹窗 -->
+	<div class="dialog" id="addcatalog" style="display:none">
+		<div class="metdDiv" style="display:block">
+			<table>
+				<tr>
+					<th>目录名称:</th>
+					<td><input type="text" id="dashboard_catalog_name" class="form-control" value=""></td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="../resource/js/dashboardPage/pannelPage.js"></script>
+	<script type="text/javascript" src="../resource/js/drag-arrange.js"></script>
+	<script type="text/javascript" src="../resource/js/dashboardPage/dashboardPage.js"></script>
+	
+</body>
+</html>
+
+
+
+
+
+

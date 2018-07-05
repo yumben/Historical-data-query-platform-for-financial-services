@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>菜单管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="../resource/style/GooFlow2.css">
+<script type="text/javascript" src="../resource/js/monitor/GooFunc.js"></script>
+<script type="text/javascript" src="../resource/js/monitor/GooFlow.js"></script>
+<script type="text/javascript"
+	src="../resource/js/monitor/GooFlow_color.js"></script>
+
+</head>
+<body>
+	<!-- <div class="subtitle">
+		<span>监控器</span>
+	</div> -->
+	<div class="state">
+	    <button type="button" class="btn btn-default fr" id="btnback"><img src="../resource/img/query-ico7.png"> 返回</button>
+		<em>执行状态：</em>
+		<span><i></i>待执行</span>
+		<span class="Wait"><i></i>等待</span>
+		<span class="Execute"><i></i>执行</span>
+		<span class="Success"><i></i>成功</span>
+		<span class="Fail"><i></i>失败</span>
+	</div>
+	<div class="detail-infor" id="all">	    
+		<div class="showbox" id="showbox" style="display: none;">
+			<div class="show-form">
+				<table class="item-table">
+					<tr>
+						<th>流程key：</th>
+						<td><input value="{{form.processKey}}"
+							v-model="form.processKey" type="text" name=""
+							class="form-control"></td>
+					</tr>
+					<tr>
+						<th>流程名称：</th>
+						<td><input value="{{form.processName}}"
+							v-model="form.processName" type="text" name=""
+							class="form-control"></td>
+					</tr>
+					<tr>
+						<th>是否执行：</th>
+						<td><label>是<input v-model="form.isexecutable"
+								value="1" type="radio" name="isexecutable"></label><label>否<input
+								v-model="form.isexecutable" value="0" type="radio" name="isexecutable"></label></td>
+					</tr>
+					<tr>
+						<th>版本：</th>
+						<td><input value="{{form.version}}" v-model="form.version"
+							type="text" name="" class="form-control"></td>
+					</tr>
+					<tr>
+						<th>备注：</th>
+						<td><input value="{{form.remark}}" v-model="form.remark"
+							type="text" name="" class="form-control"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="demo"></div>
+		<div class="inforshow">
+			<form class="myForm" id="propertyForm">
+				<div class="form_title">
+					<span class="close">X</span>属性设置
+				</div>
+				<div class="form_content">
+					<table class="item-table">
+						<tr id="ele_idTr">
+							<th>Id：</th>
+							<td><input disabled='disabled' type="text"
+								class="form-control" id="ele_id" /></td>
+						</tr>
+						<tr>
+							<th id="nameChange">名称：</th>
+							<td><input type="text" class="form-control" id="ele_name" /></td>
+						</tr>
+						<tr id="ele_typeTr">
+							<th>Type：</th>
+							<td><input type="text" class="form-control" id="ele_type" /></td>
+						</tr>
+						<tr style="display: none;">
+							<th>Model：</th>
+							<td><input type="text" class="form-control" id="ele_model" /></td>
+						</tr>
+						<tr style="display: none;" id="ele_leftTr">
+							<th>Left-r：</th>
+							<td><input type="text" class="form-control" id="ele_left" /></td>
+						</tr>
+						<tr style="display: none;" id="ele_topTr">
+							<th>Top-r：</th>
+							<td><input type="text" class="form-control" id="ele_top" /></td>
+						</tr>
+						<tr style="display: none;" id="ele_widthTr">
+							<th>Width：</th>
+							<td><input type="text" class="form-control" id="ele_width" /></td>
+						</tr>
+						<tr style="display: none;" id="ele_heightTr">
+							<th>Height：</th>
+							<td><input type="text" class="form-control" id="ele_height" /></td>
+						</tr>
+						<tr id="ele_actionIdTr">
+							<th>流程参数：</th>
+							<td><select id="ele_actionId" v-model="actionId"
+								class="form-control select-control">
+									<option value="">请选择</option>
+									<option v-for="a in actionIdSelect" v-bind:value="a.actionId">{{a.actionName
+										}}</option>
+							</select></td>
+						</tr>
+						<tr style="display: none;" id="ele_fromTr">
+							<th>From：</th>
+							<td><input type="text" class="form-control" id="ele_from" /></td>
+						</tr>
+						<tr style="display: none;" id="ele_toTr">
+							<th>To：</th>
+							<td><input type="text" class="form-control" id="ele_to" /></td>
+						</tr>
+						<tr id="ele_conditionTr">
+							<th>condition：</th>
+							<td><input type="text" class="form-control"
+								id="ele_condition" /></td>
+						</tr>
+					</table>
+				</div>
+				<div class="form_btn_div">
+					<input type="reset" value="重置" class="btn btn-default" /> <input
+						type="button" value="保存" data="" class="btn btn-primary"
+						onclick="propertyForm()" id="saveBtn1" />
+						<input
+						id="paramInfo" type="button" value="参数信息" class="btn btn-info"
+						onclick="taskParam(this)" />
+				</div>
+			</form>
+
+		</div>
+	</div>
+	
+	<div class="showbox" id="paramDiv" style="display: none;">
+		<div class="show-form">
+			<table class="item-table" id="taskParam">
+			</table>
+		</div>
+	</div>
+	
+</body>
+
+<script type="text/javascript" src="../resource/js/monitor/scheduler.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$(".close").click(function() {
+			$(this).parents(".inforshow").hide();
+		});
+		$("#btnback").click(function() {
+			window.location.href = "/bdp-web/monitor/schedulerTableList.html?menuCode=187";
+	    });
+	})
+</script>
+</html>

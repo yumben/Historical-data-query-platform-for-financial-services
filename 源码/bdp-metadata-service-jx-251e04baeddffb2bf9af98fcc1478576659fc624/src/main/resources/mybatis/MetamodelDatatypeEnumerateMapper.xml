@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelDatatypeEnumerateMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelDatatypeEnumerate">
+		<id column="enumerate_id" property="enumerateId" />
+		<result column="datatype_id" property="datatypeId" />
+		<result column="enumitems_id" property="enumitemsId" />
+		<result column="enumerate_code" property="enumerateCode" />
+		<result column="enumerate_name" property="enumerateName" />
+		<result column="enumerate_describe" property="enumerateDescribe" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+<select id="queryModelEnumerateByNameAndPackageId" resultType = "cn.com.infohold.entity.MetamodelDatatypeEnumerate">
+SELECT a.enumerate_id AS enumerateId,
+	a.enumerate_name AS enumerateName,
+	a.enumerate_code AS enumerateCode,
+	a.datatype_id AS datatypeId,
+	a.enumerate_describe AS enumerateDescribe,
+	a.create_name AS createName,
+	a.create_date AS createDate,
+	a.edit_date AS editDate ,
+	a.edit_name AS editName,
+	b.datatype_name AS datatypeName,
+	c.enumitems_name AS enumitemsName
+FROM metamodel_datatype_enumerate a,
+  metamodel_datatype b,
+  metamodel_datatype_enumitems c
+<where>
+	b.datatype_id = a.datatype_id
+    AND a.enumitems_id = c.enumitems_id 
+    <if test="null != packageId and '' != packageId">
+     AND b.package_id = #{packageId} 
+    </if>
+    <if test="null != enumerateNameOrCode and '' != enumerateNameOrCode">
+    	 AND (a.enumerate_name LIKE #{enumerateNameOrCode} 
+          OR a.enumerate_code LIKE #{enumerateNameOrCode}) 
+    </if>
+    ORDER BY a.enumerate_id desc
+</where>
+
+</select>
+
+</mapper>

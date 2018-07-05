@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>灵活查询</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+
+	<!-- wrap star -->
+	<div class="wrap">
+		<!-- asider start -->
+		<div class="asider">
+			<div class="search-query">
+				<input type="text" class="form-control search-input" id="btn_search"
+					onkeydown="javascript:if(event.keyCode==13) search();"
+					placeholder="输入关键字"><span onclick="search();"><img
+					src="../resource/img/query-ico.png"></span>
+				<div>
+					<h5 class="objtypeselecttitle">
+						<i class="fa fa-plus addFilebtn fr disnone"></i><span
+							class="filesShow"><a id="filedShowconent">添加计算字段</a><a
+							id="grounBtn">添加分组字段</a></span>请选择业务对象类型
+					</h5>
+					<select class="form-control search-input" id="classIfication"
+						onchange="objType();"><option>无</option></select>
+				</div>
+			</div>
+
+			<div class="scroll-y03">
+				<p class="nodetext">无</p>
+
+				<!-- //表 -->
+				<ul class="query-entry" id="chiocSurface" style="display: none;">
+				</ul>
+				<!-- //字段 -->
+				<ul class="query-entry" id="chiocFieldch" style="display: none;">
+				</ul>
+			</div>
+
+		</div>
+		<!-- asider end -->
+
+		<!-- content start -->
+		<div class="section">
+			<div class="content">
+				<div class="title-query">
+					<p class="btnquery">
+						<button type="button" class="btn btn-default" id="btnsave">
+							<img src="../resource/img/query-ico5.png"> 保存
+						</button>
+						<button type="button" class="btn btn-default" id="btncancel">
+							<img src="../resource/img/query-ico6.png"> 重置
+						</button>
+						<button type="button" class="btn btn-default" id="btnback">
+							<img src="../resource/img/query-ico7.png"> 返回
+						</button>
+					</p>
+					<em>查询定义</em>
+				</div>
+				<div id="choiceR01" class="query-item">
+					<button type="button" class="btn btn-primary querybtnobj"
+						id="querybtnobj">
+						<img src="../resource/img/query-ico4.png">选择业务对象
+					</button>
+					<div class="defin-r-lsit01" id="businessboxobj"
+						style="display: none;">
+						<span>业务对象</span>
+						<div id="businessObj">
+							<p id="textnode">请拖拽左边标签到此</p>
+						</div>
+					</div>
+					<div class="defin-r-lsit01" id="queryfilterboxobj"
+						style="display: none;">
+						<span>查询条件</span>
+						<div id="queryfilter">
+							<p>请拖拽左边标签到此</p>
+						</div>
+					</div>
+					<div class="defin-r-lsit01" id="queryAttrboxobj"
+						style="display: none;">
+						<span>输出属性</span>
+						<div id="queryAttr01">
+							<p>请拖拽左边标签到此</p>
+						</div>
+					</div>
+				</div>
+				<div class="tab-preview">
+					<ul class="tab-preview-menu" id="tabmenu">
+						<li class="current">预览</li>
+						<li>展示风格</li>
+					</ul>
+					<div class="tab-preview-content" id="tabcontent">
+						<!-- 预览 star -->
+						<div style="display:block">
+							<div class="table-form scorll-x">
+								<table class="table table-striped alltable">
+									<thead>
+										<tr id="headList">
+										</tr>
+									</thead>
+									<tbody></tbody>
+								</table>
+
+							</div>
+						</div>
+						<!-- 预览 end -->
+						<!-- 展示风格 star -->
+						<div>
+							<ul>
+								<li><i></i><span>表格展示</span></li>
+							</ul>
+						</div>
+						<!-- 展示风格 end -->
+
+					</div>
+
+				</div>
+
+
+			</div>
+		</div>
+		<!-- content end -->
+	</div>
+	<!-- wrap end -->
+
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+
+	<!-- 添加分组字段弹窗 -->
+	<div class="showbox" id="showbox" style="display:none;">
+		<div class="show-form">
+			<div class="filed-title">
+				<span>字段名称：</span><input type="text" class="field-name"
+					id="filedName"
+					onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')">
+			</div>
+			<div class="filed-title">
+				<div class="filed-item">
+					<span>分组字段：</span>
+					<div class="filed-down">
+						<button type="button" class="field-name field-input" id="downlist">
+							<!-- <em id="1">日期</em> -->
+							<i class="fa fa-angle-down"></i>
+						</button>
+						<ul class="filed-list" id="groupFiled">
+						</ul>
+					</div>
+				</div>
+				<!-- 日期  -->
+				<div class="filed-item" id="dateFiled" style="display:none">
+					<span>分组方式：</span>
+					<div class="filed-down">
+						<button type="button" class="field-name field-input"
+							id="dateGroupMode_button">
+							<em value="1">常规</em><i class="fa fa-angle-down"></i>
+						</button>
+						<ul class="filed-list" id="dateGroupMode">
+							<li value="1">常规</li>
+							<li value="2">年内分组</li>
+							<li value="3">月内分组</li>
+							<li value="4">周内分组</li>
+							<!-- <li value="5">固定步长</li> -->
+							<!-- <li value="6">表达式</li> -->
+						</ul>
+					</div>
+				</div>
+				<!-- 数字  -->
+				<div class="filed-item" id="numFiled" style="display:none">
+					<span>分组方式：</span>
+					<div class="filed-down">
+						<button type="button" class="field-name field-input"
+							id="numGroupMode_button">
+							<em value="1">固定步长</em><i class="fa fa-angle-down"></i>
+						</button>
+						<ul class="filed-list" id="numGroupMode">
+							<li value="1">固定步长</li>
+							<li value="2">自定义步长</li>
+							<!-- <li>表达式</li> -->
+						</ul>
+					</div>
+				</div>
+
+			</div>
+			<div class="filed-content" id="filed_content_data">
+				<!-- 日期 start  -->
+				<div class="filed-time" id="dateType" style="display:none">
+					<div class="filed-time-item scroll-x-filed"
+						id="filed_time_dateType">
+						<div>
+							<input type="text" name="data_group_yearName"
+								onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+								placeholder="分组名称"><select name="data_group_yearStar">
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select><select name="data_group_yearEnd">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select>至<select name="data_group_yearStarTwo">
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select><select name="data_group_yearEndTwo">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select><i class="fa fa-plus addDateGroup2"></i>
+						</div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text"
+							onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+							id="NoCoverageAreaData1">未覆盖的范围
+					</div>
+				</div>
+
+				<div class="filed-time" id="dateType2" style="display:none">
+					<div class="filed-time-item scroll-x-filed"
+						id="filed_time_dateType2">
+						<div>
+							<input type="text"
+								onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+								placeholder="分组名称" name="data_normal_name"> <input
+								type="text" class="datepicker" id="startTime"
+								name="data_normal_star" readonly="readonly" placeholder="起始日期">至
+							<input type="text" class="datepicker" id="endTime"
+								name="data_normal_end" readonly="readonly" placeholder="截至日期"><i
+								class="fa fa-plus addDateGroup"></i>
+						</div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text"
+							onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+							id="NoCoverageAreaData2">未覆盖的范围
+					</div>
+				</div>
+
+				<div class="filed-time" id="dateType3" style="display:none">
+					<div class="filed-time-item scroll-x-filed"
+						id="filed_time_dateType3">
+						<div>
+							<input type="text" placeholder="分组名称"
+								onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+								name="data_group_monthName"><select
+								name="data_group_monthStar">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select>至<select name="data_group_monthEnd">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select><i class="fa fa-plus addDateGroup3"></i>
+						</div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text"
+							onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+							id="NoCoverageAreaData3">未覆盖的范围
+					</div>
+				</div>
+
+				<div class="filed-time" id="dateType4" style="display:none">
+					<div class="filed-time-item scroll-x-filed"
+						id="filed_time_dateType4">
+						<div>
+							<input type="text"
+								onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+								placeholder="分组名称" name="data_group_weekName"><select
+								name="data_group_weekStar">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>4
+							</select>至<select name="data_group_weekEnd">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>4
+							</select><i class="fa fa-plus addDateGroup4"></i>
+						</div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text"
+							onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+							id="NoCoverageAreaData4">未覆盖的范围
+					</div>
+				</div>
+
+				<!-- 日期 end  -->
+				<!-- 数字 start  -->
+				<div class="filed-num" id="numType" style="display:none">
+					<div class="filed-num-step">
+						<div class="filed-title">
+							<span>起始于：</span><input type="text" class="field-name"
+								id="star_numType"
+								onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+								onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+						</div>
+						<div class="filed-title">
+							<span>终止于 ：</span><input type="text" class="field-name"
+								id="end_numType"
+								onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+								onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+						</div>
+						<div class="filed-title">
+							<span>分组步长 ：</span><input type="text" class="field-name"
+								id="step_numType"
+								onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+								onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+						</div>
+					</div>
+				</div>
+				<div class="filed-time" id="numType2" style="display:none">
+					<div class="filed-time-item scroll-x-filed" id="filed_time_num">
+						<div>
+							<input type="text" placeholder="分组名称" name="text_group_name"
+								onkeyup="this.value=this.value.replace(/[, ,\W]/g,'')"><input
+								type="text" placeholder="起始"
+								onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+								name="text_group_star"><select name="select_symbol_star">
+								<option value=">" selected="selected">&lt;</option>
+								<option value=">=">&lt;=</option>
+							</select>至<select name="select_symbol_end">
+								<option value="<" selected="selected">&lt;</option>
+								<option value="<=">&lt;=</option>
+							</select><input type="text" placeholder="结束"
+								onkeyup="this.value=this.value.replace(/[^0-9]/g,'')"
+								name="text_group_end"><i class="fa fa-plus addNumType2"></i>
+						</div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text" id="NoCoverageArea"
+							onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')">未覆盖的范围
+					</div>
+				</div>
+				<!-- 数字 end  -->
+			</div>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="../resource/js/drop-query.js"></script>
+	<!-- 分组字段和新计算字段弹窗   -->
+	<script type="text/javascript" src="../resource/js/group_field.js"></script>
+	<script type="text/javascript" src="../resource/js/calculate_field.js"></script>
+	<script type="text/javascript">
+		var click_id = null;
+		var mtRelationId = null;
+		//表
+		var businessObj = document.getElementById('businessObj');
+		var businessObjEm = businessObj.getElementsByTagName('em');
+		var businessObjp = businessObj.getElementsByTagName('p');
+		var chiocSurface = document.getElementById('chiocSurface');
+		var chiocSurfaceLi = chiocSurface.getElementsByTagName('li');
+	
+		//字段
+		var queryAttr = document.getElementById('queryAttr01');
+		var queryAttrEm = queryAttr.getElementsByTagName('strong');
+		var chiocFieldch = document.getElementById('chiocFieldch');
+		var chiocFieldchLi = chiocFieldch.getElementsByTagName('li');
+	
+	
+		//生成表格
+		var headList = document.getElementById('headList');
+		var headListth = document.getElementsByTagName('th');
+	
+		var menuCode = GetQueryString("menuCode");
+	
+		//点击业务对象表
+		var metaPraentId = null;
+	
+		function refresh() {
+	
+			//刷新左侧业务对象表
+			var listEmId = new Array();
+			//获取所有em标签的id
+			$("#businessObj em").each(function() {
+				listEmId.push($(this).attr("id"));
+			});
+			refreshBusinessObj(listEmId);
+			//选择业务对象（表）
+			buObjPro();
+		}
+	
+	
+		$("#btnback").click(function() {
+			window.location.href = "/bdp-web/flexiblequery/flexiblequery-index.html?menuCode=" + menuCode;
+		});
+	
+	
+		function search() {
+			var val = $("#btn_search").val().trim();
+			if (click_id != null && click_id != "") {
+				if (val == "" || val == "null") {
+					$("ul[id='chiocFieldch'] li").show();
+				} else {
+					$("ul[id='chiocFieldch'] li").each(
+						function() {
+							var val_temp = $(this).text();
+							if (val_temp.indexOf(val) != -1) {
+								$(this).show();
+							} else {
+								$(this).hide();
+							}
+						}
+					)
+				}
+			} else {
+				if (val == "" || val == "null") {
+					$("ul[id='chiocSurface'] li").show();
+				} else {
+					$("ul[id='chiocSurface'] li").each(
+						function() {
+							var val_temp = $(this).text();
+							if (val_temp.indexOf(val) != -1) {
+								$(this).show();
+							} else {
+								$(this).hide();
+							}
+						}
+					)
+				}
+			}
+		}
+	
+		$("#btnsave").click(function() {
+			var businessList = new Array();
+			var queryfilterList = new Array();
+			var queryfeildList = new Array();
+			var flag = true;
+			if (mtRelationId != "" && mtRelationId != null) {
+				//获取数据
+				//获取业务对象的数据
+				var checkMsg = "";
+				var arr1 = new Array();
+				var arr1_id = new Array();
+				var arr1_code = new Array();
+				if ($("#businessboxobj").find("div[id='businessObj']").find("em").size() == 0) {
+					alert("请选择业务对象！");
+					flag = false;
+				} else {
+					$("#businessboxobj").find("div[id='businessObj']").find("em").each(function(i, o) {
+						var bbo = $("#businessboxobj").find("div[id='businessObj']").find("em").eq(i).text();
+						var bboid = $("#businessboxobj").find("div[id='businessObj']").find("em").eq(i).attr("id");
+						var bbcode = $("#businessboxobj").find("div[id='businessObj']").find("em").eq(i).attr("code");
+						arr1[i] = bbo;
+						arr1_id[i] = bboid;
+						arr1_code[i] = bbcode;
+						var businessObj = {
+							"id" : bboid,
+							"code" : bbcode,
+							"text" : bbo
+						};
+						businessList.push(businessObj);
+					});
+				}
+				checkMsg += arr1.toString() + ";";
+				checkMsg += arr1_id.toString() + ";";
+				checkMsg += arr1_code.toString() + ";";
+	
+				//获取查询条件的数据
+				if (flag) {
+					var arr2 = new Array();
+					var arr2_id = new Array();
+					var arr2_pid = new Array();
+					var arr2_code = new Array();
+					var arr2_protype = new Array();
+					$("#queryfilterboxobj").find("div[id='queryfilter']").find("em").each(function(i, o) {
+						var qfbo = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).text();
+						var qfboid = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("id");
+						var qfbopid = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("parent");
+						var qfcode = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("code"); //加入   业务对象.code
+						var qfprotype = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("protype");
+						if (qfprotype == "" || qfprotype == null) {
+							qfprotype = "null";
+						}
+						arr2[i] = qfbo;
+						arr2_id[i] = qfboid;
+						arr2_pid[i] = qfbopid;
+						arr2_code[i] = qfcode;
+						arr2_protype[i] = qfprotype;
+						var queryfilterboxobj = {
+							"id" : qfboid,
+							"parent" : qfbopid,
+							"code" : qfcode,
+							"protype" : qfprotype,
+							"text" : qfbo
+						};
+						queryfilterList.push(queryfilterboxobj);
+					});
+					checkMsg += arr2.toString() + ";";
+					checkMsg += arr2_id.toString() + ";";
+					checkMsg += arr2_pid.toString() + ";";
+					checkMsg += arr2_code.toString() + ";";
+				}
+	
+				//获取输出属性的数据
+				if (flag) {
+					var arr3 = new Array();
+					var arr3_id = new Array();
+					var arr3_pid = new Array();
+					var arr3_pcode = new Array();
+					var arr3_pcomcode = new Array();
+					var arr3_alias = new Array();
+					if ($("#queryAttrboxobj").find("div[id='queryAttr01']").find("em").size() == 0) {
+						alert("请添加输出属性！");
+						flag = false;
+					} else {
+						$("#queryAttrboxobj").find("div[id='queryAttr01']").children("em").each(function(i, o) {
+							//修改灵活查询后
+							var qabo = $(this).children("strong").text();
+							var qaboid = $(this).attr("id");
+							var qabopid = $(this).attr("parent");
+							var qabopcode = $(this).attr("code");
+							var qabopcomcode = $(this).attr("comcode");
+							var protype = $(this).attr("protype");
+							if (qabopcomcode == "" || qabopcomcode == null) {
+								qabopcomcode = "null";
+							}
+							var num = protype.replace(/[^0-9]/ig, "");
+							arr3[i] = qabo;
+							arr3_id[i] = qaboid;
+							arr3_pid[i] = qabopid;
+							arr3_pcode[i] = qabopcode;
+							arr3_pcomcode[i] = qabopcomcode;
+							if (num == "1") {
+								arr3_alias[i] = "datafield" + i;
+							} else if (num == "2") {
+								arr3_alias[i] = "varcfield" + i;
+							} else if (num == "3") {
+								arr3_alias[i] = "numbfield" + i;
+							}
+							var queryfeild = {
+								"id" : qaboid,
+								"parent" : qabopid,
+								"code" : qabopcode,
+								"comcode" : qabopcomcode,
+								"protype" : protype,
+								"text" : qfqabobo
+							};
+							queryfeildList.push(queryfeild);
+						});
+					}
+					var arr3_pcomcode2 = new Array();
+					var arr3_pcomcode3 = new Array();
+					var arr3_alias2 = new Array();
+					var arr3_alias3 = new Array();
+					var arr3_pcode2 = new Array();
+					var arr3_pcode3 = new Array();
+					for (var i = 0; i < arr3_pcomcode.length; i++) {
+						if (arr3_pcomcode[i] != "null") {
+							arr3_pcomcode2.push(arr3_pcomcode[i]);
+							arr3_alias2.push(arr3_alias[i]);
+							arr3_pcode2.push(arr3_pcode[i]);
+						} else {
+							arr3_pcomcode3.push(arr3_pcomcode[i]);
+							arr3_alias3.push(arr3_alias[i]);
+							arr3_pcode3.push(arr3_pcode[i]);
+						}
+					}
+					for (var j = 0; j < arr3_pcomcode2.length; j++) {
+						arr3_pcomcode3.push(arr3_pcomcode2[j]);
+						arr3_alias3.push(arr3_alias2[j]);
+						arr3_pcode3.push(arr3_pcode2[j]);
+					}
+					arr3_pcomcode = arr3_pcomcode3;
+					arr3_alias = arr3_alias3;
+					arr3_pcode = arr3_pcode3;
+					checkMsg += arr3.toString() + ";";
+					checkMsg += arr3_id.toString() + ";";
+					checkMsg += arr3_pid.toString() + ";";
+					checkMsg += arr3_pcode.toString() + ";";
+					checkMsg += arr3_pcomcode.toString() + ";";
+					checkMsg += arr3_alias.toString() + ";";
+					if (arr2_protype == "" || arr2_protype == null) {
+						checkMsg += "null"
+					} else {
+						checkMsg += arr2_protype.toString() + ";";
+					}
+					checkMsg += arr2_protype.toString() + ";";
+				}
+				
+				if (flag) {
+					var templateId = null;
+					top.layer.open({
+						title : '保存为模板',
+						closeBtn : 2,
+						type : 2,
+						area : [ '500px', '400px' ],
+						shadeClass : true,
+						content : "metaquerytemplate-add.html?mtRelationId" + mtRelationId,
+						btn : [ '确定', '取消' ],
+						btnAlign : 'c',
+						closeBtn : 1,
+						success : function(layero, index) {
+							var params = {
+								"mtRelationId" : mtRelationId
+							};
+							ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/editPopupEcho", params, function(data) {
+								var metaQueryTemplateVO = data.metaQueryTemplateVO;
+								var metadataVO = data.metadataVO;
+								var doc = $(layero).find("iframe")[0].contentWindow.document;
+								$(doc).find("input[name='query_code']").val(metaQueryTemplateVO.queryCode);
+								$(doc).find("input[name='query_name']").val(metaQueryTemplateVO.queryName);
+								$(doc).find("select[name='classification']").val(metaQueryTemplateVO.queryType);
+								$(doc).find("input[name='query_describe']").val(metaQueryTemplateVO.queryDes);
+								templateId = metaQueryTemplateVO.id;
+	
+								$(doc).find("input[id='code']").val(metadataVO.metadataCode);
+								$(doc).find("input[id='name']").val(metadataVO.metadataName);
+								$(doc).find("#parentId").val($(doc).find("select[name='classification'] option:selected").text());
+							});
+						},
+						yes : function(index, layero) {
+							//按钮【确定】的回调	
+							//获取弹出框数据
+							var doc = $(layero).find("iframe")[0].contentWindow.document;
+							var code = $(doc).find("input[name='query_code']").val();
+							var name = $(doc).find("input[name='query_name']").val();
+							var type = $(doc).find("select[name='classification'] option:selected").val();
+							var typename = $(doc).find("select[name='classification'] option:selected").text();
+							var des = $(doc).find("input[name='query_describe']").val();
+	
+							//获取元数据存储部分
+							var metadatacode = $(doc).find("input[id='code']").val();
+							var metadataname = $(doc).find("input[id='name']").val();
+	
+							//获取属性
+							var propertyId = new Array();
+							var propertyValue = new Array();
+							var parent = $(layero).find("iframe")[0].contentWindow;
+							propertyId = parent.propertyId;
+							for (var i = 0; i < propertyId.length; i++) {
+								propertyValue.push($(doc).find("#" + propertyId[i]).val().trim());
+							}
+	
+							if (code == "" || code == null) {
+								alert("请输入模板代码！");
+								flag = false;
+								return false;
+							}
+							if (name == "" || name == null) {
+								alert("请输入模板名称！");
+								flag = false;
+								return false;
+							}
+							if (des == "" || des == null) {
+								alert("请输入描述内容！");
+								flag = false;
+								return false;
+							}
+							if (metadatacode == "" || metadatacode == null) {
+								alert("请输入元数据模板代码！");
+								flag = false;
+								return false;
+							}
+							if (metadataname == "" || metadataname == null) {
+								alert("请输入元数据模板名称！");
+								flag = false;
+								return false;
+							}
+	
+							var params = {
+								"operate" : "check",
+								"templateCode" : code,
+								"templateId" : templateId
+							};
+							var listcode = null;
+							ajaxSend("/bdp-web/metaqueryTemplateController/checkTemplateCode", params, function call(data) {
+								listcode = data.metaQueryTemplateVOs;
+							});
+							if (listcode != null) {
+								if (listcode.length != 0) {
+									alert("模板代码已存在，请重新输入！");
+									flag = false;
+									return;
+								}
+							}
+							if (flag) {
+								var params = {
+									"operate" : "edit",
+									"templateCode" : code,
+									"templateName" : name,
+									"templateType" : type,
+									"templateDes" : des,
+									"templateTypeName" : typename,
+									"checkMsg" : checkMsg,
+									"metadatacode" : metadatacode,
+									"metadataname" : metadataname,
+									"mtRelationId" : mtRelationId,
+									"propertyId" : propertyId,
+									"propertyValue" : propertyValue
+								};
+								ajaxSend("/bdp-web/metaqueryTemplateController/editTemplate", params, callfunction);
+							}
+							top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+							window.location.href = "/bdp-web/flexiblequery/flexiblequery-index.html?menuCode=" + menuCode;
+						},
+						btn2 : function(index, layero) {
+							//按钮【取消】的回调
+						},
+						cancel : function(index) {
+							//【右上角关闭】的回调
+						}
+					});
+				}
+	
+	
+			} else {
+				//获取数据
+				//获取业务对象的数据
+				var checkMsg = "";
+				var arr1 = new Array();
+				var arr1_id = new Array();
+				var arr1_code = new Array();
+				if ($("#businessboxobj").find("div[id='businessObj']").find("em").size() == 0) {
+					alert("请选择业务对象！");
+					flag = false;
+				} else {
+					$("#businessboxobj").find("div[id='businessObj']").find("em").each(function(i, o) {
+						var bbo = $("#businessboxobj").find("div[id='businessObj']").find("em").eq(i).text();
+						var bboid = $("#businessboxobj").find("div[id='businessObj']").find("em").eq(i).attr("id");
+						var bbcode = $("#businessboxobj").find("div[id='businessObj']").find("em").eq(i).attr("code");
+						arr1[i] = bbo;
+						arr1_id[i] = bboid;
+						arr1_code[i] = bbcode;
+					});
+				}
+				checkMsg += arr1.toString() + ";";
+				checkMsg += arr1_id.toString() + ";";
+				checkMsg += arr1_code.toString() + ";";
+	
+				//获取查询条件的数据
+				if (flag) {
+					var arr2 = new Array();
+					var arr2_id = new Array();
+					var arr2_pid = new Array();
+					var arr2_code = new Array();
+					var arr2_protype = new Array();
+					$("#queryfilterboxobj").find("div[id='queryfilter']").find("em").each(function(i, o) {
+						var qfbo = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).text();
+						var qfboid = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("id");
+						var qfbopid = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("parent");
+						var qfcode = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("code"); //加入   业务对象.code
+						var qfprotype = $("#queryfilterboxobj").find("div[id='queryfilter']").find("em").eq(i).attr("protype");
+						//	alert(qfprotype);
+						arr2[i] = qfbo;
+						arr2_id[i] = qfboid;
+						arr2_pid[i] = qfbopid;
+						arr2_code[i] = qfcode;
+						arr2_protype[i] = qfprotype;
+					});
+					//					}
+					checkMsg += arr2.toString() + ";";
+					checkMsg += arr2_id.toString() + ";";
+					checkMsg += arr2_pid.toString() + ";";
+					checkMsg += arr2_code.toString() + ";";
+				}
+	
+				//获取输出属性的数据
+				if (flag) {
+					var arr3 = new Array();
+					var arr3_id = new Array();
+					var arr3_pid = new Array();
+					var arr3_pcode = new Array();
+					var arr3_pcomcode = new Array();
+					var arr3_alias = new Array();
+					if ($("#queryAttrboxobj").find("div[id='queryAttr01']").find("em").size() == 0) {
+						alert("请添加输出属性！");
+						flag = false;
+					} else {
+						$("#queryAttrboxobj").find("div[id='queryAttr01']").children("em").each(function(i, o) {
+							//修改灵活查询后
+							var qabo = $(this).children("strong").text();
+							var qaboid = $(this).attr("id");
+							var qabopid = $(this).attr("parent");
+							var qabopcode = $(this).attr("code");
+							var qabopcomcode = $(this).attr("comcode");
+							var protype = $(this).attr("protype");
+							if (qabopcomcode == "" || qabopcomcode == null) {
+								qabopcomcode = "null";
+							}
+							var num = protype.replace(/[^0-9]/ig, "");
+							arr3[i] = qabo;
+							arr3_id[i] = qaboid;
+							arr3_pid[i] = qabopid;
+							arr3_pcode[i] = qabopcode;
+							arr3_pcomcode[i] = qabopcomcode;
+							if (num == "1") {
+								arr3_alias[i] = "datafield" + i;
+							} else if (num == "2") {
+								arr3_alias[i] = "varcfield" + i;
+							} else if (num == "3") {
+								arr3_alias[i] = "numbfield" + i;
+							}
+						//获取计算组件
+						});
+					}
+					var arr3_pcomcode2 = new Array();
+					var arr3_pcomcode3 = new Array();
+					var arr3_alias2 = new Array();
+					var arr3_alias3 = new Array();
+					var arr3_pcode2 = new Array();
+					var arr3_pcode3 = new Array();
+					for (var i = 0; i < arr3_pcomcode.length; i++) {
+						if (arr3_pcomcode[i] != "null") {
+							arr3_pcomcode2.push(arr3_pcomcode[i]);
+							arr3_alias2.push(arr3_alias[i]);
+							arr3_pcode2.push(arr3_pcode[i]);
+						} else {
+							arr3_pcomcode3.push(arr3_pcomcode[i]);
+							arr3_alias3.push(arr3_alias[i]);
+							arr3_pcode3.push(arr3_pcode[i]);
+						}
+					}
+					for (var j = 0; j < arr3_pcomcode2.length; j++) {
+						arr3_pcomcode3.push(arr3_pcomcode2[j]);
+						arr3_alias3.push(arr3_alias2[j]);
+						arr3_pcode3.push(arr3_pcode2[j]);
+					}
+					arr3_pcomcode = arr3_pcomcode3;
+					arr3_alias = arr3_alias3;
+					arr3_pcode = arr3_pcode3;
+					checkMsg += arr3.toString() + ";";
+					checkMsg += arr3_id.toString() + ";";
+					checkMsg += arr3_pid.toString() + ";";
+					checkMsg += arr3_pcode.toString() + ";";
+					checkMsg += arr3_pcomcode.toString() + ";";
+					checkMsg += arr3_alias.toString() + ";";
+					if (arr2_protype == "" || arr2_protype == null) {
+						checkMsg += "null"
+					} else {
+						checkMsg += arr2_protype.toString() + ";";
+					}
+				}
+				// return;
+				if (flag) {
+					top.layer.open({
+						title : '保存为模板',
+						closeBtn : 2,
+						type : 2,
+						area : [ '500px', '400px' ],
+						shadeClass : true,
+						content : "metaquerytemplate-add.html",
+						btn : [ '确定', '取消' ],
+						btnAlign : 'c',
+						closeBtn : 1,
+						success : function(layero, index) {},
+						yes : function(index, layero) {
+							//按钮【确定】的回调	
+							//获取弹出框数据
+							var doc = $(layero).find("iframe")[0].contentWindow.document;
+							var code = $(doc).find("input[name='query_code']").val();
+							var name = $(doc).find("input[name='query_name']").val();
+							var type = $(doc).find("select[name='classification'] option:selected").val();
+							var typename = $(doc).find("select[name='classification'] option:selected").text();
+							var des = $(doc).find("input[name='query_describe']").val();
+	
+							//获取元数据存储部分
+							var metadatacode = $(doc).find("input[id='code']").val();
+							var metadataname = $(doc).find("input[id='name']").val();
+	
+							//获取属性
+							var propertyId = new Array();
+							var propertyValue = new Array();
+							var parent = $(layero).find("iframe")[0].contentWindow;
+							propertyId = parent.propertyId;
+							for (var i = 0; i < propertyId.length; i++) {
+								propertyValue.push($(doc).find("#" + propertyId[i]).val().trim());
+							}
+	
+							if (code == "" || code == null) {
+								alert("请输入模板代码！");
+								flag = false;
+								return false;
+							}
+							if (name == "" || name == null) {
+								alert("请输入模板名称！");
+								flag = false;
+								return false;
+							}
+							if (des == "" || des == null) {
+								alert("请输入描述内容！");
+								flag = false;
+								return false;
+							}
+							if (metadatacode == "" || metadatacode == null) {
+								alert("请输入元数据模板代码！");
+								flag = false;
+								return false;
+							}
+							if (metadataname == "" || metadataname == null) {
+								alert("请输入元数据模板名称！");
+								flag = false;
+								return false;
+							}
+	
+							var params = {
+								"operate" : "check",
+								"templateCode" : code
+							};
+							var listcode = null;
+							ajaxSend("/bdp-web/metaqueryTemplateController/checkTemplateCode", params, function call(data) {
+								listcode = data.metaQueryTemplateVOs;
+							});
+							if (listcode.length != 0) {
+								alert("模板代码已存在，请重新输入！");
+								flag = false;
+								return;
+							} else {
+								flag = true;
+							}
+							if (flag) {
+								var params = {
+									"operate" : "add",
+									"templateCode" : code,
+									"templateName" : name,
+									"templateType" : type,
+									"templateDes" : des,
+									"templateTypeName" : typename,
+									"checkMsg" : checkMsg,
+									"metadatacode" : metadatacode,
+									"metadataname" : metadataname,
+									"propertyId" : propertyId,
+									"propertyValue" : propertyValue,
+									"alias" : alias
+								};
+								ajaxSend("/bdp-web/metaqueryTemplateController/addTemplate", params, callfunction);
+							}
+							top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+							window.location.href = "/bdp-web/flexiblequery/flexiblequery-index.html?menuCode=" + menuCode;
+						},
+						btn2 : function(index, layero) {
+							//按钮【取消】的回调
+						},
+						cancel : function(index) {
+							//【右上角关闭】的回调
+						}
+					});
+				}
+			}
+		})
+	
+	
+		function callfunction(data) {
+			if (data.errorCode != null || data.errorMessage != null) {
+				alert("操作失败！");
+			} else {
+				alert("操作成功！");
+			}
+		}
+		//业务对象属性
+		function businessObjPro(emId) {
+			var params = {
+				"flag" : "ObjectChange",
+				"id" : emId
+			};
+			var listProMetadataVO = null;
+			ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/queryBusinessObjectPro", params, function show(data) {
+				listProMetadataVO = data.listProMetadataVO;
+			});
+	
+			if (listProMetadataVO != null && listProMetadataVO != "") {
+				var ul = $("#chiocFieldch");
+				ul.empty();
+				if (listProMetadataVO != null) {
+					$.each(listProMetadataVO, function(i, vo) {
+						var code = null;
+						var params = {
+							"flag" : "metacode",
+							"id" : vo.parentMetadata
+						};
+						ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/queryMetadata", params, function getmetacode(data) {
+							var metadataVO = data.metadata;
+							code = metadataVO.metadataCode;
+						});
+						var allcode = code + "." + vo.metadataCode;
+						var li = $("<li draggable='true' value='1'  id=" + vo.metadataId + " parent=" + vo.parentMetadata + " code=" + allcode + " proType=" + vo.propertyValue + " isGroupField=" + vo.isGroupField + " iscalculatefield=" + vo.isCalculateField + " >" + vo.metadataName + "</li>");
+						if (vo.propertyValue != null) {
+							var split = vo.propertyValue.split("#");
+							li.attr("proType", split[1]);
+						}
+						ul.append(li);
+						if (vo.isGroupField == "yes" || vo.isCalculateField == "yes") {
+							var em = $("<i class='fa fa-trash-o selectGroupField'></i><i class='fa fa-pencil editGroundfiled'></i>");
+							li.append(em);
+						}
+	
+					});
+				}
+			}
+			//输出属性
+			chiocEm();
+			//查询条件
+			releaseCondition();
+		}
+	
+	
+		var listEmIdnew = null
+		function refreshBusinessObj(listEmId, id) {
+			if ($("#classIfication").children("option").text() == "无") {
+				var op = $("<option id='calc_obj'>计算对象</option>");
+				var opTwo = $("<option id='index' >指标</option>");
+				$("#classIfication").children("option").remove();
+				$("#classIfication").append(op);
+				$("#classIfication").append(opTwo);
+			}
+			//获取选中的类型
+			var id = $("#classIfication option:selected").attr("id");
+	
+			//alert("刷新业务对象");
+			listEmIdnew = listEmId;
+			var params = {
+				"listid" : listEmId,
+				"flag" : "businessObjectRelation",
+				"classIficationId" : id
+			};
+			var listMetadataVO = null;
+			ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/queryBusinessObjectRelation", params, busObjPro);
+		}
+	
+	
+		function busObjPro(data) {
+			var listMetadataVO = data.list;
+			var ul = $("#chiocSurface");
+			ul.empty();
+			listMetadataVO.forEach(function(e, i) {
+				var li = $("<li draggable='true' value='0' id=" + e.metadata_id + "  classId=" + e.class_id + " code=" + e.metadata_code + " >" + e.metadata_name + "</li>");
+				ul.append(li);
+			});
+			//隐藏开关
+			$('#chiocSurface').show();
+			$('#chiocFieldch').hide();
+		}
+	
+		//取消
+		$("#cancel").click(function() {
+			location.reload(true);
+		});
+		function InitInquiry() {
+			$("#querybtnobj").click();
+	
+			$("#businessboxobj").show();
+			$("#queryfilterboxobj").show();
+			$("#queryAttrboxobj").show();
+	
+			if (mtRelationId != null && mtRelationId != ""
+				&& mtRelationId != "null") {
+				var metaQueryMsgVO = null;
+				var businessObject = null;
+				var businessObjectId = null;
+				var property = null;
+				var propertyid = null;
+				var propertyParentId = null;
+				var outProperty = null;
+				var outPropertyId = null;
+				var outPropertyParentId = null;
+				var array_businessObject = new Array();
+				var array_businessObjectId = new Array();
+				var array_property = new Array();
+				var array_propertyid = new Array();
+				var array_propertyParentId = new Array();
+				var array_outProperty = new Array();
+				var array_outPropertyId = new Array();
+				var array_outPropertyParentId = new Array();
+				var array_outPropertyCode = new Array();
+				var tablelist = new Array();
+				var conditionlist = new Array();
+				var outPropertyCode = null
+	
+				var business_code = null;
+				var array_business_code = new Array();
+				var query_condit_code = null;
+				var array_query_condit_code = new Array();
+				var computing_component = null;
+				var array_computing_component = new Array();
+				var outPropertyType = null;
+				var array_outPropertyType = new Array();
+				var outPropertyAlias = null;
+				var array_outPropertyAlias = new Array();
+				var params = {
+					"mtRelationId" : mtRelationId
+				}
+				ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/metaqueryTemplate", params, function initVOs(data) {
+					metaQueryMsgVO = data.metaQueryMsgVO;
+				});
+	
+				businessObject = metaQueryMsgVO.businessObject; //获取对象
+				businessObjectId = metaQueryMsgVO.businessObjectId; //获取对象id
+				property = metaQueryMsgVO.property; //获取属性
+				propertyid = metaQueryMsgVO.propertyId; //获取属性id
+				propertyParentId = metaQueryMsgVO.propertyParentId; //获取属性对应的父id
+				outProperty = metaQueryMsgVO.outProperty; //获取输出属性
+				outPropertyId = metaQueryMsgVO.outPropertyId; //获取输出属性id
+				outPropertyParentId = metaQueryMsgVO.outPropertyParentId; //获取输出属性对应的父id
+				outPropertyCode = metaQueryMsgVO.outPropertyCode; //获取输出属性对应的code
+	
+				business_code = metaQueryMsgVO.businessCode; //获取业务对象代码
+				query_condit_code = metaQueryMsgVO.queryConditCode; //获取查询条件代码
+				computing_component = metaQueryMsgVO.computingComponent; //获取计算组件
+				outPropertyType = metaQueryMsgVO.outPropertyType; //获取输出属性字段类型
+				outPropertyAlias = metaQueryMsgVO.outPropertyAlias; //获取输出属性别名
+	
+				//返显业务对象
+				array_businessObject = businessObject.split(",");
+				array_businessObjectId = businessObjectId.split(",");
+				array_business_code = business_code.split(",");
+				var div_bo = $("#businessObj");
+				div_bo.empty();
+				var div_html_bo = "";
+				for (var i = 0; i < array_businessObject.length; i++) {
+					div_html_bo = $("<em id='" + array_businessObjectId[i].trim()
+						+ "' code=" + array_business_code[i].trim() + " ><i class='icon-remove'></i>"
+						+ array_businessObject[i].trim() + "</em>");
+					div_bo.append(div_html_bo);
+				}
+				//返显查询条件
+				if (property != null && property != undefined && property != "") {
+					array_property = property.split(",");
+					array_propertyid = propertyid.split(",");
+					array_propertyParentId = propertyParentId.split(",");
+					array_query_condit_code = query_condit_code.split(",");
+					array_outPropertyType = outPropertyType.split(",");
+				}
+				var div_qf = $("#queryfilter");
+				div_qf.empty();
+				var div_html_qf = "";
+				if (array_property != null && array_property != ""
+					&& array_property != "null") {
+					for (var i = 0; i < array_property.length; i++) {
+						div_html_qf = $("<em id='" + array_propertyid[i].trim()
+							+ "' parent='" + array_propertyParentId[i].trim()
+							+ "' code=" + array_query_condit_code[i].trim() + " protype=" + array_outPropertyType[i].trim() + " ><i class='icon-remove'></i>"
+							+ array_property[i].trim() + "</em>");
+						div_qf.append(div_html_qf);
+					}
+				}
+				//返显输出属性
+				array_outProperty = outProperty.split(",");
+				array_outPropertyId = outPropertyId.split(",");
+				array_outPropertyParentId = outPropertyParentId.split(",");
+				array_outPropertyCode = outPropertyCode.split(",");
+				array_computing_component = computing_component.split(",");
+				array_outPropertyAlias = outPropertyAlias.split(",");
+				var div_qa = $("#queryAttr01");
+				div_qa.empty();
+				var div_html_qa = "";
+				var filedType = null;
+				var isGroupOrCauField = null;
+				var param = {
+					"array_outPropertyId" : array_outPropertyId
+				};
+				ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/metaqueryOutProFieldType", param, function filed(data) {
+					filedType = data.filedType;
+					isGroupOrCauField = data.isGroupOrCauField
+				});
+				var arr_filedType = new Array();
+				filedType = filedType.split(",");
+				var filedTypeNum = new Array();
+				for (var i = 0; i < filedType.length; i++) {
+					filedTypeNum.push(filedType[i].split("#")[1]);
+				}
+	
+	
+				//排回原顺序
+				//array_computing_component
+				var array_computing_component2 = new Array();
+				var array_outPropertyCode2 = new Array();
+				for (var i = 0; i < array_computing_component.length; i++) {
+					for (var j = 0; j < array_outPropertyAlias.length; j++) {
+						var temp = array_outPropertyAlias[j].replace(/[^0-9]/ig, "");
+						if (i == temp) {
+							array_computing_component2.push(array_computing_component[j]);
+							array_outPropertyCode2.push(array_outPropertyCode[j]);
+						}
+					}
+				}
+				array_computing_component = array_computing_component2;
+				array_outPropertyCode = array_outPropertyCode2;
+				for (var i = 0; i < array_outProperty.length; i++) {
+					// 加载计算组件
+					newFiledTemp = isGroupOrCauField[i];
+					var params = {
+						"flag" : "calculateIndexRule"
+					};
+					ajaxSend("/bdp-web/metaqueryTemplateDefinitionController/calculateIndexRule", params, initAssembly);
+	
+					div_html_qa = $("<em id='" + array_outPropertyId[i].trim() + "' parent='" + array_outPropertyParentId[i].trim() + "' code='" + array_outPropertyCode[i].trim() + "' comcode=" + array_computing_component[i].trim() + " protype=" + filedTypeNum[i] + "  ></em>");
+					div_qa.append(div_html_qa);
+					var Strong = $("<strong>" + array_outProperty[i].trim() + "</strong>");
+					div_html_qa.append(Strong);
+					var emTwo = $("<em  class='icon-angle-down' </em>");
+					Strong.append(emTwo);
+					var iTwo = $("<i class='icon-remove'> </i>");
+					Strong.append(iTwo);
+					var ul = $("<ul class='attrshow01'></ul>");
+					ul.append(creamElm);
+					div_html_qa.append(ul);
+				}
+				addTh();
+				refresh();
+			}
+		}
+	
+		$(function() {
+			mtRelationId = GetQueryString("mtRelationId");
+			if (mtRelationId != "" && mtRelationId != null) {
+				InitInquiry();
+	
+			}
+		});
+		function addTh() {
+			var codeArr = [];
+			var tdCode = [];
+			headList.innerHTML = "";
+			$("#queryAttr01").children("em").each(function() {
+				var codeAttr = $(this).attr("comcode");
+				codeArr.push(codeAttr);
+			});
+			for (var i = 0; i < queryAttrEm.length; i++) {
+				var oTh = document.createElement('th');
+				if (codeArr[i] != "" && codeArr[i] != "null") {
+					tdCode.push(queryAttrEm[i].innerText);
+				} else {
+	
+					oTh.innerHTML = queryAttrEm[i].innerText;
+					headList.appendChild(oTh);
+				}
+			}
+			if (tdCode != "" || tdCode != null) {
+				for (var j = 0; j < tdCode.length; j++) {
+					var oTh = document.createElement('th');
+					oTh.innerHTML = tdCode[j];
+					headList.appendChild(oTh);
+				}
+			}
+		}
+	
+		$("#btncancel").click(function() {
+			$("#queryAttr01").empty();
+			$("#queryfilter").empty();
+			$("#businessObj").empty();
+			$("#queryAttrboxobj").hide();
+			$("#queryfilterboxobj").hide();
+			//隐藏分组
+			$(".disnone").hide();
+			var params = {
+				"flag" : "newBusinessObject"
+			};
+			initLeftMenu(params);
+			addTh();
+			refresh();
+		});
+		//关联删除
+		//取消
+		$(document).on("click", "#node--3", function() {
+			var text = $(this).parent("ul").parent("em").children("strong").text().split("(");
+			$(this).parent("ul").parent("em").children("strong").text(text[0]);
+			$(this).parent("ul").parent("em").attr("comcode", "");
+			$(this).parent("ul").parent("em").children("strong").append($("<em class='icon-angle-down'></em>"));
+			$(this).parent("ul").parent("em").children("strong").append($("<i class='icon-remove'></i>"));
+			addTh();
+		});
+	
+		//设置属性信息
+		var alias = null; //别名
+		$(document).on("click", "#node--2", function() {
+			$("#alias").val("");
+			var text = $(this);
+			//$("#node-2").on("click",function(){
+			//console.log("111");
+			var main = $("#attrshow");
+			layer.open({
+				title : '设置属性信息',
+				closeBtn : 2,
+				type : 1,
+				area : [ '430px', '280px' ],
+				shadeClass : true,
+				content : main,
+				btn : [ '确定', '取消' ],
+				btnAlign : 'c',
+				closeBtn : 1,
+				yes : function(index, layero) {
+	
+					alias = $("#alias").val();
+					if (alias == "" || alias == null || alias == undefined) {
+						alert("请输入别名！");
+						return;
+					}
+					text.parent("ul").parent("em").children("strong").text(alias);
+					text.parent("ul").parent("em").children("strong").append($("<em class='icon-angle-down'></em>"));
+					text.parent("ul").parent("em").children("strong").append($("<i class='icon-remove'></i>"));
+					addTh();
+					layer.close(index); //如果设定了yes回调，需进行手工关闭
+	
+	
+					$(".attrshow").hide();
+				},
+				btn2 : function(index, layero) {
+					$(".attrshow").hide();
+				},
+				cancel : function(index, layero) {
+					layer.close(index);
+					$(".attrshow").hide();
+				}
+			});
+		});
+		//选择业务对象分类
+		function objType() {
+			refresh();
+			buObjPro();
+		}
+	
+		//计算字段（多目计算）
+		$("#filedShowconent").on("click", function() {
+			calculateFieldMange(metaPraentId, null, "flexibleQuery");
+		});
+	
+		//编辑自定义字段
+		$(document).on("click", ".editGroundfiled", function() {
+			var editId = $(this).parent("li").attr("id").replace(/[^0-9]/ig, "");
+			var groupFieldFlag = $(this).parent("li").attr("isGroupField");
+			var calculateFieldFlag = $(this).parent("li").attr("iscalculatefield");
+			if (groupFieldFlag == "yes") {
+				groupFieldMange(metaPraentId, editId, "flexibleQuery");
+			} else if (calculateFieldFlag == "yes") {
+				calculateFieldMange(metaPraentId, editId, "flexibleQuery");
+			}
+		});
+	
+		//删除自定义字段
+		$(document).on("click", ".selectGroupField", function() {
+	
+			var delId = $(this).parent("li").attr("id").replace(/[^0-9]/ig, "");
+			var groupFieldFlag = $(this).parent("li").attr("isGroupField");
+			var calculateFieldFlag = $(this).parent("li").attr("iscalculatefield");
+			if (groupFieldFlag == "yes") {
+				delGroupFiled(metaPraentId, delId, "flexibleQuery");
+			} else if (calculateFieldFlag == "yes") {
+				removeCalculateField(metaPraentId, delId, "flexibleQuery");
+			}
+	
+		});
+	
+		//分组字段
+		$("#grounBtn").click(function() {
+			var flagTemp = "flexibleQuery";
+			groupFieldMange(metaPraentId, null, "flexibleQuery");
+		})
+	</script>
+</body>
+</html>
+<!-- 设置属性信息 star -->
+<div class="dialog-defin" id="attrshow" style="display:none;">
+	<div class="select-show">
+		<table class="dialogcon">
+			<tr>
+				<th>设置属性别名:</th>
+				<td><input type="text" class="form-control"
+					onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"
+					id="alias"></td>
+			</tr>
+			</tr>
+			-->
+		</table>
+	</div>
+</div>
+
+
+
+
+

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>简易图表定义</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="/bdp-web/workbench/header.shtml"-->
+	<!-- 中间内容 -->
+	<div class="section-wrap">
+		<div class="section-main">
+			<!-- 左边菜单 star-->
+			<div class="leftContent">
+				<div class="selectbox">
+					<div class="selec-table">
+						<h3>
+							工作表
+						</h3>
+						<div class="tableSearch">
+							<p>
+								<i id="select-search-btntable">
+									<img src="../resource/img/query-ico.png">
+								</i>
+								<input type="text" name="tableSearchInput" id="tableSearchInput">
+							</p>							
+						</div>
+						<div class="leftshowbox" id="tableMenu">
+						</div>
+					</div>
+				</div>
+				<div class="selectbox">
+					<h3>字段</h3>
+					<div class="select-search">
+						<p>
+							<i id="select-search-btn">
+								<img src="../resource/img/query-ico.png">
+							</i>
+							<input type="text" name="select-search" id="select-search-text">
+						</p>
+					</div>
+					<div class="select-list">
+						<ul id="selectList">
+							<!-- <li draggable="true" value="1"><i class="fa fa-calendar-o"></i><span>贷款明细查询表</span></li> -->
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 左边菜单 end-->
+			<!-- 中间内容 star-->
+			<div class="centerContent">
+				<div class="rule-title">
+					<span>查询定义</span>
+					<p class="btnquery">						
+						<button type="button" class="btn btn-default" id="btnsave">
+							<img src="../resource/img/query-ico5.png"> 保存
+						</button>
+						<button type="button" class="btn btn-default" id="btnback">
+							<img src="../resource/img/query-ico7.png"> 返回
+						</button>
+					</p>
+				</div>
+				<div class="rule">
+					<div class="rule-con">
+						<span>业务对象</span>
+						<div class="rule-con-list">
+							<ul id="treeObj"></ul>
+						</div>
+						<em><i class="fa fa-angle-double-up"></i><b>收缩</b></em> <b
+							class="clearAttr" id='treeBtn'><i class="fa fa-trash-o"></i> 清空</b>
+					</div>
+					<div class="rule-con">
+						<span>维度<!-- <i></i> --></span>
+						<div class="rule-con-list">
+							<ul id="dimen"></ul>
+						</div>
+						<em><i class="fa fa-angle-double-up"></i><b>收缩</b></em> <b
+							class="clearAttr"><i class="fa fa-trash-o"></i> 清空</b>
+					</div>
+					<div class="rule-con">
+						<span>输出对象<!-- <i></i> --></span>
+						<div class="rule-con-list">
+							<ul id="outAttr"></ul>
+						</div>
+						<em><i class="fa fa-angle-double-up"></i><b>收缩</b></em> <b
+							class="clearAttr"><i class="fa fa-trash-o"></i> 清空</b>
+					</div>
+					<div class="rule-con">
+						<span>图表类型</span>
+						<div class="rule-con-list">
+							<ul class="charttype" id="charttype">
+								<li type="line" value="line-chart" title="折线图" class="current"><img alt="line-chart" src="../resource/img/line-chart.png"></li>
+								<li type="pie" value="pie-chart" title="饼状图"><img alt="pie-chart" src="../resource/img/pie-chart.png"></li>
+								<li type="line" value="area-chart" title="区域图"><img alt="area-chart" src="../resource/img/area-chart.png"></li>
+								<li type="bar" value="bar-chart" title="柱状图"><img alt="bar-chart" src="../resource/img/bar-chart.png"></li>
+								<li type="radar" value="radar-chart" title="雷达图"><img alt="radar-chart" src="../resource/img/radar-chart.png"></li>
+								<li type="bar" value="columnar-chart" title="条形图"><img alt="columnar-chart" src="../resource/img/columnar-chart.png"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="rule-content">
+					<div class="rule-screen" id="ruleScreen">
+						<h3>
+							筛选器<b class="clearAttr"><i class="fa fa-trash-o"></i> 清空</b>
+						</h3>
+					</div>
+					<div class="rule-detail">
+						<div class="rule-detailList" id="chartType" style="height:100%;min-height:400px;">
+							
+						</div>
+					</div>
+				</div>
+
+			</div>
+			<!-- 中间内容 end-->
+		</div>
+	</div>
+	<!-- 保存模板弹窗star -->
+	<div class="showbox" id="saveEasy" style="display:none">
+		<div class="show-form">
+			<table class="item-table">
+				<tbody>
+					<tr style="display:none">
+						<th>metadata_id：</th>
+						<td><input type="text" id="metadata_id" name="metadata_id"
+							class="form-control"></td>
+					</tr>
+					<tr style="display:none">
+						<th>图表代码：</th>
+						<td><input type="text" id="chart_code"
+							onkeyup="checkInput(this)" name="chart_code" class="form-control"><em
+							class="tip"><i>*</i> 只能输入中文、数字、字母以及下划线</em></td>
+					</tr>
+					<tr>
+						<th>图表名称：</th>
+						<td><input type="text" id="chart_name"
+							onkeyup="checkInput(this)" class="form-control"><em
+							class="tip"><i>*</i> 只能输入中文、数字、字母以及下划线</em></td>
+					</tr>
+					<tr>
+						<th>图表类型：</th>
+						<td><select id="chart_catalog_id" class="form-control">
+						</select></td>
+					</tr>
+					<tr>
+						<th>图表描述：</th>
+						<td><textarea id="chart_des" name="chart_des" class="form-control"></textarea></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 保存模板弹窗end -->
+	<!-- 全选star -->
+	<!-- <div class="showbox" id="selectAllFiled" style="display:none">
+		<div class="selectAllCon">
+			<div class="easy-select-filed" id="filedTime">
+				<span><label><input type="checkbox" value="0">
+						<i class="fa fa-file-text"></i> 日期</label></span>
+				<div></div>
+			</div>
+			<div class="easy-select-filed" id="filedNum">
+				<span><label><input type="checkbox" value="0">
+						<i class="fa fa-file-text"></i> 数值</label></span>
+				<div></div>
+			</div>
+			<div class="easy-select-filed" id="filedText">
+				<span><label><input type="checkbox" value="0">
+						<i class="fa fa-file-text"></i> 文本</label></span>
+				<div></div>
+			</div>
+		</div>
+	</div> -->
+	<!-- 多选end -->
+	<!-- 设置别名star -->
+	<div class="showbox" id="setAliasz" style="display:none">
+		<div class="show-form">
+			<table class="item-table">
+				<tbody>
+					<tr>
+						<th>别名：</th>
+						<td><input type="text" id="setAliaszInput"
+							class="form-control"><em class="tip"><i>*</i>
+								只能以字母、中文或者下划线开头</em></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 设置别名end -->
+	<!-- 设置字段格式star -->
+	<div class="showbox" id="fieldformat" style="display:none">
+		<div class="show-form">
+			<table class="item-table">
+				<tbody>
+					<tr>
+						<td><input type="text" name="field_decimal_point" class="form-control pointInput">位小数</td>
+					</tr>
+					<tr>
+						<td><label><input type="checkbox" name="field_unit_limit">设置单位</label></td>
+					</tr>
+					<tr>
+						<td><label><input type="checkbox" name="show_form">千分位</label></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 设置字段格式end -->
+	<!-- 筛选器设置star -->
+	<div class="showbox" id="screenformat" style="display:none">
+		<div class="show-form">
+			<table class="item-table screenformat">
+				<tbody id="screenData">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 筛选器设置end -->
+	<!-- 分段计算star -->
+	<div class="showbox sectionwrap" id="section" style="display:none">
+		<div class="show-form">
+			<div class="sectionwrap">			
+				<div class="sectioncon">
+					<span>条件：</span>
+					<div>
+					</div>
+				</div>
+				<!-- <p><span>其他:</span><input class="form-control" autocomplete="off"></p> -->
+			</div>
+		</div>
+	</div>
+	<!-- 分段计算end -->
+	
+	<!-- 遮罩 -->
+	<div id="load">
+		<span class="checkshow"><img src="../resource/img/load-mon.gif"><em>请稍后，数据处理中....</em></span>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var params = {};
+			ajaxSend("/bdp-web/chartCatalog/select", params, function(data) {
+			//console.log(JSON.stringify(data)+'@@@')
+				var select = $("#chart_catalog_id");
+				$.each(data.list, function(j, e) {
+					var options = $("<option chart_catalog_code='"+e.chart_catalog_code+"' value='" + e.chart_catalog_id + "'>" + e.chart_catalog_name + "</option>");
+					select.append(options);
+				});
+			});
+		});
+	</script>	
+	<script type="text/javascript" src="../resource/js/attrModel.js"></script>
+	<script type="text/javascript" src="../resource/js/easychart/drapPublic.js"></script>
+	<script type="text/javascript" src="../resource/js/easychart/easychartdefine.js"></script>
+	<script type="text/javascript" src="../resource/js/drag-arrange.js"></script>
+	<script type="text/javascript" src="../resource/js/check.js"></script>
+	<!-- <script type="text/javascript" src="../resource/js/easychart/easycharttype.js"></script> -->
+</body>
+</html>

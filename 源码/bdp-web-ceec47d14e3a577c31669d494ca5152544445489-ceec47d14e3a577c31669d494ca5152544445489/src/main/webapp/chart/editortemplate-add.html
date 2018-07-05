@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>保存为模板</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+<script type="text/javascript">
+	var index =0 ;
+	$(document).ready(function($) {
+		index = 0;	//重置
+		var params = {"flag":"metamodelClassPropertyVO"};
+		//ajaxSend("/pms-web/ajax/ajaxQueryChartTemplatePropertyAction",params,showProperty);
+		ajaxSend("/bdp-web/metaqueryChartTemplateController/saveChartTemplatePopupPro",params,showProperty);
+		$("#parentId").val($("select[name='chart_classific'] option:selected").text());
+	});
+	
+	function success(data){
+		$("#parentId").attr("value",data.metadataVO.name);
+	}
+	
+	var propertyId = new Array();
+	function showProperty(data){
+		var mList = data.mList;
+		var table = $("#property");
+//		var vos = data.vos;
+		var lists = data.lists;
+
+		table.empty();
+		propertyId.length = 0;
+		$.each(mList, function(i,metamodelClassPropertyVO){
+		if(metamodelClassPropertyVO.isshow=="否"){//是否显示
+		}else{
+			propertyId.push(metamodelClassPropertyVO.propertyId);
+			if(metamodelClassPropertyVO.editcontrolName=="下拉框"){
+				var tr=$("<tr></tr>");
+	        	tr.appendTo(table);
+	        	var th = $("<th>"+metamodelClassPropertyVO.propertyName+":</th>");
+	        	th.appendTo(tr);
+	        	var td = $("<td>"+"</td>");
+	        	td.appendTo(tr);
+	        	var select;
+				var options;
+				select =$("<select class='form-control' id='"+metamodelClassPropertyVO.propertyId+"' name='"+metamodelClassPropertyVO.propertyCode+"' onchange='choose()' >" + "</select>");
+/*
+				$.each(vos, function(j, e) {
+					options = $("<option value='"+e.id+"'>"+e.name+"</option>");
+					select.append(options);
+				});
+*/				
+				var vos = chooseOne(lists);
+				$.each(vos, function(j, e) {
+					options = $("<option value='"+e.metadataId+"'>"+e.metadataName+"</option>");
+					select.append(options);
+				});				
+	        	select.appendTo(td);
+			}else{
+				var tr=$("<tr></tr>");
+	        	tr.appendTo(table);
+	        	var th = $("<th>"+metamodelClassPropertyVO.propertyName+":</th>");
+	        	th.appendTo(tr);
+	        	var td = $("<td>"+"</td>");
+	        	td.appendTo(tr);
+	        	var input = $("<input type='text' class='form-control' id='"+metamodelClassPropertyVO.propertyId+"' name='"+metamodelClassPropertyVO.propertyCode+"'>"+"</input>");
+	        	input.appendTo(td);		
+			}
+        }
+		});
+	}
+</script>
+</body>
+</html>
+<div class="dialog" id="addTemplate">
+   <h3 class="title-basic ml mt"><em>属性信息</em></h3>
+   <table id="property"></table>
+   <h3 class="title-basic ml mt"><em>基本信息</em></h3>
+   <table>
+      <tr>
+         <th>元数据代码:</th>
+         <td><input type="text" class="form-control" id="code"></td>
+      </tr>
+      <tr>
+         <th>元数据名称:</th>
+         <td><input type="text" class="form-control" id="name"></td>
+      </tr>
+      <tr>
+         <th>上下文路径:</th>
+         <td><input type="text" class="form-control" readonly id="parentId"></td>
+      </tr>
+   </table>
+</div>
+<script type="text/javascript">
+	function choose(){
+		$("#parentId").val($("select[name='chart_classific'] option:selected").text());
+	}
+	
+	function chooseOne(obj){
+		var arr = new Array();
+		arr = obj;
+		var data = arr[index];
+		index++;
+		return data;
+	}
+</script>

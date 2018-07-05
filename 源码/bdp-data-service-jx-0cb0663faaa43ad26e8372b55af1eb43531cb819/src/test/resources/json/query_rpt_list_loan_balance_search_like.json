@@ -1,0 +1,586 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "rpt_list_loan_balance_search",
+    "if_count": true,
+    "fields": [
+        {
+            "name": "teller_id"
+        },
+        {
+            "name": "unit_id"
+        },
+        {
+            "name": "ou_nm"
+        },
+        {
+            "name": "loan_bargain_id"
+        },
+        {
+            "name": "loan_account"
+        },
+        {
+            "name": "due_bill_id"
+        },
+        {
+            "name": "subject_id"
+        },
+        {
+            "name": "apply_id"
+        },
+        {
+            "name": "protocol_id"
+        },
+        {
+            "name": "approve_id"
+        },
+        {
+            "name": "rh_sn_classify_nm"
+        },
+        {
+            "name": "rh_sn_classify"
+        },
+        {
+            "name": "trade_type_nm"
+        },
+        {
+            "name": "trade_type"
+        },
+        {
+            "name": "business_line"
+        },
+        {
+            "name": "business_line_nm"
+        },
+        {
+            "name": "tel_contact"
+        },
+        {
+            "name": "loan_type"
+        },
+        {
+            "name": "loan_type_nm"
+        },
+        {
+            "name": "loan_product_id"
+        },
+        {
+            "name": "product_name"
+        },
+        {
+            "name": "kind_type"
+        },
+        {
+            "name": "bdw_cl_id"
+        },
+        {
+            "name": "kind_type_nm"
+        },
+        {
+            "name": "loan_mode"
+        },
+        {
+            "name": "loan_mode_nm"
+        },
+        {
+            "name": "capital_type"
+        },
+        {
+            "name": "card_kind"
+        },
+        {
+            "name": "customer_id"
+        },
+        {
+            "name": "cust_name"
+        },
+        {
+            "name": "paper_type"
+        },
+        {
+            "name": "paper_type_nm"
+        },
+        {
+            "name": "id_card"
+        },
+        {
+            "name": "customer_type"
+        },
+        {
+            "name": "customer_type_nm"
+        },
+        {
+            "name": "enter_scope"
+        },
+        {
+            "name": "assure_name"
+        },
+        {
+            "name": "mortagege_name"
+        },
+        {
+            "name": "impawn_name"
+        },
+        {
+            "name": "assure_type"
+        },
+        {
+            "name": "loan_invest"
+        },
+        {
+            "name": "loan_invest_nm"
+        },
+        {
+            "name": "loan_use"
+        },
+        {
+            "name": "loan_use_kind"
+        },
+        {
+            "name": "loan_amount"
+        },
+        {
+            "name": "owe_int"
+        },
+        {
+            "name": "loan_time_kind"
+        },
+        {
+            "name": "loan_time_kind_nm"
+        },
+        {
+            "name": "loan_time"
+        },
+        {
+            "name": "loan_date"
+        },
+        {
+            "name": "interst_date"
+        },
+        {
+            "name": "pre_end_bate"
+        },
+        {
+            "name": "end_date"
+        },
+        {
+            "name": "int_end_date"
+        },
+        {
+            "name": "return_type"
+        },
+        {
+            "name": "auto_return_flag"
+        },
+        {
+            "name": "re_account"
+        },
+        {
+            "name": "int_way"
+        },
+        {
+            "name": "int_way_nm"
+        },
+        {
+            "name": "int_tz_type"
+        },
+        {
+            "name": "currency"
+        },
+        {
+            "name": "currency_nm"
+        },
+        {
+            "name": "loan_balance"
+        },
+        {
+            "name": "overdue_amount"
+        },
+        {
+            "name": "overdue_int"
+        },
+        {
+            "name": "return_cycle"
+        },
+        {
+            "name": "state5"
+        },
+        {
+            "name": "state5_t"
+        },
+        {
+            "name": "state5_nm"
+        },
+        {
+            "name": "state10"
+        },
+        {
+            "name": "credit_level"
+        },
+        {
+            "name": "interest_conr"
+        },
+        {
+            "name": "interest"
+        },
+        {
+            "name": "interest_mode"
+        },
+        {
+            "name": "sex"
+        },
+        {
+            "name": "comm_dz_code"
+        },
+        {
+            "name": "comm_dz"
+        },
+        {
+            "name": "comm_dz_xx"
+        },
+        {
+            "name": "comm_addr_tx"
+        },
+        {
+            "name": "comm_addr_jy"
+        },
+        {
+            "name": "comm_addr_dw"
+        },
+        {
+            "name": "check_teller"
+        },
+        {
+            "name": "main_check_teller"
+        },
+        {
+            "name": "teller_manage"
+        },
+        {
+            "name": "teller_manage_nm"
+        },
+        {
+            "name": "main_teller_id"
+        },
+        {
+            "name": "teller_sc"
+        },
+        {
+            "name": "teller_sp"
+        },
+        {
+            "name": "comp_holding_type"
+        },
+        {
+            "name": "income_type"
+        },
+        {
+            "name": "state"
+        },
+        {
+            "name": "state_t"
+        },
+        {
+            "name": "state_nm"
+        },
+        {
+            "name": "wt_state"
+        },
+        {
+            "name": "qs_state_nm"
+        },
+        {
+            "name": "qs_state"
+        },
+        {
+            "name": "st_flag"
+        },
+        {
+            "name": "aj_flag"
+        },
+        {
+            "name": "loan_bn_balance"
+        },
+        {
+            "name": "loan_bw_balance"
+        },
+        {
+            "name": "last_hbx_date"
+        },
+        {
+            "name": "last_loan_balance"
+        },
+        {
+            "name": "last_loan_interest"
+        },
+        {
+            "name": "job"
+        },
+        {
+            "name": "nation"
+        },
+        {
+            "name": "zq_account"
+        },
+        {
+            "name": "interest_range"
+        },
+        {
+            "name": "record_state_nm"
+        },
+        {
+            "name": "record_state"
+        },
+        {
+            "name": "leg_unit"
+        },
+        {
+            "name": "last_date"
+        },
+        {
+            "name": "state5_main_body"
+        },
+        {
+            "name": "expire_date_money"
+        },
+        {
+            "name": "expire_date_rights"
+        },
+        {
+            "name": "expire_times"
+        },
+        {
+            "name": "assure_type_classify"
+        },
+        {
+            "name": "assure_type_clsify_nm"
+        },
+        {
+            "name": "enterprise_type"
+        },
+        {
+            "name": "small_flag"
+        },
+        {
+            "name": "isplat_flag"
+        },
+        {
+            "name": "individuality_flag"
+        },
+        {
+            "name": "post_quality"
+        },
+        {
+            "name": "town_type"
+        },
+        {
+            "name": "balance_count"
+        },
+        {
+            "name": "int_count"
+        },
+        {
+            "name": "unit_flag"
+        },
+        {
+            "name": "transfer_bitch"
+        },
+        {
+            "name": "old_teller"
+        },
+        {
+            "name": "interest_end_date"
+        },
+        {
+            "name": "deal_channel"
+        },
+        {
+            "name": "int_type"
+        },
+        {
+            "name": "int_type_nm"
+        },
+        {
+            "name": "last_year_balance"
+        },
+        {
+            "name": "last_month_balance"
+        },
+        {
+            "name": "sh_deduct_amount"
+        },
+        {
+            "name": "real_deduct_amount"
+        },
+        {
+            "name": "sh_deduct_int"
+        },
+        {
+            "name": "real_deduct_int"
+        },
+        {
+            "name": "sh_deduct_cp"
+        },
+        {
+            "name": "real_deduct_cp"
+        },
+        {
+            "name": "sh_deduct_pun"
+        },
+        {
+            "name": "real_deduct_pun"
+        },
+        {
+            "name": "last_deduct_date"
+        },
+        {
+            "name": "deduct_date"
+        },
+        {
+            "name": "next_deduct_date"
+        },
+        {
+            "name": "standby1"
+        },
+        {
+            "name": "standby2"
+        },
+        {
+            "name": "standby3"
+        },
+        {
+            "name": "standby4"
+        },
+        {
+            "name": "standby5"
+        },
+        {
+            "name": "standby6"
+        },
+        {
+            "name": "standby7"
+        },
+        {
+            "name": "home_addr_sheng"
+        },
+        {
+            "name": "home_addr_sheng_nm"
+        },
+        {
+            "name": "home_addr_shi"
+        },
+        {
+            "name": "home_addr_shi_nm"
+        },
+        {
+            "name": "home_addr_xian"
+        },
+        {
+            "name": "home_addr_xian_nm"
+        },
+        {
+            "name": "home_addr_xiang"
+        },
+        {
+            "name": "home_addr_xiang_nm"
+        },
+        {
+            "name": "home_addr_cun"
+        },
+        {
+            "name": "home_addr_cun_nm"
+        },
+        {
+            "name": "home_addr_zu"
+        },
+        {
+            "name": "home_addr_zu_nm"
+        },
+        {
+            "name": "re_account1"
+        },
+        {
+            "name": "re_account2"
+        },
+        {
+            "name": "balance1"
+        },
+        {
+            "name": "balance2"
+        },
+        {
+            "name": "on_int"
+        },
+        {
+            "name": "last_month_on_int"
+        },
+        {
+            "name": "last_month_owe_int"
+        },
+        {
+            "name": "agr_body"
+        },
+        {
+            "name": "agr_body_nm"
+        },
+        {
+            "name": "apply_unit"
+        },
+        {
+            "name": "are_id"
+        },
+        {
+            "name": "area_name"
+        },
+        {
+            "name": "xy_teller"
+        },
+        {
+            "name": "last_owe_int"
+        },
+        {
+            "name": "int_rate"
+        },
+        {
+            "name": "register_date"
+        },
+        {
+            "name": "first_jc_end_date"
+        },
+        {
+            "name": "first_jc_fact_date"
+        },
+        {
+            "name": "cur_common_end_date"
+        },
+        {
+            "name": "last_common_end_date"
+        },
+        {
+            "name": "last_common_fact_date"
+        },
+        {
+            "name": "dhjc_warn_count"
+        },
+        {
+            "name": "loan_amount_interest"
+        },
+        {
+            "name": "sn_flag"
+        },
+        {
+            "name": "cb_flag"
+        }
+    ],
+    "conditions": [
+        {
+            "and": [
+                {
+                    "field1": "data_date",
+                    "cond": "=",
+                    "value1": "20171017"
+                } ]
+        }
+    ]
+}

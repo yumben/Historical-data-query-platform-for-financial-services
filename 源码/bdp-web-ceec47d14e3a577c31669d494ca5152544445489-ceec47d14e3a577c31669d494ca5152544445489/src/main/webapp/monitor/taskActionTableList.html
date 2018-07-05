@@ -1,0 +1,612 @@
+﻿<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>监控调度系统</title>
+</head>
+<body>
+
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap">
+		<div class="contentbox">
+			<div class="title-query" data-genuitec-lp-enabled="false"
+				data-genuitec-file-id="wc1-13"
+				data-genuitec-path="/control-service/src/main/webapp/demo/taskActionTableList.html">
+				<em>任务动作列表</em>
+			</div>
+			<div class="contentload">
+				<div class="detailList-form" id="vueArea">
+					<div class="text-form">
+						<button class="btn btn-primary" type="type"
+							class="btn btn-primary" id="javaBtn" onClick="selectType('java')">JAVA</button>
+						<button class="btn btn-primary" type="type"
+							class="btn btn-primary" id="sqlBtn" onClick="selectType('sql')">SQL</button>
+						<button class="btn btn-primary" type="type"
+							class="btn btn-primary" id="shellBtn"
+							onClick="selectType('shell')">shell</button>
+						<button class="btn btn-primary" type="type"
+							class="btn btn-primary" id="batBtn" onClick="selectType('bat')">bat</button>
+						<span class="addbtn fr" id="batBtn" onClick="addTaskAction()"
+							title="新增"></span>
+						<!-- <button class="btn btn-primary fr" type="type"
+							class="btn btn-primary" id="batBtn" onClick="addTaskAction()">添加</button> -->
+					</div>
+
+					<div class="table-form">
+						<table id="table" data-id-field="actionId"
+							class="table table-striped table-hover">
+							<thead>
+								<tr>
+									<th data-field="actionName">动作名称</th>
+									<th data-field="actionType">动作类型</th>
+									<th data-field="actionRemark">备注</th>
+									<th data-field="actionId" data-formatter="operateFormatter">操作</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div class="text-center">
+						<ul class="pagination pagination-centered" id="page"></ul>
+					</div>
+
+					<!-- 添加弹窗 -->
+					<div class="showbox" id="Addbox" style="display: none;">
+						<div class="show-form">
+							<div v-if="addTaskActionList!=''">
+								<table class="item-table">
+									<tbody>
+										<tr>
+											<th>动作名称：</th>
+											<td><input value="{{addTaskActionList.actionName}}"
+												v-model="addTaskActionList.actionName" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>动作备注：</th>
+											<td><input value="{{addTaskActionList.actionRemark}}"
+												v-model="addTaskActionList.actionRemark" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>动作类型：</th>
+											<td><select class="form-control select-control"
+												v-model="addTaskActionList.actionType">
+													<option value="">请选择</option>
+													<option value="java">java</option>
+													<option value="sql">sql</option>
+													<option value="shell">shell</option>
+													<option value="bat">bat</option>
+											</select></td>
+										</tr>
+									</tbody>
+									<tbody v-if="addTaskActionList.actionType == 'java'">
+										<tr>
+											<th>类全名：</th>
+											<td><input value="{{addTaskActionList.classFullName}}"
+												v-model="addTaskActionList.classFullName" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>方法名：</th>
+											<td><input value="{{addTaskActionList.method}}"
+												v-model="addTaskActionList.method" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="addTaskActionList.actionType == 'sql'">
+										<tr>
+											<th>数据库链接串：</th>
+											<td><input value="{{addTaskActionList.jdbcConId}}"
+												v-model="addTaskActionList.jdbcConId" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>sql语句：</th>
+											<td><input value="{{addTaskActionList.jdbcCommand}}"
+												v-model="addTaskActionList.jdbcCommand" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>存储过程名称：</th>
+											<td><input value="{{addTaskActionList.jdbcProcedure}}"
+												v-model="addTaskActionList.jdbcProcedure" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库驱动：</th>
+											<td><input value="{{addTaskActionList.jdbcDriver}}"
+												v-model="addTaskActionList.jdbcDriver" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库登录用户名：</th>
+											<td><input value="{{addTaskActionList.jdbcUsername}}"
+												v-model="addTaskActionList.jdbcUsername" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库登录密码：</th>
+											<td><input value="{{addTaskActionList.jdbcPassword}}"
+												v-model="addTaskActionList.jdbcPassword" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>sql语句类型：</th>
+											<td><select class="form-control select-control"
+												v-model="addTaskActionList.jdbcSqlType">
+													<!-- <option value="">请选择</option> -->
+													<option value="Q">query查询</option>
+													<option value="E">execute执行</option>
+													<option value="P">Procedure存储过程</option>
+											</select></td>
+										</tr>
+									</tbody>
+									<tbody v-if="addTaskActionList.actionType == 'bat'">
+										<tr>
+											<th>bat文件名称：</th>
+											<td><input value="{{addTaskActionList.batName}}"
+												v-model="addTaskActionList.batName" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>bat执行目录：</th>
+											<td><input value="{{addTaskActionList.batDir}}"
+												v-model="addTaskActionList.batDir" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>bat超时时间：</th>
+											<td><input
+												onkeypress="return event.keyCode >= 49 && event.keyCode <= 57"
+												value="{{addTaskActionList.batTimeout}}"
+												v-model="addTaskActionList.batTimeout" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="addTaskActionList.actionType == 'shell'">
+										<tr>
+											<th>shell脚本名称：</th>
+											<td><input value="{{addTaskActionList.shellCommand}}"
+												v-model="addTaskActionList.shellCommand" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell脚本所在机器ip：</th>
+											<td><input value="{{addTaskActionList.shellIp}}"
+												v-model="addTaskActionList.shellIp" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell用户：</th>
+											<td><input value="{{addTaskActionList.shellPassword}}"
+												v-model="addTaskActionList.shellPassword" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell密码：</th>
+											<td><input value="{{addTaskActionList.shellUsername}}"
+												v-model="addTaskActionList.shellUsername" type="text"
+												name="" class="form-control"></td>
+										</tr>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+					<!-- 详情弹窗 -->
+					<div class="showbox" id="showDetailbox" style="display: none;">
+						<div class="show-form">
+							<div v-if="detailList!=''">
+								<table class="item-table">
+									<tbody>
+										<tr>
+											<th>动作名称：</th>
+											<td><input disabled="true "
+												title="{{detailList.actionName}}"
+												value="{{detailList.actionName}}"
+												v-model="detailList.actionName" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>动作类型：</th>
+											<td><input disabled="true "
+												title="{{detailList.actionType}}"
+												value="{{detailList.actionType}}"
+												v-model="detailList.actionType" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>动作备注：</th>
+											<td><input disabled="true "
+												title="{{detailList.actionRemark}}"
+												value="{{detailList.actionRemark}}"
+												v-model="detailList.actionRemark" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="detailList.actionType == 'java'">
+										<tr>
+											<th>类全名：</th>
+											<td><input disabled="true "
+												title="{{detailList.classFullName}}"
+												value="{{detailList.classFullName}}"
+												v-model="detailList.classFullName" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>方法名：</th>
+											<td><input disabled="true "
+												title="{{detailList.method}}" value="{{detailList.method}}"
+												v-model="detailList.method" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="detailList.actionType == 'sql'">
+										<tr>
+											<th>数据库链接串：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcConId}}"
+												value="{{detailList.jdbcConId}}"
+												v-model="detailList.jdbcConId" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>sql语句：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcCommand}}"
+												value="{{detailList.jdbcCommand}}"
+												v-model="detailList.jdbcCommand" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>存储过程名称：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcProcedure}}"
+												value="{{detailList.jdbcProcedure}}"
+												v-model="detailList.jdbcProcedure" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库驱动：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcDriver}}"
+												value="{{detailList.jdbcDriver}}"
+												v-model="detailList.jdbcDriver" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库登录用户名：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcUsername}}"
+												value="{{detailList.jdbcUsername}}"
+												v-model="detailList.jdbcUsername" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库登录密码：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcPassword}}"
+												value="{{detailList.jdbcPassword}}"
+												v-model="detailList.jdbcPassword" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>sql语句类型：</th>
+											<td><input disabled="true "
+												title="{{detailList.jdbcSqlType}}"
+												value="{{detailList.jdbcSqlType}}"
+												v-model="detailList.jdbcSqlType" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="detailList.actionType == 'bat'">
+										<tr>
+											<th>bat文件名称：</th>
+											<td><input disabled="true "
+												title="{{detailList.batName}}"
+												value="{{detailList.batName}}" v-model="detailList.batName"
+												type="text" name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>bat执行目录：</th>
+											<td><input disabled="true "
+												title="{{detailList.batDir}}" value="{{detailList.batDir}}"
+												v-model="detailList.batDir" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>bat超时时间：</th>
+											<td><input disabled="true "
+												title="{{detailList.batTimeout}}"
+												value="{{detailList.batTimeout}}"
+												v-model="detailList.batTimeout" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="detailList.actionType == 'shell'">
+										<tr>
+											<th>shell脚本名称：</th>
+											<td><input disabled="true "
+												title="{{detailList.shellCommand}}"
+												value="{{detailList.shellCommand}}"
+												v-model="detailList.shellCommand" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell脚本所在机器ip：</th>
+											<td><input disabled="true "
+												title="{{detailList.shellIp}}"
+												value="{{detailList.shellIp}}" v-model="detailList.shellIp"
+												type="text" name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell用户：</th>
+											<td><input disabled="true "
+												title="{{detailList.shellPassword}}"
+												value="{{detailList.shellPassword}}"
+												v-model="detailList.shellPassword" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell密码：</th>
+											<td><input disabled="true "
+												title="{{detailList.shellUsername}}"
+												value="{{detailList.shellUsername}}"
+												v-model="detailList.shellUsername" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+
+
+						</div>
+					</div>
+					<!-- 编辑弹窗 -->
+					<div class="showbox" id="Editbox" style="display: none;">
+						<div class="show-form">
+							<div v-if="editTaskActionList!=''">
+								<table class="item-table">
+									<tbody>
+										<tr>
+											<th>动作名称：</th>
+											<td><input value="{{editTaskActionList.actionName}}"
+												v-model="editTaskActionList.actionName" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>动作备注：</th>
+											<td><input value="{{editTaskActionList.actionRemark}}"
+												v-model="editTaskActionList.actionRemark" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>动作类型：</th>
+											<td><select class="form-control select-control"
+												v-model="editTaskActionList.actionType">
+													<option value="">请选择</option>
+													<option value="java">java</option>
+													<option value="sql">sql</option>
+													<option value="shell">shell</option>
+													<option value="bat">bat</option>
+											</select></td>
+										</tr>
+									</tbody>
+									<tbody v-if="editTaskActionList.actionType == 'java'">
+										<tr>
+											<th>类全名：</th>
+											<td><input value="{{editTaskActionList.classFullName}}"
+												v-model="editTaskActionList.classFullName" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>方法名：</th>
+											<td><input value="{{editTaskActionList.method}}"
+												v-model="editTaskActionList.method" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="editTaskActionList.actionType == 'sql'">
+										<tr>
+											<th>数据库链接串：</th>
+											<td><input value="{{editTaskActionList.jdbcConId}}"
+												v-model="editTaskActionList.jdbcConId" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>sql语句：</th>
+											<td><input value="{{editTaskActionList.jdbcCommand}}"
+												v-model="editTaskActionList.jdbcCommand" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>存储过程名称：</th>
+											<td><input value="{{editTaskActionList.jdbcProcedure}}"
+												v-model="editTaskActionList.jdbcProcedure" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库驱动：</th>
+											<td><input value="{{editTaskActionList.jdbcDriver}}"
+												v-model="editTaskActionList.jdbcDriver" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库登录用户名：</th>
+											<td><input value="{{editTaskActionList.jdbcUsername}}"
+												v-model="editTaskActionList.jdbcUsername" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>数据库登录密码：</th>
+											<td><input value="{{editTaskActionList.jdbcPassword}}"
+												v-model="editTaskActionList.jdbcPassword" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>sql语句类型：</th>
+											<td><select value="{{editTaskActionList.jdbcSqlType}}"
+												class="form-control select-control"
+												v-model="editTaskActionList.jdbcSqlType">
+													<!-- <option value="">请选择</option> -->
+													<option value="Q">query查询</option>
+													<option value="E">execute执行</option>
+													<option value="P">Procedure存储过程</option>
+											</select></td>
+										</tr>
+									</tbody>
+									<tbody v-if="editTaskActionList.actionType == 'bat'">
+										<tr>
+											<th>bat文件名称：</th>
+											<td><input value="{{editTaskActionList.batName}}"
+												v-model="editTaskActionList.batName" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>bat执行目录：</th>
+											<td><input value="{{editTaskActionList.batDir}}"
+												v-model="editTaskActionList.batDir" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>bat超时时间：</th>
+											<td><input
+												onkeypress="return event.keyCode >= 49 && event.keyCode <= 57"
+												value="{{editTaskActionList.batTimeout}}"
+												v-model="editTaskActionList.batTimeout" type="text" name=""
+												class="form-control"></td>
+										</tr>
+									</tbody>
+									<tbody v-if="editTaskActionList.actionType == 'shell'">
+										<tr>
+											<th>shell脚本名称：</th>
+											<td><input value="{{editTaskActionList.shellCommand}}"
+												v-model="editTaskActionList.shellCommand" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell脚本所在机器ip：</th>
+											<td><input value="{{editTaskActionList.shellIp}}"
+												v-model="editTaskActionList.shellIp" type="text" name=""
+												class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell用户：</th>
+											<td><input value="{{editTaskActionList.shellPassword}}"
+												v-model="editTaskActionList.shellPassword" type="text"
+												name="" class="form-control"></td>
+										</tr>
+										<tr>
+											<th>shell密码：</th>
+											<td><input value="{{editTaskActionList.shellUsername}}"
+												v-model="editTaskActionList.shellUsername" type="text"
+												name="" class="form-control"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- 添加参数弹窗 -->
+					<div class="showbox" id="addTaskActionParam" style="display: none;">
+						<div class="show-addTaskActionParam show-form">
+							<table class="item-table">
+								<tbody>
+									<tr>
+										<th>动作名：</th>
+										<td><input value="{{addTaskActionParam.actionName}}"
+											v-model="addTaskActionParam.actionName" type="text" name=""
+											class="addTaskActionParam-control form-control"
+											disabled="true "></td>
+									</tr>
+									<tr>
+										<th>参数名：</th>
+										<td><input value="{{addTaskActionParam.paramName}}"
+											v-model="addTaskActionParam.paramName" type="text" name=""
+											class="addTaskActionParam-control form-control"></td>
+									</tr>
+									<tr>
+										<th>参数类型：</th>
+										<td><input value="{{addTaskActionParam.paramType}}"
+											v-model="addTaskActionParam.paramType" type="text" name=""
+											class="addTaskActionParam-control form-control"></td>
+									</tr>
+									<tr>
+										<th>参数序号：</th>
+										<td><input value="{{addTaskActionParam.paramSeq}}"
+											v-model="addTaskActionParam.paramSeq" type="text" name=""
+											class="addTaskActionParam-control form-control"></td>
+									</tr>
+									<tr>
+										<th>参数内容：</th>
+										<td><input value="{{addTaskActionParam.paramContext}}"
+											v-model="addTaskActionParam.paramContext" type="text" name=""
+											class="addTaskActionParam-control form-control"></td>
+									</tr>
+									<tr>
+										<th>备注：</th>
+										<td><input value="{{addTaskActionParam.paramRemark}}"
+											v-model="addTaskActionParam.paramRemark" type="text" name=""
+											class="addTaskActionParam-control form-control"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+
+</body>
+
+<script type="text/javascript" src="../resource/js/jsonp4Table.js"></script>
+<script type="text/javascript"
+	src="../resource/js/monitor/taskActionTableList.js"></script>
+<script type="text/javascript">
+	$(function() {
+		reflashData();
+	});
+
+	var _json4Table = new $.jsonp4Table({
+		action : baseUrl+"taskAction/getTaskActionList",
+		jsonpCallback : 'callBack',
+		formatter : operateFormatter,
+		callback : function(data) {
+			processList.table = data.list;
+		}
+	});
+
+	function selectType(type) {
+		_json4Table.drewTable({
+			"condition" : type
+		});
+		processList.param.condition = type;
+	}
+
+	function reflashData() {
+		_json4Table.drewTable(processList.param);
+	}
+
+	function operateFormatter(id) {
+		var opt = "<a onclick=\"lookDedail('" + id + "')\">查看详情</a> "
+			+ "<a onclick=\"lookTaskActionParam('taskActionParamList.html','" + id + "')\">查看参数详情</a>"
+			+ "<a onclick=\"editTaskAction('" + id + "')\">编辑</a> "
+			+ "<a class=\"delet-td\" onclick=\"delTaskAction('" + id + "')\">删除</a> "
+			+ "<a onclick=\"addTaskActionParam('" + id + "')\">添加参数</a>";
+		return opt;
+	}
+</script>
+</html>
+

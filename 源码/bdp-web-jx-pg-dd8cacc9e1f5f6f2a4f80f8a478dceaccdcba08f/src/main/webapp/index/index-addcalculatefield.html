@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+</body>
+</html>
+<div class="showbox" id="showbox">
+	<div class="show-form">
+		<div class="filed-title filedfloat"><span>字段名称：</span><input onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')" id="fieldName" type="text" class="field-name width03"></div>
+		<div class="filed-title filedfloat"><span>字段类型：</span><div class="filed-down downwidth">
+				<button id="fieldType" type="button" class="field-name field-input"><em>请选择字段类型</em><i class="fa fa-angle-down"></i></button>
+				<ul class="filed-list">
+					<li value="0">请选择字段类型</li>
+					<li value="1">日期</li>
+					<li value="2">文本</li>
+					<li value="3">数值</li>
+				</ul>
+			</div>
+		</div>
+		<div class="filed-title">
+		    <!-- <div contenteditable="true" class="text-add" id="text-add"></div> -->
+			<textarea rows="3" cols="5" class="text-add" id="text-add" placeholder="AVG([字段1]) + SUM([字段2])"></textarea>
+			<input id="text-add01" style="display:none;">
+			<p class="add-tip"><a class="resetbtn" onclick="reset();">重置</a>示例:AVG(表达式/数值字段)</p>
+		</div>
+		<div class="filed-content width02">	
+			<div class="add-file-l fl">
+				<h5>函数</h5>
+				<div class="search-query border-add-search">
+	                <input onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')" id="fnSearchName" type="text" class="form-control search-input"><span id="fnSearch" onclick="search('fn_search');"><img src="../resource/img/query-ico.png"></span>
+	            </div>
+				<ul class="list-add" id="list-add-fun"></ul>
+			</div>
+			<div class="add-file-r fl">
+				<h5>字段名</h5>
+				<div class="search-query border-add-search">
+	                <input onkeyup="this.value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\_]/g,'')"  id="fieldSearchName" type="text" class="form-control search-input"><span id="fieldSearch" onclick="search('pro_search');"><img src="../resource/img/query-ico.png"></span>
+	            </div>
+				<ul class="list-add" id="list-add-field"></ul>
+			</div>		
+		</div>
+	</div>
+</div>
+ 
+<script>
+
+// 统计对象的元数据id
+var parentId = null;
+// 统计属性的元数据id
+var metadataId = null;
+
+$(document).ready(function($){
+	
+	parentId = GetQueryString("parentId");
+	metadataId = GetQueryString("metadataId");
+	var params = {"flag":"initMenu"};
+	if(metadataId != null){
+		params.metadataId = metadataId;
+		params.flag = "editInit";
+		ajaxSend("/bdp-web/calculateField/editInitCalculateFieldAction",{"param" : JSON.stringify(params)},initMenu);
+	}else{
+		params.metadataId = parentId;
+		params.flag = "initMenu";
+		ajaxSend("/bdp-web/calculateField/initCalculateFieldMenuAction",{"param" : JSON.stringify(params)},initMenu);
+	}
+	
+});
+
+// 刷新菜单
+function initMenu(data){
+
+	if(metadataId != null){
+		$("#fieldName").val(data.fieldName);
+		if(data.fieldType != null){
+			var split = data.fieldType.split("#");
+			$("#fieldType").find("em").attr("value", split[1]);
+			if(split[1] == "1"){
+				$("#fieldType").find("em").text("日期");
+			}else if(split[1] == "2"){
+				$("#fieldType").find("em").text("文本");
+			}else if(split[1] == "3"){
+				$("#fieldType").find("em").text("数值");
+			}
+		}
+		$("#text-add").val(data.sqlDescribe);
+	}
+
+	var proList = data.proList;
+	var fnList = data.fnList;
+	var parentVO = data.parentVO;
+	// 刷新字段
+	initPro(proList, parentVO);
+	// 刷新函数
+	initFn(fnList);
+	
+	clickFun();
+}
+
+// 刷新字段
+function initPro(proList, parentVO){
+
+	if(proList == null ){
+		return;
+	}
+	// 刷新字段
+	$("#list-add-field").empty();
+	proList.forEach(function(vo,i){
+		var li = $("<li id="+vo.metadataId
+				+" classid="+vo.classId+" name='field-value' code="+
+				vo.metadataCode+" parentCode="+parentVO.metadataCode+" parentId="+parentVO.metadataId+">"+vo.metadataName+"</li>");
+		$("#list-add-field").append(li);
+	});
+}
+
+// 刷新函数
+function initFn(fnList){
+
+	if(fnList == null ){
+		return;
+	}
+	// 刷新函数
+	$("#list-add-fun").empty();
+	fnList.forEach(function(e,i){
+		var li = $("<li>"+e.dictionaryValue+"</li>");
+		$("#list-add-fun").append(li);
+	});
+}
+
+// 检索菜单
+function search(flag){
+	var searchName = null;
+	var params = null;
+	if(flag == "pro_search"){
+		searchName = $("#fieldSearchName").val();
+		params = {"flag":"pro_search", "metadataId":parentId, "searchName":searchName};
+		ajaxSend("/bdp-web/calculateField/searchFieldAction",{"param" : JSON.stringify(params)},initMenu);
+	}else {
+		searchName = $("#fnSearchName").val();
+		params = {"flag":"fn_search", "searchName":searchName};
+		ajaxSend("/bdp-web/calculateField/searchFunctionAction",{"param" : JSON.stringify(params)},initMenu);
+	}
+	ajaxSend("/pms-web/ajax/ajaxIndexFieldAction",params,initMenu);
+}
+
+// 重置函数表达式
+function reset(){
+
+	$("#text-add").val("");
+	$("#text-add01").val("");
+}
+
+// 设置光标位置
+function setCaretPosition(ctrl, pos){
+    if(ctrl.setSelectionRange)
+    {
+        ctrl.focus();
+        ctrl.setSelectionRange(pos,pos);
+    }
+    else if (ctrl.createTextRange) {
+        var range = ctrl.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', pos);
+        range.moveStart('character', pos);
+        range.select();
+    }
+}
+//获取光标位置
+function getCursortPosition(ctrl) {
+    var CaretPos = 0;   // IE Support
+    if (document.selection) {
+        ctrl.focus();
+        var Sel = document.selection.createRange();
+        Sel.moveStart ('character', -ctrl.value.length);
+        CaretPos = Sel.text.length;
+    }
+    // Firefox support
+    else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+        CaretPos = ctrl.selectionStart;
+    return (CaretPos);
+}
+
+var index = 0;
+var index1 = 0;
+var text = document.getElementById("text-add");
+var text01 = document.getElementById("text-add01");
+//函数
+var ul = document.getElementById("list-add-fun");
+var li = ul.getElementsByTagName("li");	
+
+//字段
+var ulfiled = document.getElementById("list-add-field");
+var lifiled = ulfiled.getElementsByTagName("li");	
+
+function clickFun(){
+	for(var i=0;i<li.length;i++){		
+		li[i].onclick = function(){
+			var val = this.innerText + "()";
+			text.focus();
+		    insertText(text,val);
+		    insertText(text01,val);
+		    index = getCursortPosition(text) - 1;
+		    index1 = getCursortPosition(text01) - 1;
+		    setCaretPosition(text, index); 
+		    setCaretPosition(text01, index1);   
+		}	
+	}
+	for(var i=0;i<lifiled.length;i++){
+		lifiled[i].onclick = function(){	
+			var code = this.attributes["parentCode"].value + "." + this.attributes["code"].value;	
+			var val = "[" + this.innerText + "]";
+			text.focus();
+		    insertText(text,val);
+		    insertText(text01,code);
+		}	
+	}
+}
+</script>
+

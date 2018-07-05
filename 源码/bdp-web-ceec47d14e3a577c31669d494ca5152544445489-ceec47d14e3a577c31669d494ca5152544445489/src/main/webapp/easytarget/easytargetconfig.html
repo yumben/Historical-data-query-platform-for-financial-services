@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>指标配置</title>
+<link rel="stylesheet"
+	href="../resource/style/jquery-ui-custom/jquery-ui.min.css">
+<style>
+.targetConfig {
+	width: 100%;
+	min-width: 1100px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 40px
+}
+
+.leftConfigContentSubs, .rightConfigContentSubs {
+	height: 600px;
+	border-radius: 4px;
+	background: #ffffff
+}
+
+.leftConfigContentSubs {
+	width: 600px;
+	padding: 10px;
+	overflow: auto;
+	/*border: 1px solid #e6e7e9*/
+}
+
+.rightConfigContentSubs {
+	width: 73%;
+	padding: 10px 0;
+	border: 1px solid #e6e7e9;
+	position: relative
+}
+
+.rightConfigContentSubs>div {
+	background: #5182e4;
+	/*border: 1px solid #1e80c9;*/
+	border-radius: 4px;
+	margin: 10px;
+	font-size: 14px;
+	color: #fff;
+	display: inline-block;
+	height: 30px;
+	line-height: 30px;
+	cursor: default;
+	min-width:180px;
+	border:0;
+	position:relative;
+}
+
+.rightConfigContentSubs>div>i:first-child {
+	margin-right: 10px;
+	cursor: default
+}
+
+.rightConfigContentSubs>div.leftContentChild {
+	height: 30px;
+	line-height: 30px;
+	position: relative
+}
+
+.rightConfigContentSubs>div.leftContentChild:after {
+	content: "";
+	width: 0;
+	height: 0;
+	border: 14px solid transparent;
+	border-radius: 0px;
+	border-left-color: #5182e4;
+	position: absolute;
+	left: 99%;
+	top: 50%;
+	margin-top: -14px
+}
+
+.rightConfigContentSubs>div:hover {
+	box-shadow: 2px 1px 2px #A9A9A9
+}
+
+.rightConfigContentSubs>div>i {
+	margin-left: 5px;
+	cursor: pointer;
+	margin-right: 5px;
+	font-size: 14px;
+}
+.rightConfigContentSubs>div>i.turnOffI{
+	position: absolute;
+	right:5px;
+	top:8px;
+}
+.rightConfigContentSubs>div>i.turnOptionI{
+	position: absolute;
+	right:25px;
+	top:8px;
+}
+.rightContentChild>table {
+	width: 100%;
+	font-size: 12px;
+	background-color: #ffffff;
+	color:#333
+}
+
+.rightContentChild>table:hover {
+	box-shadow: 2px 4px 2px #A9A9A9
+}
+
+.rightContentChild>table td {
+	height: 20px;
+	line-height: 20px
+}
+
+.rightContentChild>table tr:first-child td {
+	background: #eee;
+	color: #858484;
+	font-weight: bold
+}
+
+.leftConfigContent>span, .rightConfigContentSubs>span,
+	.rightConfigContent>span {
+	font-size: 16px;
+	color: #606060;
+	display: block;	
+	padding:0px 0 8px 8px;
+	border-bottom: 1px solid #e6e7e9;
+	margin-bottom:10px;
+}
+
+.leftConfigContent, .rightConfigContent {
+	width: 200px;
+	height: 600px;
+	padding: 10px 0px;
+	border: 1px solid #e6e7e9;
+	border-radius: 4px;
+	overflow: auto;
+	background: #ffffff;
+}
+
+.dataNav>li {
+	font-size: 14px;
+	margin-bottom: 6px;
+	cursor: pointer;
+	padding-left: 10px;	
+}
+
+.dataNav>li>h5{margin-bottom:8px;}
+.dataNav>li>h5>i {
+	margin-right: 5px;
+	font-size:12px;
+}
+
+.dataNav>li li {
+	padding-left: 30px;
+	cursor: default;
+	transition: 0.3s;
+	white-space: nowrap;
+	margin-bottom: 2px;
+	cursor: pointer;
+	line-height:30px;
+}
+
+.dataNav>li li:hover {
+	background: #f3f4f8;
+	padding-left: 5px
+}
+
+.rightNav>li li:hover {
+	background: #f3f4f8
+}
+
+.optionContent {
+	display: inline-block;
+	position: absolute;
+	right: 0px;
+	top: -35px;
+	z-index: 100
+}
+
+.configDialogTable>thead>tr>th {
+	height: 20px;
+	line-height: 20px !important;
+}
+
+.configDialogTable>tbody {
+	border-bottom: 1px solid #ccc;
+}
+
+.configDialogTable>tbody>tr>td {
+	height: 20px;
+	line-height: 20px !important;
+	position: relative;
+	border-right: 1px solid #ccc;
+}
+
+.configDialogTable textarea {
+	font-size: 13px;
+}
+
+.configDialogTable button {
+	padding: 0 4px;
+	height: 20px;
+	line-height: normal;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+}
+</style>
+
+</head>
+
+<body>
+
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<script type="text/javascript" src="../resource/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../resource/js/jsplumb.min.js"></script>
+
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap">
+		<div class="optionContent">
+			<button type="button" class="btn btn-default saveConfig"><img src="../resource/img/query-ico5.png"> 保存</button>
+			<button type="button" class="btn btn-default returnLastPage"><img src="../resource/img/query-ico7.png"> 返回</button>
+		</div>
+		<div class="targetConfig">
+			<div class="leftConfigContent">
+				<span>业务对象：</span>
+			</div>
+			<div class="rightConfigContentSubs" id="containment-wrapper">
+				<span>组件放置处：</span>
+			</div>
+			<div class="rightConfigContent">
+				<span>算法：</span>
+			</div>
+		</div>
+		<!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<div id="dialog-textarea" style="display:none;" title="输入内容">
+		<textarea name="" id="input-value" cols="45" rows="6" style="width:290px"></textarea>
+	</div>
+	<table id="dialog-message" title="算法定义"
+		class="table table-hover table-condensed configDialogTable"
+		style="width:100%;display:none"></table>
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+	<script type="text/javascript" src="../resource/js/attrModel.js"></script>
+	<script type="text/javascript" src="../resource/js/easytargetconfig.js"></script>
+</body>
+
+</html>

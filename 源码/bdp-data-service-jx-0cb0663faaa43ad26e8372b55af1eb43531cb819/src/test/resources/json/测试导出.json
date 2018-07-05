@@ -1,0 +1,24 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "ln_txn_dtl",
+    "if_count": true,
+    "export_type":"excel",
+    "limit": 100,
+    "fields": [
+        {
+            "name": "ln_acc_opnorg_utid",
+            "title_name": "字段1"
+        },
+        {
+            "name": "opnorg_nm"
+            ,
+            "title_name": "字段2"
+        },
+        {
+            "name": "ou_ip_id",
+            "title_name": "字段3"
+        }
+    ]
+}

@@ -1,0 +1,55 @@
+{
+    "sys_code": null,
+    "sys_token": null,
+    "query_time": null,
+    "table": "rpt_db_list_impawn_tj",
+    "limit": 10,
+    "skip": 0,
+    "if_count": true,
+    "if_show_count": true,
+    "fields": [{
+            "name": "loan_amount",
+            "function": "sum",
+            "alias": "金额",
+            "param": null,
+            "title_name": "贷款金额[金额](求和)",
+            "filed_type": "number",
+            "is_total_field": "1",
+            "dimension": false
+        }, {
+            "name": "loan_balance",
+            "function": "sum",
+            "alias": "余额",
+            "param": null,
+            "title_name": "贷款余额[余额](求和)",
+            "filed_type": "number",
+            "is_total_field": "1",
+            "dimension": false
+        }],
+    "conditions": [{
+            "fun1": null,
+            "field1": "unit_id",
+            "cond": "in",
+            "fun2": null,
+            "field2": null,
+            "value1": ["18521"],
+            "value2": null,
+            "and": null,
+            "or": null
+        }],
+    "groups": [{
+            "group": null,
+            "field": "",
+            "function": null
+        }, {
+            "group": null,
+            "field": "",
+            "function": null
+        }, {
+            "group": null,
+            "field": "",
+            "function": null
+        }],
+    "having": null,
+    "orders": []
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- <link rel="stylesheet" type="text/css" href="/pms-web/resource/js/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/pms-web/resource/style/css/main.css">
+<script type="text/javascript" src="/pms-web/resource/js/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="/pms-web/resource/js/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/pms-web/resource/js/qiao/qiao.js"></script>
+<script type="text/javascript" src="/pms-web/resource/js/initmenu.js"></script>
+<script type="text/javascript" src="/pms-web/resource/js/main.js"></script>
+<script type="text/javascript" src="/pms-web/resource/js/ajax.js"></script> 
+<script type="text/javascript" src="/pms-web/resource/js/jquery-form.js"></script>-->
+<title>批量导入数据</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<div class="prog">
+		<div class="w1170">
+			<ul>
+				<li class="lan">1.选择批量文件<span>></span>
+				</li>
+				<li>2.完成</li>
+			</ul>
+		</div>
+	</div>
+	<div id="all">
+		<div id="main" class="w1170 clearfix">
+			<div class="content">
+				<div class="data_form current">
+
+					<div>
+						<form action="/pms-web/importAction" method="post" enctype="multipart/form-data" id="form1">
+							<input type="file" name="file" id="file" size="50"/>
+							<br/>				
+							<button id="up"  class="btn btn-success">上传	</button>						
+						</form>
+						<br/>
+						<button id="btnDowm" class="btn btn-success">模板下载</button>&nbsp;&nbsp;&nbsp;&nbsp;	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#btnDowm").click(function() {
+			window.location.href = "/pms-web/download/DataSource.rar";
+		});
+		 var options = {
+        	success: callfunction
+    };
+ 
+        // ajaxForm
+        $("#up").click(function (){
+        	$("#form1").ajaxSubmit(options);
+        });
+	});
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+	} 
+	</script>
+</body>
+</html>

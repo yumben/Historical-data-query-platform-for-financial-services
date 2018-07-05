@@ -1,0 +1,16 @@
+﻿GooFlow.prototype.color={
+  main:"#00456c",
+  node:"#f9f9f9",
+  line:"#3892D3",
+  mark:"#ff3300",
+  mix:"#B6F700",
+  font:"#15428B"
+};/*"#00B4E1"
+GooFlow.prototype.color={
+  main:"#A8C508",
+  node:"#DFE9B4",
+  line:"#A8C508",
+  mark:"#E98200",
+  mix:"#B6F700",
+  font:"#357425"
+};*/

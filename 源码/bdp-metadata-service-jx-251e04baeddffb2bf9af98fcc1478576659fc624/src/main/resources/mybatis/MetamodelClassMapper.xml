@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelClassMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelClass">
+		<id column="class_id" property="classId" />
+		<result column="class_code" property="classCode" />
+		<result column="class_name" property="className" />
+		<result column="describes" property="describes" />
+		<result column="type" property="type" />
+		<result column="isshow" property="isshow" />
+		<result column="isadd" property="isadd" />
+		<result column="display_icon" property="displayIcon" />
+		<result column="package_id" property="packageId" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+
+	<select id="queryModelClassByClassId" resultType="cn.com.infohold.entity.MetamodelClass">
+		SELECT
+		a.class_id AS classId,
+		a.class_code AS classCode,
+		a.class_name AS
+		className,
+		a.describes AS describes,
+		a.type AS type,
+		a.isshow AS isshow,
+		a.isadd AS isadd,
+		a.display_icon AS displayIcon,
+		a.package_id AS
+		packageId,
+		a.create_date AS createDate,
+		a.create_name AS createName,
+		a.edit_date AS editDate,
+		a.edit_name AS editName,
+		b.package_name AS
+		packageName,
+		b.package_code AS packageCode
+		FROM
+		metamodel_class a,
+		metamodel_package b
+		WHERE
+		a.package_id = b.package_id
+		AND a.class_id =
+		#{classId}
+
+	</select>
+	
+	<select id="queryModelClassByCode" resultType="cn.com.infohold.entity.MetamodelClass">
+		SELECT
+		a.class_id AS classId,
+		a.class_code AS classCode,
+		a.class_name AS
+		className,
+		a.describes AS describes,
+		a.type AS type,
+		a.isshow AS isshow,
+		a.isadd AS isadd,
+		a.display_icon AS displayIcon,
+		a.package_id AS
+		packageId,
+		a.create_date AS createDate,
+		a.create_name AS createName,
+		a.edit_date AS editDate,
+		a.edit_name AS editName,
+		b.package_name AS
+		packageName,
+		b.package_code AS packageCode
+		FROM
+		metamodel_class a,
+		metamodel_package b
+		WHERE
+		a.package_id = b.package_id
+		AND a.class_code =
+		#{classCode}
+
+	</select>
+
+	<select id="queryModelClass" resultType="cn.com.infohold.entity.MetamodelClass" >
+		SELECT
+		a.class_id AS classId,
+		a.class_code AS classCode,
+		a.class_name AS
+		className,
+		a.describes AS describes,
+		a.type AS type,
+		a.isshow AS isshow,
+		a.isadd AS isadd,
+		a.display_icon AS displayIcon,
+		a.package_id AS
+		packageId,
+		a.create_date AS createDate,
+		a.create_name AS createName,
+		a.edit_date AS editDate,
+		a.edit_name AS editName,
+		b.package_name AS
+		packageName,
+		b.package_code AS packageCode
+		FROM
+		metamodel_class a,
+		metamodel_package b
+		WHERE
+		a.package_id = b.package_id
+		<if test="packageId != null and packageId != ''">
+			AND a.package_id = #{packageId}
+		</if>
+		<if test="classname != null and classname != ''">
+			AND (a.class_code like
+			CONCAT(CONCAT('%',#{classname}),'%') OR
+			a.class_name like
+			CONCAT(CONCAT('%',#{classname}),'%'))
+		</if>
+		order by a.class_id desc
+	</select>
+<select id="selectMetamodelClassByGroupClassId" resultType="cn.com.infohold.entity.MetamodelClass">
+SELECT a.class_id AS classId,
+		a.class_code AS classCode,
+		a.class_name AS
+		className,
+		a.describes AS describes,
+		a.type AS type,
+		a.isshow AS isshow,
+		a.isadd AS isadd,
+		a.display_icon AS displayIcon,
+		a.package_id AS
+		packageId,
+		a.create_date AS createDate,
+		a.create_name AS createName,
+		a.edit_date AS editDate,
+		a.edit_name AS editName
+FROM metamodel_class a
+WHERE a.class_id IN(SELECT
+                      b.classgrouped_id
+                    FROM metamodel_classgroup b
+                    WHERE b.class_id = #{classId})
+</select>
+
+</mapper>

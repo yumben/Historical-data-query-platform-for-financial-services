@@ -1,0 +1,37 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "ln_txn_dtl",
+    "if_count": true,
+    "fields": [
+        {
+            "name": "ln_acc_opnorg_utid"
+        } ,
+        {
+            "function" : "count" , 
+            "alias" : "c1" , 
+            "name": "ln_acc_opnorg_utid"
+        } 
+    ],
+    "conditions": [
+        {
+            "and": [
+                {
+                    "field1": "data_date",
+                    "cond": "=",
+                    "value1": "20171017"
+                } ]
+        }
+    ],
+    "having": [
+        {
+            "and": [
+                {
+                    "field1": "c1",
+                    "cond": ">",
+                    "value1": 45934
+                } ]
+        }
+    ]
+}

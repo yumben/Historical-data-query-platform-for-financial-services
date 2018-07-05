@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>数据源表格</title>
+
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	
+	<!-- wrap star -->	
+	<div class="wrap">
+	    <!-- asider start -->
+	    <div class="asider queryasider">
+	         <div id="tree"></div>
+	    </div>
+	    <!-- asider end -->
+	    <!-- content start -->
+	    <div class="section">
+	        <div class="content">
+	            <div class="title-query">
+	              <em>数据源配置</em>                  
+               </div>
+	            <div class="search-form-model">
+					<div class="item">
+						<span>查询条件：</span><input id="querydataSourceName"class="form-control" placeholder="请输入表名称">
+					</div>
+					<div class="item">
+						<button id="btn-search" class="btn btn-primary"><img src="../resource/images/search.png">查询</button>
+					</div>
+					<div class="item"><button id="btnadd" class="btn btn-success">+ 新增</button></div>
+					<div class="item">
+						<button id="btnBatch" class="btn btn-success">批量导入</button>
+					</div>	
+			   </div>
+				<div class="table-form">
+					<table id="table" data-id-field="dataTableName" class="table table-striped">
+						<thead>
+							<tr>
+								<th data-field="dataTableName">表名称</th>
+								<th data-field="dataTableNameCN">表中文名</th>
+								<th data-field="dataSourceId">所属数据库</th>
+								<th data-field="tableType">输入/出</th>
+								<th data-field="desc">描述</th>
+								<th data-field="operateFormatter" data-formatter="operateFormatter">操&nbsp;&nbsp;作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+	        </div>
+	    </div>
+	    <!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+
+	<script type="text/javascript">
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryDataTable",
+		formatter : operateFormatter
+	});
+	$(document).ready(function() {
+		var params = {};
+		_json4Table.drewTable(params);
+		$("#btnadd").click(
+			function() {
+				qiao.bs.dialog({
+					url : 'add_DataTableConfig.html',
+					title : '新增数据源表',
+					qubtn : '取消',
+					btn : true,
+					okbtn : '保存',
+					callback : function() {
+						ajaxSend("/pms-web/ajax/ajaxQueryDataSource", {"pageSize":-1},function(data){
+							$("#dataSourceId").html("");
+							var options="";
+							$.each(data.list, function(i, obj) {
+								options+="<option value='"+obj["dataSourceName"]+"'>"+obj["dataSourceNameCN"]+"</option>";
+							});
+							$("#dataSourceId").html(options);
+						});
+					}},
+					function() {
+						var dataTableName = $("#dataTableName").val();
+						var dataTableNameCN = $("#dataTableNameCN").val();
+						var dataSourceId   = $("#dataSourceId").val();
+						var tableType = $("#tableType").val();
+						var desc = $("#desc").val();
+						var params = {
+							"operate" : "add",
+							"vo.dataTableName" : dataTableName,
+							"vo.dataTableNameCN" : dataTableNameCN,
+							"vo.dataSourceId" : dataSourceId,
+							"vo.tableType" : tableType,
+							"vo.desc" : desc
+						};
+						ajaxSend("/pms-web/ajax/ajaxSubmitDataTable",params, callfunction);
+						return true;
+					});
+				});
+				$("#btnBatch").click(function() {
+					window.location.href = "import_dataTable.html?identify=110";
+				});
+				$("#btn-search").click(function(){
+						var querydataSourceName=$("#querydataSourceName").val();
+						var params = {
+							"querydataSourceName" : querydataSourceName
+						};
+						_json4Table.drewTable(params);
+					});
+					var params = {};
+					_json4Table.drewTable(params);
+				});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+	function edit(id) {
+		qiao.bs.dialog({
+			url : 'add_DataTableConfig.html',
+			title : '编辑数据源表',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback : function() {
+				var params = {
+					"vo.dataTableName" : id
+				};
+				ajaxSend("/pms-web/ajax/ajaxQueryDataSource", {"pageSize":-1},function(data){
+					$("#dataSourceId").html("");
+					var options="";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["dataSourceName"]+"'>"+obj["dataSourceNameCN"]+"</option>";
+					});
+					$("#dataSourceId").html(options);
+					ajaxSend("/pms-web/ajax/ajaxGetDataTable", params, initVO);
+				});
+			}},function() {
+					var dataTableName   = $("#dataTableName").val();
+					var dataTableNameCN   = $("#dataTableNameCN").val();
+					var dataSourceId   = $("#dataSourceId").val();
+					var tableType   = $("#tableType").val();
+					var desc = $("#desc").val();
+					var params = {
+						"operate" : "edit",
+						"vo.dataTableName" : dataTableName,
+						"vo.dataTableNameCN" : dataTableNameCN,
+						"vo.dataSourceId" : dataSourceId,
+						"vo.tableType" : tableType,
+						"vo.desc" : desc
+					};
+					ajaxSend("/pms-web/ajax/ajaxSubmitDataTable", params,
+							callfunction);
+					return true;
+				});
+	}
+	function initVO(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("加载失败！");
+		} else {
+			$("#dataTableName").val(data.vo.dataTableName);
+			$("#dataTableName").attr({"disabled":"disabled"});
+			$("#dataTableNameCN").val(data.vo.dataTableNameCN);
+			$("#dataSourceId").val(data.vo.dataSourceId);
+			$("#tableType").val(data.vo.tableType);
+			$("#desc").val(data.vo.desc); 
+		}
+	}
+
+	function remove(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除该配置？"
+		},function() {
+					var params = {
+						"operate" : "del",
+						"vo.dataTableName" : id
+					};
+					ajaxSend("/pms-web/ajax/ajaxSubmitDataTable", params,
+							callfunction);
+				}, function() {
+				});
+	}
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		var params = {};
+		_json4Table.drewTable(params);
+	}
+	
+</script>
+	<script type="text/javascript">
+		var $tree = $("#tree");
+		$(function() {
+			var params = {"pageSize":-1};
+			ajaxSend("/pms-web/ajax/ajaxQueryDataSource", params, inittree);
+		});
+		function inittree(data) {
+			var treedata = list2Json5(data.list);
+			/* alert(JSON.stringify(data.list)); */ 
+			$tree.treeview({
+				showBorder : false,
+				enableLinks : true,
+				data : treedata
+			});
+		}
+		function treeclick(field, value) {
+			if (field==""&&value==""){
+				var params = {};
+					_json4Table.drewTable(params);
+			} else{
+					_json4Table.drewTable({"dataSourceId":value});
+			}
+		}
+	</script>
+</body>
+</html>

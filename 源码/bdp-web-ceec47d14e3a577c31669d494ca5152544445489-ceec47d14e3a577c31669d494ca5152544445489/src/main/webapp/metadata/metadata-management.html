@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<title>元数据管理</title>
+
+<script type="text/javascript">
+	
+	var _json4Table = new $.json4Table({
+		//action : "/pms-web/ajax/ajaxQueryMetadataListAction",
+		action :metadataControl,
+		formatter : operateFormatter
+	});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:details(\'' + id
+						+ '\')" title="详情">',
+				'<i class="glyphicon glyphicon-edit">详情</i>',
+				'</a>  ',
+				'<a class="edit" href="javascript:getRelationShip(\'' + id
+						+ '\')" title="应用对象">',
+				'<i class="glyphicon glyphicon-edit">应用对象</i>',
+				'</a>  ' ]
+				.join('');
+	}	
+		
+	function details(id){
+		window.location.href="/bdp-web/metadata/metadata-infor.html?metadataId="+id;
+	}
+	
+	function getRelationShip(id){
+		window.location.href="/bdp-web/metadata/metadata-relationship.html?metadataId="+id+"&codeOrName="+encodeURI($("#codeOrName").val());
+	}
+	
+	/*******批量导入数据开始****/
+	 function batchImport(){
+		top.layer.open({
+			title : '批量导入',
+			closeBtn : 3,
+			type : 2,
+			area : [ '500px', '200px' ],
+			shadeClass : true,
+			content : "metadata-batch-import.html?catalogId="+window.parent.catalogId,
+			btn : [ '确定', '取消','下载模板' ],
+			btnAlign : 'c',
+			closeBtn : 1,
+			yes : function(index, layero) {			     
+				var doc = $(layero).find("iframe")[0].contentWindow.document;
+				var catalogId = window.parent.catalogId;
+				var file = $(doc).find("#uploadFile").val();;
+				//alert(catalogId);
+				if (file.length<1) {
+					alert("请选择文件!");
+					return;
+				}
+				var index2= file.indexOf(".xls");
+				var index1 = file.indexOf(".xlsx");
+				if (index2 == -1 && index1 == -1) {
+					alert("请上传Excel文件类型!");
+					return;
+				} 
+			   $(doc).find("#uploadForm").ajaxSubmit({
+			        url: "/pms-web/ajax/metadataFileUploadAction",
+			        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+			        data : {"catalogId":catalogId},
+			        cache: false,
+			        success: function (data) {
+		              	alert(data.msg);
+		              	window.parent.initMenu();
+		              	top.layer.close(index);  
+			        },
+			        error:function(e){
+			            popUpMessInfo("上传文件失败。");
+			        }
+			    });
+						
+				
+				//ajaxSend("/pms-web/ajax/metadataFileUploadAction", params, submitSuccess);
+			
+			},
+			btn2 : function(index, layero) {
+				//按钮【取消】的回调
+				top.layer.close(index);
+			},
+			btn3 : function(index, layero) {
+				//下载模板文件
+				location.href="/pms-web/ajax/ajaxDownloadResBatchImportTemplate";
+			},
+			cancel : function(index) {
+				//【右上角关闭】的回调
+				top.layer.close(index);
+			}
+		});
+	} 
+
+
+	
+	
+	/*******批量导入数据结束****/
+
+
+	$(document).ready(function($) {	
+		
+		var classType = GetQueryString("classType");
+		if(classType == "null"){
+			if(window.parent.catalogId == 0){
+				$("#addre").hide();
+			}else{
+				$("#addre").show();
+			}			
+		}else{
+			var codeOrName = decodeURI(GetQueryString("codeOrName"));
+			$("#codeOrName").val(codeOrName);
+			var params = {
+				"codeOrName" : codeOrName
+			};
+			_json4Table.drewTable(params);
+		}
+	});
+	
+	function query(){
+			
+			var codeOrName=$("#codeOrName").val();
+			
+			codeOrName = codeOrName.trim();
+			if(codeOrName == null || codeOrName==""){
+				alert("请输入元数据代码或名称");
+				return;
+			}
+			var params = {
+				"codeOrName" : codeOrName,
+				
+			};
+			var param = {"param" :JSON.stringify(params),"menuUrl":"metadata/ajaxQueryMetadataListAction"};
+			_json4Table.drewTable(param);
+		
+	}
+
+</script>
+</head>
+<body style="min-width:auto;">
+
+    <div class="content ">
+        <div class="title-query">	              
+          <em>元数据管理</em>
+        </div>
+        <div class="search-form-model">
+         	<div class="item fr"><a class="btn btn-success" onclick="batchImport();" id="addre"><i class="fa fa-plus"></i> 库批量导入</a></div>
+            <div class="item"><span>代码/名称：</span><input class="form-control" id="codeOrName" placeholder="元数据代码/名称"></div>
+            <div class="item"><a class="btn btn-primary" onclick="query()"><i class="fa fa-search"></i> 全文检索</a></div>
+        </div>
+        <!-- <div class="metaset">根据时间动态显示元数据操作信息 </div>-->
+        <div class="table-form">
+             <table id="table" data-id-field="metadataId" class="table table-striped alltable">
+                 <thead>
+                     <tr>
+                         <!-- <th><input class="selectinput" type="checkbox" value="0">全选</th> -->
+                         <th data-field="metadataCode">代码</th>
+                         <th data-field="metadataName">名称</th>
+                         <th data-field="classCode">所属类代码</th>
+                         <th data-field="className">所属类名称</th>
+                         <th data-field="contextCatalog">上下文路径</th>
+                         <th data-field="editDate">修改时间</th>
+                         <th data-field="editName">修改人</th>
+                         <th data-field="" data-formatter="operateFormatter">操作</th>
+                     </tr>
+                 </thead>
+             </table>
+       </div>
+    </div>
+</body>
+</html>

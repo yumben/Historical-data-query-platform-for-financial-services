@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>cn.com.infohold</groupId>
+	<artifactId>bdp-authorization-service</artifactId>
+	<version>0.0.21-jx</version>
+	<description>
+	    0.0.19-jx 使用basic-util-http 0.0.14
+		0.0.18-jx 优化版本
+		0.0.17-jx 不使用连接池
+        0.0.16-jx 使用http连接池0.0.8
+	    0.0.15-jx 使用http连接池0.0.7
+	    0.0.14
+	    0.0.13 信贷系统集成
+		0.0.12 默认机构
+		0.0.11 自动增加资源表
+		0.0.10 优化获取机构及下级
+		0.0.9登录返回中文名
+		0.0.8 增加日志
+		0.0.7 增加登录返回信息
+		0.0.6 根据TOKEN获取用户ID和机构
+		0.0.5 登录
+		0.0.4 TOKEN获取机构
+		0.0.3 登录
+    	0.0.2 登录接口
+        0.0.1 初始化
+    </description>
+	<packaging>jar</packaging>
+	<name>bdp-authorization-service</name>
+	<url>http://maven.apache.org</url>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.0.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<start-class>cn.com.infohold.ServiceApplication</start-class>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>jdk.tools</groupId>
+			<artifactId>jdk.tools</artifactId>
+			<version>1.8</version>
+			<scope>system</scope>
+			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<!-- 加入Eureka的服务治理体系 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+		<!-- 开启重试功能 -->
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<!-- 实现客户端应用配置信息的重新获取与刷新 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-json</artifactId>
+			<version>0.0.1</version>
+			<type>jar</type>
+		</dependency>
+
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>bdp-springmvc-core</artifactId>
+			<version>0.0.4</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-tools</artifactId>
+			<version>0.0.3</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>bdp-commons-bean</artifactId>
+			<version>0.0.124</version>
+			<type>jar</type>
+		</dependency>
+		<!-- http -->
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>basic-util-http</artifactId>
+			<version>0.0.14</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlunit</groupId>
+			<artifactId>htmlunit</artifactId>
+		</dependency>
+
+		<!-- Loggable jcabi -->
+		<dependency>
+			<groupId>com.jcabi</groupId>
+			<artifactId>jcabi-aspects</artifactId>
+			<version>0.22.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.12</version>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Brixton.SR5</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+
+		<repository>
+			<id>localnexus-re</id>
+			<name>localnexus-re</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/releases/</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>localnexus-snapshot</id>
+			<name>User Porject Snapshot</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

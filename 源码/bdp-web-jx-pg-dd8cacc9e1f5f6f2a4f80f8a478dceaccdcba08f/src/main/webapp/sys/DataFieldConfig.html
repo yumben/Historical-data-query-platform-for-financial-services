@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>数据表属性配置</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+
+	<!-- wrap star -->	
+	<div class="wrap">
+	    <!-- asider start -->
+	    <div class="asider queryasider">
+	         <div id="tree"></div>
+	    </div>
+	    <!-- asider end -->
+	    <!-- content start -->
+	    <div class="section">
+	        <div class="content">
+	            <div class="title-query">
+	              <em>数据表属性配置</em>                  
+               </div>
+	            <div class="search-form-model">
+					<div class="item"><span>属性名称：</span><input id="dataField_Name" class="form-control" placeholder="属性名称"/></div>
+					<div class="item"><span>属性中文名称：</span><input id="dataField_Name_cn" class="form-control" placeholder="属性中文名称"/></div>
+					<div class="item"><button id="btn-search" class="btn btn-primary"><img src="../resource/images/search.png">查询</button></div>
+					<div class="item"><button id="btnadd" class="btn btn-success">+ 新增</button></div>
+					<div class="item">
+						<button id="btnBatch" class="btn btn-success">批量导入</button>
+					</div>	
+				</div>
+				<div class="table-form">
+					<table id="table" class="table table-striped"
+						data-id-field="dataFieldId">
+						<thead>
+							<tr>
+								<th data-field="dataTableId" >所属表</th>
+								<th data-field="dataFieldName" >属性名称</th>
+								<th data-field="dataFieldNameCN" >属性中文名称</th>
+								<th data-field="dataType" >数据类型</th>
+								<th data-field="sourceDataBase" >来源数据库</th>
+								<th data-field="sourceTable">来源表</th>
+								<th data-field="dataRule" >计算规则</th>
+								<th data-field="" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+	        </div>
+	    </div>
+	    <!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+
+<script type="text/javascript">
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryDataField",
+		formatter : operateFormatter
+	});
+	$(document).ready(function() {
+		$("#btnadd").click(function() {
+			qiao.bs.dialog({
+			url : 'add_DataFieldConfig.html',
+			title : '新增',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback : function() {
+				ajaxSend("/pms-web/ajax/ajaxQueryDataTable", {"pageSize":-1},function(data){
+					$("#dataTableId").html("");
+					$("#sourceTable").html("");
+					var options="";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["dataTableName"]+"'>"+obj["dataTableNameCN"]+"</option>";
+					});
+					$("#dataTableId").html(options);
+					$("#sourceTable").html(options);
+				});
+				ajaxSend("/pms-web/ajax/ajaxQueryDataSource", {"pageSize":-1},function(data){
+					$("#dataSourceId").html("");
+					var options="";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["dataSourceName"]+"'>"+obj["dataSourceNameCN"]+"</option>";
+					});
+					$("#sourceDataBase").html(options);
+				});
+			}},
+			function() {
+				var dataFieldId = $("#dataFieldId").val();
+				var dataFieldName = $("#dataFieldName").val();
+				var dataFieldNameCN = $("#dataFieldNameCN").val();
+				var dataTableId = $("#dataTableId").val();
+				var dataType = $("#dataType").val();
+				var dataRule = $("#dataRule").val();
+				var sourceDataBase = $("#sourceDataBase").val();
+				var sourceTable = $("#sourceTable").val();
+				var desc = $("#desc").val();
+				var params = {
+						"operate" : "add",
+						"vo.dataFieldId" : dataFieldId,
+						"vo.dataFieldName" : dataFieldName,
+						"vo.dataFieldNameCN" : dataFieldNameCN,
+						"vo.dataTableId" : dataTableId,
+						"vo.dataType" : dataType,
+						"vo.sourceDataBase" : sourceDataBase,
+						"vo.sourceTable" : sourceTable,
+						"vo.dataRule" : dataRule,
+						"vo.desc" : desc
+						};
+				ajaxSend("/pms-web/ajax/ajaxSubmitDataField",params,callfunction);
+				return true;
+			});
+		});
+		$("#btnBatch").click(function() {
+					window.location.href = "import_dataField.html?identify=110";
+			});
+		$("#btn-search").click(function(){
+			var dataField_Name=$.trim($("#dataField_Name").val());
+			var dataField_Name_cn=$.trim($("#dataField_Name_cn").val());
+			var params = {
+				"dataField_Name" : dataField_Name,
+				"dataField_Name_cn" : dataField_Name_cn
+			};
+			_json4Table.drewTable(params);
+		});
+		var params = {};
+		_json4Table.drewTable(params);
+	});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+	function edit(id) {
+		qiao.bs.dialog({
+			url : 'add_DataFieldConfig.html',
+			title : '编辑',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback : function() {
+				var params = {
+					"vo.dataFieldId" : id
+				};
+				ajaxSend("/pms-web/ajax/ajaxQueryDataTable", {"pageSize":-1},function(data){
+					$("#dataTableId").html("");
+					$("#sourceTable").html("");
+					var options="";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["dataTableName"]+"'>"+obj["dataTableNameCN"]+"</option>";
+					});
+					$("#dataTableId").html(options);
+					$("#sourceTable").html(options);
+				});
+				ajaxSend("/pms-web/ajax/ajaxQueryDataSource", {"pageSize":-1},function(data){
+					$("#dataSourceId").html("");
+					var options="";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["dataSourceName"]+"'>"+obj["dataSourceNameCN"]+"</option>";
+					});
+					$("#sourceDataBase").html(options);
+					ajaxSend("/pms-web/ajax/ajaxGetDataField", params, initVO);
+				});
+			}
+		}, function() {
+				var dataFieldId = $("#dataFieldId").val();
+				var dataFieldName = $("#dataFieldName").val();
+				var dataFieldNameCN = $("#dataFieldNameCN").val();
+				var dataTableId = $("#dataTableId").val();
+				var dataType = $("#dataType").val();
+				var sourceDataBase = $("#sourceDataBase").val();
+				var sourceTable = $("#sourceTable").val();
+				var dataRule = $("#dataRule").val();
+				var desc = $("#desc").val();
+				var params = {
+						"operate" : "edit",
+						"vo.dataFieldId" : dataFieldId,
+						"vo.dataFieldName" : dataFieldName,
+						"vo.dataFieldNameCN" : dataFieldNameCN,
+						"vo.dataTableId" : dataTableId,
+						"vo.dataType" : dataType,
+						"vo.sourceDataBase" : sourceDataBase,
+						"vo.sourceTable" : sourceTable,
+						"vo.dataRule" : dataRule,
+						"vo.desc" : desc
+			};
+			ajaxSend("/pms-web/ajax/ajaxSubmitDataField", params, callfunction);
+			return true;
+		});
+	}
+	function initVO(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("加载失败！");
+		} else {
+				$("#dataFieldId").val(data.vo.dataFieldId);
+				$("#dataFieldName").val(data.vo.dataFieldName);
+				$("#dataFieldNameCN").val(data.vo.dataFieldNameCN);
+				$("#dataTableId").val(data.vo.dataTableId);
+				$("#dataType").val(data.vo.dataType);
+				$("#sourceDataBase").val(data.vo.sourceDataBase);
+				$("#sourceTable").val(data.vo.sourceTable);
+				$("#dataRule").val(data.vo.dataRule);
+				$("#desc").val(data.vo.desc);
+		}
+	}
+
+	function remove(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除？"
+		}, function() {
+			var params = {
+				"operate" : "del",
+				"vo.dataFieldId" : id
+			};
+			ajaxSend("/pms-web/ajax/ajaxSubmitDataField", params, callfunction);
+		}, function() {
+		});
+	}
+
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		var params = {};
+		_json4Table.drewTable(params);
+	}
+</script>
+
+	<script type="text/javascript">
+		var $tree = $("#tree");
+		$(function() {
+			var params = {"pageSize":-1};
+			ajaxSend("/pms-web/ajax/ajaxQueryDataTable", params, inittree);
+		});
+		function inittree(data) {
+			var treedata = list2Json4(data.list);
+			/* alert(JSON.stringify(data.list)); */
+			$tree.treeview({
+				showBorder : false,
+				enableLinks : true,
+				data : treedata
+			});
+		}
+		function treeclick(value) {
+			if (value==""){
+				var params = {};
+				_json4Table.drewTable(params);
+			} else{
+				_json4Table.drewTable({"dataTableId":value});
+			}
+		}
+	</script>
+</body>
+</html>

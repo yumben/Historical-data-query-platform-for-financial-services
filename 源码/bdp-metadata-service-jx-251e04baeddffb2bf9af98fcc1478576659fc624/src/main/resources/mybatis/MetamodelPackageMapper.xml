@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelPackageMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelPackage">
+		<id column="package_id" property="packageId" />
+		<result column="package_code" property="packageCode" />
+		<result column="package_name" property="packageName" />
+		<result column="describes" property="describes" />
+		<result column="parent_id" property="parentId" />
+		<result column="package_type" property="packageType" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+<select id="queryModelePackageByIdAndPackeName" resultType="cn.com.infohold.entity.MetamodelPackage">
+SELECT package_id AS packageId,
+	package_code AS packageCode,
+	package_name AS packageName,
+	describes,
+	parent_id AS parentId,
+	package_type AS packageType,
+	create_date AS createDate,
+	create_name AS createName,
+	edit_date AS editDate,
+	edit_name AS editName
+FROM metamodel_package 
+<where>
+1=1 
+<if test="null != packageName and '' != packageName">
+and package_name LIKE #{packageName} or package_code LIKE #{packageName} 
+</if>
+<if test="null != idlist and idlist.size()>0" >
+and package_id IN
+	<foreach collection="idlist" item="id" index="index" open="("
+		close=")" separator=",">
+		#{id}
+	</foreach>
+</if>
+</where>
+ORDER BY package_id desc
+</select>
+</mapper>

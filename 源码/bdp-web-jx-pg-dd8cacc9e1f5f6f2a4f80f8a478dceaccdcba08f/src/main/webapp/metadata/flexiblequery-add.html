@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+<script>
+    var classId = null;
+	$(document).ready(function($) {
+		classType = GetQueryString("classId");
+		var params = {"classId":"1","flag":"menu"};
+		initLeftMenu(params);
+	});
+	
+	function initLeftMenu(params){
+		ajaxSend("/pms-web/ajax/ajaxAddFlexibleQueryAction",params,calFun);
+	}
+	
+	// 点击目录加载下级菜单
+	$(document).on('click', 'li[newNode="true"] > p', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var parentId = li.attr("id");
+		
+		p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+			if(li.children('ul').hasClass('unstyled')){
+				p.children("i").addClass("fa-plus-square").removeClass("fa-minus-square");	
+				li.children('ul').remove();	
+			}else{
+				p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+				var param = {"classId" : "1","parentId":parentId,"flag":"menu2"};
+				ajaxSend("/pms-web/ajax/ajaxAddFlexibleQueryAction",param,calFun);
+			}
+	});
+
+	function calFun(data){
+		var parentId = data.parentId;
+		var curent;
+		if(parentId == null){
+			curent = $("#nav-left");
+		}else if(parentId != null){
+			curent = $('#'+parentId);
+		} 
+		var ul = $("<ul class='unstyled'></ul>");
+		var list = data.list;
+		list.forEach(function(e,i){
+			if(parentId == null){
+				var li = $("<li id=" + e.id + " classId=" + e.classId + "><p><i class='fa fa-plus-square'></i> " + e.name + "</p></li>");
+			}else {
+				var li = $("<li>&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='metadataVO' value='"+e.id+"'> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+			}
+			li.attr("newNode", "true");
+			ul.append(li).appendTo(curent);
+		});
+	} 
+
+function Keypress_err_1(){
+	if(!(event.keyCode==46)&&!(event.keyCode==8)&&!(event.keyCode==37)&&!(event.keyCode==39))
+    if(!((event.keyCode>=48&&event.keyCode<=57)||(event.keyCode>=96&&event.keyCode<=105)))
+    event.returnValue=false; 
+}
+
+</script>
+</body>
+</html>
+<div class="dialog" id="addcon">
+  <h3 class="title-basic ml mt"><em>选择对象</em></h3>
+  <div class="navmenu showmenu" id="nav-left">         
+  </div>
+</div>

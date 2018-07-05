@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+<script>
+	$(document).on('click', 'li[newNode="true"] > h5', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var id = li.attr("id");
+		var classId = li.attr("classId");
+		if(classId != null){			
+			$("#metadataType").attr("value",$(p).text());
+			$("#classId").attr("value",classId);
+		
+		}else {
+		    p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+			if(li.children('ul').hasClass('unstyled')){
+				//隐藏
+				//li.children('ul').css('display','block');
+				//清空ul
+				li.children('ul').remove();	
+				p.children("i").addClass("fa-plus-square").removeClass("fa-minus-square");	
+			}else{
+				var params={"isshow":"是","parentId":id,"classId":classId};
+				initLeftMenu(params);
+			}
+		}		
+	});
+
+	$(document).ready(function($) {
+	
+		var catalogId = GetQueryString("catalogId");
+		var metaParentId = GetQueryString("metaParentId");
+		var classType = GetQueryString("classType");
+		if(classType == "2"){
+			
+		}
+		$("#radio").hide();
+		$("#catalogue").show();
+		$(".metdDiv").slideDown();
+		$(".metdDiv1").slideUp();
+		/* if(metaParentId ==  null)
+			metaParentId = 0; */
+		//var param = {"vo.id" : catalogId,"metadataVO.id" : metaParentId,"flag":""};
+		var param = {"id" : catalogId,};
+		//ajaxSend("/pms-web/ajax/ajaxUpdateMetadataMenuAction",param,success);getMetadataCatalogById
+		ajaxSendService(metadataControl,param,"metadataCatalog/getMetadataCatalogById",success);
+	
+		var params={"isshow":"是"};
+		initLeftMenu(params);
+		
+	});
+	function initLeftMenu(params){
+		//ajaxSend("/pms-web/ajax/ajaxQueryModelMenuAction",params,calFun);
+		ajaxSendService(metadataControl,params,"metamodelClass/ajaxQueryModelMenuAction",calFun);
+	}
+	
+	function success(data){
+		console.log("11="+data.vo);
+		$("#contextCatalog").attr("value",data.vo.contextCatalog);
+		$("#parentId").attr("value",data.vo.parentCatalog);
+		//$("#metadataParentId").attr("value",data.metadataVO.parentId);
+		$("#code").attr("value",data.vo.catalogCode);
+		$("#name").attr("value",data.vo.catalogName);
+		$("#type").attr("value",data.vo.catalogType);
+		//$("#creatDate").attr("value",data.vo.creatDate);
+		//$("#metadataCode").attr("value",data.metadataVO.code);
+		//$("#metadataName").attr("value",data.metadataVO.name);
+		//$("#metadatacatalogId").attr("value",data.metadataVO.contextCatalog);
+		//$("#metadataCreateDate").attr("value",metadataVO.creatDate);
+		//alert(getLocalTime(data.vo.creatDate)+" h "+getLocalTime(data.metadataVO.creatDate));
+	}
+	
+	function calFun(data){
+		var parentId = data.parentId;
+		var classId = data.classId;
+		var curent;
+		if(parentId == null && classId == null){
+			curent = $("#nav-left");
+		}else if(parentId != null){
+			curent = $('#'+parentId);
+		} 
+		var ul = $("<ul class='unstyled'></ul>");
+		var packageList = data.packageList;
+		packageList.forEach(function(e,i){
+				var li = $("<li id=" + e.packageId + "><h5><i class='fa fa-plus-square'></i> " + e.packageName + "</h5></li>");
+				li.attr("newNode", "true");
+				ul.append(li).appendTo(curent);
+			});
+		var classList = data.classList;
+		classList.forEach(function(e,i){
+				var li = $("<li classId=" + e.classId + "><h5><i class='fa fa-file-text-o'></i> " + e.className + "</h5></li>");
+				li.attr("newNode", "true");
+				ul.append(li).appendTo(curent);
+			});
+		
+	} 
+function Keypress_err_1(){
+	if(!(event.keyCode==46)&&!(event.keyCode==8)&&!(event.keyCode==37)&&!(event.keyCode==39))
+    if(!((event.keyCode>=48&&event.keyCode<=57)||(event.keyCode>=96&&event.keyCode<=105)))
+    event.returnValue=false; 
+}
+
+function getLocalTime(timestamp) {  
+	var d = new Date(timestamp * 1000);    //根据时间戳生成的时间对象
+	var date = (d.getFullYear()) + "-" + 
+           (d.getMonth() + 1) + "-" +
+           (d.getDate()) + " " + 
+           (d.getHours()) + ":" + 
+           (d.getMinutes()) + ":" + 
+           (d.getSeconds()); 
+   return date;
+}
+
+</script>
+</body>
+</html>
+<!-- 左边菜单增加 -->
+<div class="dialog" id="addcon">
+   <p id="radio" class="showMeta"><span>请选择结构类型:</span><label class="radio-inline"><input type="radio"  name="name" id="metaList" value="catalogue">分类目录</label><label class="radio-inline"><input type="radio" name="name" id="metaList1" value="metadata">元数据</label></p>
+   <p id="catalogue" style="display:none" class="showMeta"><label class="radio-inline"><input type="radio" checked="checked" name="name" id="metaList" value="catalogue">分类目录</label></p>
+   <div class="metdDiv ml">
+       <table>
+          <tr>
+             <th>分类目录代码:</th>
+             <td><input type="text" id="code" class="form-control"></td>
+          </tr>
+          <tr>
+             <th>分类目录名称:</th>
+             <td><input type="text" id="name" class="form-control">
+             	<input  type="hidden" id="ceateDate" value="">
+             	<input  type="hidden" id="type" value="">
+             </td>
+          </tr>
+          <tr>
+             <th>上下文路径:</th>
+             <td><input type="text" id="contextCatalog" value="" placeholder="" readonly="readonly" class="form-control"></td>
+             <input  type="hidden" id="parentId" value="">
+          </tr>
+       </table>
+   </div>
+   <div class="metdDiv1"> 
+       <h3 class="title-basic ml mt"><em>模型信息</em></h3>
+       <div class="navmenu showmenu" id="nav-left">         
+       </div>
+       <h3 class="title-basic ml mt"><em>属性信息</em></h3>
+       <div class="atrshow"></div>
+       <h3 class="title-basic ml mt"><em>基本信息</em></h3>
+       <table>
+          <tr>
+             <th>元数据代码:</th>
+             <td><input type="text" id="metadataCode" class="form-control"></td>
+          </tr>
+          <tr>
+             <th>元数据名称:</th>
+             <td><input type="text" id="metadataName" class="form-control"></td>
+          </tr>-
+          <tr>
+             <th>元数据类型:</th>
+             <td><input type="text" class="form-control" id="metadataType" readonly>
+             <input  type="hidden" id="classId" value="">
+             <input  type="hidden" id="metadataParentId" value="">
+          </tr>
+          <tr>
+             <th>上下文路径:</th>
+             <td><input type="text" id="metadatacatalogId" readonly class="form-control"></td>
+          </tr>
+       </table>
+   </div>
+   
+</div>

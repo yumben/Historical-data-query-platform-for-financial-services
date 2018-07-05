@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<script type="text/javascript" src="../resource/js/earlyWarning.js"></script>
+
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;" >
+
+</body>
+</html>
+<!-- 筛选器-数值型 star -->
+<div class="dialog-defin" id="numFilter">
+  <div class="select-show">
+     <h3>数值型筛选器</h3>
+     <p class="numinput"><select class="form-control" id="numselsect" >
+          <option value="1" values="=" id="numselsects">等于</option>
+          <option value="1" values="!=" id="numselsects">不等于</option>
+          <option value="1" values=">" id="numselsects">大于</option>
+          <option value="1" values="<" id="numselsects">小于</option>
+          <option value="1" values=">=" id="numselsects">大于等于</option>
+          <option value="1" values="<=" id="numselsects">小于等于</option>
+          <option value="2" selected="" values="yes" id="numselsects">区间</option>
+          <option value="2" values="no" id="numselsects">不在区间</option>
+        </select>
+         <span class="numinput1">
+           <input type="text" class="form-control" placeholder="输入数值" id="text">
+        </span>
+        <span class="numinput2">
+           <input type="text" class="form-control" placeholder="输入数值" id="text1">
+           <em>~</em>
+           <input type="text" class="form-control" placeholder="输入数值" id="text2">
+        </span>
+      </p>
+      <input type="text" class="form-control" placeholder="描述" id="note">
+  </div>
+</div>
+<!-- 筛选器-数值型 end -->
+
+

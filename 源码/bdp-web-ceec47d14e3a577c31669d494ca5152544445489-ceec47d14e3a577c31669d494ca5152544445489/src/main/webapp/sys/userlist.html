@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>用户管理</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->	
+	<div class="wrap">
+	    <!-- asider start -->
+	    <div class="asider queryasider">
+	         <div id="tree"></div>
+	    </div>
+	    <!-- asider end -->
+	    <!-- content start -->
+	    <div class="section">
+	        <div class="content">
+	           <div class="title-query">
+	              <em>用户管理</em>                  
+               </div>
+               <div class="search-form-model">
+					<div class="item">
+						<span>用户名称：</span><input id="menu_Name" class="form-control"
+							placeholder="用户名称" />
+					</div>
+					<div class="item">
+						<button id="btn-search" class="btn btn-primary">
+							<img src="../resource/images/search.png">查询
+						</button>
+					</div>
+					<div class="item">
+						<button id="btnadd" class="btn btn-success">+ 新增</button>
+					</div>
+				</div>
+				<div class="table-form">
+					<table id="table" class="table table-striped"
+						data-id-field="userId">
+						<thead>
+							<tr>
+								<th data-field="userCode">用户编号</th>
+								<th data-field="userName">用户名称</th>
+								<th data-field="phone">手机号码</th>
+								<th data-field="email">用户邮箱</th>
+								<th data-field="status">用户状态</th>
+								<th data-field="certNo">证件号码</th>
+								<th data-field="certType">证件类型</th>
+								<th data-field="" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+	        </div>
+	    </div>
+	    <!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+
+<script type="text/javascript" src="../resource/js/jsonp4Table.js"></script>
+<script type="text/javascript">
+	//var menuurl="http://192.168.31.251:8070/";
+	
+	var _json4Table = new $.jsonp4Table({
+		action : "/bdp-web/sysUser/selectUser",
+		formatter : operateFormatter
+	});
+	$(document).ready(function() {
+		$("#btnadd").click(function() {
+			qiao.bs.dialog({
+				url : 'add_user.html',
+				title : '新增',
+				qubtn : '取消',
+				btn : true,
+				okbtn : '保存',
+				callback : function() {
+					var param = {
+						"pageSize" : 999
+					};
+					// 加载机构
+					initBranchNameOption();
+					// 加载角色
+					initRoleNameOption();
+					ajaxSendCloud("/bdp-web/sysMenu/selectMenu", param,function(data) {
+						$("#parentId").html("");
+						var options = "<option value='0'>无</option>";
+						$.each(data.list, function(i, obj) {
+							options += "<option value='" + obj["menuCode"] + "'>" + obj["menuName"] + "</option>";
+						});
+						$("#parentId").html(options);
+					});
+				}
+			},
+				function() {
+					var userCode = $("#userCode").val();
+					var userName = $("#userName").val();
+					var password = $("#password").val();
+					var exPassword = $("#exPassword").val();
+					var authType = $("#authType").val();
+					var phone = $("#phone").val();
+					var email = $("#email").val();
+					var status = $("#status").val();
+					var certType = $("#certType").val();
+					var certNo = $("#certNo").val();
+					var userType = $("#userType").val();
+					/* var roleName = $("#roleName").text();
+					var branchName = $("#branchName").text();
+					var roleId = $("#roleName").val();
+					var branchId = $("#branchName").val(); */
+					var params = {
+						"userCode" : userCode,
+						"userName" : userName,
+						"password" : password,
+						"exPassword" : exPassword,
+						"authType" : authType,
+						"phone" : phone,
+						"email" : email,
+						"status" : status,
+						"certType":certType,
+						"certNo" : certNo,
+						"userType" : userType
+						/* "roleName" : roleName,
+						"branchName":branchName */
+					};
+					ajaxSend("/bdp-web/sysUser/addUser", {
+						"param" : JSON.stringify(params),
+					}, callfunction);
+					return true;
+				});
+		});
+		$("#btn-search").click(function() {
+			var menu_Name = $("#menu_Name").val();
+			var params = {
+				"userName" : menu_Name.trim()
+			};
+			_json4Table.drewTable({
+					"param" : JSON.stringify(params)
+				});
+		});
+		var params = {};
+		_json4Table.drewTable(params);
+	});
+
+	function operateFormatter(id) {
+		return [
+			'<a class="edit" href="javascript:edit(\'' + id
+			+ '\')" title="修改">',
+			'<i class="glyphicon glyphicon-edit">修改</i>',
+			'</a>  ',
+			'<a class="remove" href="javascript:remove(\'' + id
+			+ '\')" title="删除">',
+			'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+			.join('');
+	}
+	var parentList = "";
+	function edit(id) {
+		qiao.bs.dialog({
+			url : 'add_user.html',
+			title : '编辑',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback : function() {
+				var params = {
+					"userId" : id
+				};
+				var param = {
+					"pageSize" : 9999
+				};
+				
+				// 加载机构
+				//initBranchNameOption();
+				// 加载角色
+				//initRoleNameOption();
+				ajaxSendCloud("/bdp-web/sysUser/selectUserByUserId", params, initVO);
+				/* ajaxSendCloud("/bdp-web/sysMenu/selectMenu",param, function(data) {
+					$("#parentId").html("");
+					var options = "<option value='0'>无</option>";
+					$.each(data.list, function(i, obj) {
+						options += "<option value='" + obj["menuCode"] + "'>" + obj["menuName"] + "</option>";
+					});
+					$("#parentId").html(options);
+				}); */
+			}
+		}, function() {
+		
+			var userId = $("#userId").val();
+			var userCode = $("#userCode").val();
+			var userName = $("#userName").val();
+			var password = $("#password").val();
+			var exPassword = $("#exPassword").val();
+			var authType = $("#authType").val();
+			var phone = $("#phone").val();
+			var email = $("#email").val();
+			var status = $("#status").val();
+			var certType = $("#certType").val();
+			var certNo = $("#certNo").val();
+			var userType = $("#userType").val();
+				
+			var params = {
+				"userId" : userId,
+				"userCode" : userCode,
+				"userName" : userName,
+				"password" : password,
+				"exPassword" : exPassword,
+				"authType" : authType,
+				"phone" : phone,
+				"email" : email,
+				"status" : status,
+				"certType":certType,
+				"certNo" : certNo,
+				"userType" : userType
+				};
+			
+			ajaxSend("/bdp-web/sysUser/updateUser", {
+				"param" : JSON.stringify(params)
+			}, callfunction);
+			return true;
+		});
+	}
+	
+	//加载机构
+	function initBranchNameOption(){
+		var params = {};
+		ajaxSend("/bdp-web/sysBranch/selectBranchAll",params,function(data) {
+			$("#branchName").html("");
+			var options = $("<option value=''>请选择</option>");
+			$("#branchName").append(options);
+			$.each(data.branchList, function(i, e) {
+				var option = $("<option></option>");
+				option.attr("value", e.branchId);
+				option.text(e.branchName);
+				$("#branchName").append(option);
+			});
+		});
+		
+	}
+	
+	//加载机构
+	function initRoleNameOption(){
+		var params = {};
+		ajaxSend("/bdp-web/sysRole/selectRoleAll",params,function(data) {
+			$("#roleName").html("");
+			var options = $("<option value=''>请选择</option>");
+			$("#roleName").append(options);
+			$.each(data.roleList, function(i, e) {
+				var option = $("<option></option>");
+				option.attr("value", e.roleId);
+				option.text(e.roleName);
+				$("#roleName").append(option);
+			});
+		});
+		
+	}
+	
+	function initVO(data) {
+		if (data.sysUser == null) {
+			alert("加载失败！");
+		} else {
+			var sysUser = data.sysUser;
+			$("#userId").val(sysUser.userId);
+			$("#userCode").val(sysUser.userCode);
+			$("#userName").val(sysUser.userName);
+			$("#password").val(sysUser.password);
+			$("#exPassword").val(sysUser.exPassword);
+			$("#authType").val(sysUser.authType);
+			$("#phone").val(sysUser.phone);
+			$("#email").val(sysUser.email);
+			$("#status").val(sysUser.status);
+			$("#certType").val(sysUser.certType);
+			$("#certNo").val(sysUser.certNo);
+			$("#userType").val(sysUser.userType);
+		}
+	}
+
+	function remove(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除？"
+		}, function() {
+			var params = {
+				"userId" : id
+			};
+			ajaxSend("/bdp-web/sysUser/delUser", params, callfunction);
+		}, function() {});
+	}
+
+	function callfunction(data) {
+		if (data.code != null &&( data.code != 0 || data.code != "0")) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+			var params = {};
+			_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+		}
+		var params = {};
+		_json4Table.drewTable(params);
+	}
+</script>
+
+	<script type="text/javascript">
+		var $tree = $("#tree");
+		$(function() {
+			ajaxSend("/bdp-web/sysBranch/selectBranchAll",
+				{}, inittree);
+		});
+		function inittree(data) {
+			var treedata = list2Json7(data.list);
+			$tree.treeview({
+				showBorder : false,
+				enableLinks : true,
+				data : treedata
+			});
+		}
+		function treeclick(field, value) {
+			if (field == "" && value == "") {
+				var params = {};
+				_json4Table.drewTable(params);
+			} else {
+				var params = {
+					"parentId" : value
+				};
+				_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+			}
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.easybdp</groupId>
+	<artifactId>bdp-commons-bean</artifactId>
+	<version>0.0.226</version>
+	<description>
+		0.0.225 queryCondition修改
+		0.0.224 rest包删除
+		0.0.223 QueryFields--jx版本修改
+		0.0.222 QueryBeanCondition 修改
+		0.0.219 TargetResultObj 修改
+		0.0.217 TargetSourceDate 修改
+		0.0.216 TargetTemplate 修改
+		0.0.215 TargetTemplate 修改
+		0.0.213 增加指标模版表data_date字段
+		0.0.212 MetadataInsertBean加关联关系属性
+		0.0.211 metadtaLogBean
+		0.0.210 更新指标筛选条件表bean
+		0.0.209 更新指标筛选条件表bean
+		0.0.208 更新指标输出字段表bean
+	    0.0.207 更新basic-http版本为0.0.14
+		0.0.205调度平台取参数bean
+		0.0.204调度平台取参数bean
+		0.0.199调度平台取参数bean
+		0.0.198修改调度平台的bean
+		0.0.197新增调度平台的bean
+		0.0.196指标定义修改
+		0.0.186修改算法对象bean
+		0.0.185修改算法对象bean
+		0.0.184修改业务对象bean
+		0.0.183修改元数据bean
+		0.0.182修改tablebean
+		0.0.181修改算法的bean
+		0.0.180算法增加算法描述
+		0.0.179指标定义bean修改
+		0.0.178指标模板算法表增加算法标识
+		0.0.177指标模板bean修改	
+		0.0.176业务对象bean修改
+		0.0.175添加source_condition表字段
+		0.0.174修改表bean
+		0.0.173增加灵活查询属性
+		0.0.172建表bean
+		0.0.171建表bean
+		0.0.170指标模板bean修改
+		0.0.169指标类型bean修改
+        0.0.168 使用异步日志线程池
+		0.0.167指标类型bean修改
+		0.0.166指标类型bean增加指标模板List
+		0.0.165指标模板bean增加元数据code
+		0.0.164指标bean修改
+		0.0.163指标bean修改
+		0.0.162指标bean修改
+		0.0.161业务对象查询bean
+		0.0.160指标bean修改
+		0.0.159元数据bean修改
+		0.0.158元数据业务类型bean修改
+		0.0.157元数据业务属性返回bean修改
+		0.0.156指标bean初始化
+		0.0.155元数据业务对象bean修改
+		0.0.154元数据业务对象bean修改
+		0.0.153元数据业务对象bean修改
+		0.0.152增加uninid字段
+		0.0.151元数据业务对象接口bean增加关联字段
+		0.0.150元数据业务接口bean更新
+		0.0.148元数据业务表bean更新
+		0.0.147元数据业务目录bean
+		0.0.146修改元数据业务对象bean
+		0.0.145元数据业务对象bean
+		0.0.144元数据业务表返回bean
+		0.0.143元数据业务表返回bean
+		0.0.142queryFields,Bean增加一个字段
+		0.0.141修改元数据业务表bean
+		0.0.140元数据业务表bean
+		0.0.137更新图表bean
+		0.0.136更新指标bean
+		0.0.129图表bean的更新
+		0.0.127更新灵活查询bean
+		0.0.125更新灵活查询bean
+		0.0.124更新指标bean
+		0.0.123更新指标bean
+		0.0.121分段计算
+		0.0.120图表bean的更新
+		0.0.119图表bean的更新
+		0.0.118分段计算
+		0.0.117更新图表bean
+		0.0.116更新图表bean，增加parent_metadata
+		0.0.115更新指标bean
+		0.0.114仪表盘目录bean修改
+		0.0.113仪表盘目录bean修改
+		0.0.112修改查询图表数据BEAN
+		0.0.111修改查询图表数据BEAN
+		0.0.110更新ChartTemplate加目錄ID
+		0.0.109更新chartBean的field屬性及儀錶盤元素
+		0.0.108修改beanUtil
+		0.0.107更新指标bean
+		0.0.106更新仪表盘BEAN，增加目录BEAN
+		0.0.105更新算法BEAN
+		0.0.104更新算法BEAN
+		0.0.103更新指标bean，算法BEAN
+		0.0.102更新指标bean
+		0.0.101仪表盘返回bean更新
+		0.0.100更新指标bean
+		0.0.99计算字段
+		0.0.98新增指标bean
+		0.0.96ExecuteBatchSqlBean增加删除list
+		0.0.95仪表板bean
+		0.0.94元数据bean
+		0.0.93table排序字段
+		0.0.92元数据bean增加属性
+		0.0.91增加table排序字段
+		0.0.90简单查询BEAN修改
+		0.0.89 多表查询BEAN修改
+		0.0.88 多表查询BEAN修改
+		0.0.87 多表查询BEAN修改
+		0.0.86 排序别名
+		0.0.85 动态查询条件
+		0.0.84 图表bean更新
+		0.0.81 ConditionBean转换方法
+		0.0.80增加菜单entity
+		0.0.79 修改资源BEAN
+		0.0.78 condition 增加pk中文名字段
+		0.0.77 chartBean更新
+		0.0.76 AuthResource
+		0.0.75公共Bean转换方法
+		0.0.74新增汇总查询 bean
+		0.0.73多表SQL bean
+		0.0.72默认选中分组
+		0.0.71汇总
+		0.0.70是否多选
+		0.0.69条件排序
+		0.0.68汇总
+		0.0.67登录返回中文名
+		0.0.66灵活查询字段bean参数名修正
+		0.0.65 筛选bean增加是树形下拉的属性
+		0.0.64 灵活查询字段bean增加小数点、设置单位属性
+		0.0.64 灵活查询字段bean增加小数点、设置单位属性
+		0.0.63 十大户修改
+		0.0.62 灵活查询字段bean增加千分位属性，删除61版本
+		0.0.61 灵活查询bean增加千分位属性
+		0.0.60 修改chartbean
+		0.0.59 chartbean
+		0.0.58 增加AnalysisUtil公共方法,chartbean
+		0.0.57 EasyQuery
+		0.0.56 导出
+		0.0.55 前几行
+		0.0.54 前几行
+		0.0.53 前几行
+		0.0.52 前几行
+		0.0.51 EasyQuery 增加属性
+		0.0.50 EasyQuery 增加属性
+		0.0.49 EasyQuery 增加属性
+		0.0.48 RetBean 增加属性
+		0.0.47 ExecuteSqlBean增加属性
+		0.0.46 ExecuteBatchSqlBean批量操作数据库bean
+		0.0.45 authorization
+		0.0.44 修改retbean 增加返回对象list
+		0.0.43 数据对象bean增加对象ID
+		0.0.42 AuthPrivilege增加数据对象
+		0.0.41 LoginBean修改
+		0.0.40 AuthPrivilegesBean修改
+		0.0.39 QueryParams
+		0.0.38 authorization
+		0.0.36 LoginBean
+		0.0.35 AuthPrivilegesBean修改
+		0.0.34 AuthPrivilegesBean修改
+		0.0.33 AuthPrivilegesBean修改
+		0.0.32 authorization修改
+		0.0.31 authorization
+		0.0.30 QueryParams
+		0.0.29 QueryParams
+		0.0.28 QueryParams
+		0.0.27 QueryParams排序属性修改
+		0.0.26 QueryParams
+		0.0.25 QueryParams
+		0.0.24 QueryParams
+		0.0.23 QueryParams
+		0.0.22 QueryParams
+		0.0.21 RetBean
+		0.0.20 RetBean
+		0.0.19 RetBean
+		0.0.17 QueryParam去掉多余参数
+		0.0.16 QueryParam加返回页码
+		0.0.15 retBean加返回页码
+		0.0.14 queryParams增加排序列表
+		0.0.13 添加eval
+		0.0.12 修改类型
+		0.0.11 retBean增加pageSize和indexPage
+		0.0.10 增加中文名
+		0.0.9 QueryParams bean的Integer
+    	0.0.8  修改bean属性
+    	0.0.7  灵活查询：返回对象bean、查询bean
+        0.0.6 修改成员名称
+        0.0.5 修改成员名称
+        0.0.4 修改目录结构
+        0.0.3 增加数据服务的返回对象
+    </description>
+	<packaging>jar</packaging>
+	
+	<dependencies>
+		
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>basic-util-http</artifactId>
+			<version>0.0.14</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-json</artifactId>
+			<version>0.0.1</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-tools</artifactId>
+			<version>0.0.5</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-jdbc</artifactId>
+			<version>0.0.24</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+	<build>
+		<defaultGoal>compile</defaultGoal>
+		<plugins>
+			<!-- compiler插件, 设定JDK版本 最好是用1.7，因为利为的是运行在jre7上面的，如果用1.8的话，会报错 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+
+		<repository>
+			<id>localnexus-re</id>
+			<name>localnexus-re</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/releases/</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>localnexus-snapshot</id>
+			<name>User Porject Snapshot</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

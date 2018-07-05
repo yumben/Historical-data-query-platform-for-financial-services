@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<title>元数据管理</title>
+
+<script type="text/javascript">
+	var _json4Table = new $.json4Table({
+		action : metadataControl,
+		formatter : null
+	});
+	$(document).ready(function($) {	
+		
+		var metadataId = GetQueryString("metadataId");	
+		
+		var params = {
+				"metadataId" : metadataId
+			};
+		var param = {"param" :JSON.stringify(params),"menuUrl":"metadata/ajaxQueryMetadataRelationshipListAction"};
+			
+		_json4Table.drewTable(param);
+	});
+	
+	function back(){
+		window.location.href="/bdp-web/metadata/metadata-management.html?codeOrName="+decodeURI(GetQueryString("codeOrName"));
+	}
+	
+
+</script>
+</head>
+<body style="min-width:auto;">
+
+    <div class="content ">
+        <div class="title-query">	              
+          <em>元数据应用对象</em>
+          <div class="item fr"><a class="btn btn-default" onclick="back();" id="addre"><img src="../resource/img/query-ico7.png"> 返回</a></div>
+        </div>
+       
+        <!-- <div class="metaset">根据时间动态显示元数据操作信息 </div>-->
+        <div class="table-form">
+             <table id="table" data-id-field="id" class="table table-striped alltable">
+                 <thead>
+                     <tr>
+                        <!--  <th data-field="code">代码</th>
+                         <th data-field="id">ID</th> -->
+                         <th data-field="metadataCode">代码</th>
+                         <th data-field="metadataName">名称</th>
+                         <th data-field="beRelationMeta">被关联对象</th>
+                         <th data-field="relationMeta">关联对象</th>
+                         <th data-field="contextCatalog">元数据来源</th>
+                     </tr>
+                 </thead>
+             </table>
+       </div>
+    </div>
+</body>
+</html>

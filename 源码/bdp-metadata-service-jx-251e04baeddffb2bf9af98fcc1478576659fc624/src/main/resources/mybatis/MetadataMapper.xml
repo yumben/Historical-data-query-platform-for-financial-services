@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetadataMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.Metadata">
+		<id column="metadata_id" property="metadataId" />
+		<result column="metadata_code" property="metadataCode" />
+		<result column="metadata_name" property="metadataName" />
+		<result column="parent_metadata" property="parentMetadata" />
+		<result column="catalog_id" property="catalogId" />
+		<result column="class_id" property="classId" />
+		<result column="notshow" property="notshow" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+
+<select id="getTableList" resultType="cn.com.infohold.entity.Metadata">
+	SELECT
+	metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+	FROM metadata
+	WHERE
+	metadata_id IN (
+	SELECT
+	parent_metadata
+	FROM
+	metadata
+	WHERE
+	metadata_id IN (
+	SELECT
+	metadata_relationed
+	FROM
+	metadata_relation
+	WHERE
+	metadata_id IN
+	<foreach collection="ids" item="id" index="index" open="("
+		close=")" separator=",">
+		#{id}
+	</foreach>
+	)
+	)
+	AND metadata_id != #{metadataId} AND parent_metadata IS NOT NULL
+</select>
+
+
+
+<select id="getFromMetaData" resultType="cn.com.infohold.entity.Metadata">
+	SELECT
+	metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+	FROM metadata
+	WHERE
+	metadata_id in (
+		SELECT
+			mr.metadata_relationed
+		FROM
+			metadata_relation mr,metamodel_relation mdr
+		WHERE
+			mr.metadata_id = #{metadataId}
+		AND mr.relation_id = mdr.relation_id
+		AND mdr.relation_code = 'table_10001'
+	)
+</select>
+
+<select id="selectContextById" resultType="cn.com.infohold.entity.Metadata">
+	SELECT
+		m.metadata_name AS metadataName,
+		m.parent_metadata AS parentMetadata,
+		mc.class_name AS className
+	FROM
+		metadata m,
+		metamodel_class mc
+	WHERE
+		m.class_id = mc.class_id
+	AND m.metadata_id = #{metadataId}
+</select>
+<!-- <delete  id="deleteMetadataIdList">
+	DELETE FROM metadata 
+	WHERE metadata_id IN 
+		<foreach collection="mids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+	
+</delete> -->
+
+
+<!-- <select id="selectMetadataById" resultType="cn.com.infohold.entity.Metadata">
+	SELECT
+	metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+	FROM metadata
+	WHERE 
+	metadata_id = #{metadataId} 
+
+</select> -->
+
+
+<!-- <select  id="selectMetadataByCatalogIdList" resultType="cn.com.infohold.entity.Metadata">
+	SELECT 
+	metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+	FROM metadata 
+	WHERE catalog_id IN 
+		<foreach collection="cids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach> 
+
+</select> -->
+
+
+<select  id="selectPannelMetadataByCatalogIdList" resultType="cn.com.infohold.entity.Metadata">
+	SELECT
+	  m.metadata_id AS metadataId,
+	  m.metadata_name AS metadataName,
+	  m.catalog_id AS catalogId,
+	  m.class_id AS classId,
+	  p.pannelpage_id AS pannelpageId 
+	FROM metadata m 
+	  INNER JOIN pannel_page p 
+	    ON m.metadata_id = p.metadata_id 
+	WHERE catalog_id = #{cid}
+	
+
+</select>
+
+<!-- <select  id="selectMetadataByCatalogId" resultType="cn.com.infohold.entity.Metadata">
+	SELECT 
+	metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+	FROM metadata 
+	WHERE catalog_id = #{cid}
+</select>
+ -->
+<!-- <update id="updMetadataByMetadataId">
+UPDATE metadata
+SET metadata_name = #{metadataName}
+WHERE metadata_id = #{metadataId};
+</update> -->
+
+<select id="selectMetadataByParentIdAndClassType" resultType="cn.com.infohold.entity.Metadata">
+SELECT 	
+	a.metadata_id AS metadataId,
+	a.metadata_code AS metadataCode,
+	a.metadata_name AS metadataName,
+	a.parent_metadata AS parentMetadata,
+	a.catalog_id AS catalogId,
+	a.class_id AS classId,
+	a.notshow
+FROM metadata a,
+  metamodel_class b
+WHERE a.class_id = b.class_id
+    AND a.catalog_id =#{parentId} and (a.parent_metadata is null or a.parent_metadata = '') and b.type = #{classType} 
+</select>
+
+<select id="selectMetadataByParentId" resultType="cn.com.infohold.entity.Metadata">
+SELECT metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+FROM metadata
+WHERE catalog_id = #{parentId}
+    AND (parent_metadata IS NULL
+          OR parent_metadata = '')
+</select>
+
+<select id="queryMetaDataByParentIdAndClassIdAndClassType" resultType="cn.com.infohold.entity.Metadata">
+SELECT a.metadata_id AS metadataId,
+	a.metadata_code AS metadataCode,
+	a.metadata_name AS metadataName,
+	a.parent_metadata AS parentMetadata,
+	a.catalog_id AS catalogId,
+	a.class_id AS classId,
+	a.notshow
+FROM metadata a,
+  metamodel_class b
+WHERE a.class_id = b.class_id
+    AND a.parent_metadata = #{parentId}
+    AND a.class_id = #{classId}
+    AND b.type = #{classType}
+</select>
+
+<!-- <select id="queryMetaDataByParentIdAndClassId" resultType="cn.com.infohold.entity.Metadata">
+SELECT metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+FROM metadata
+WHERE parent_metadata =#{parentId}
+    AND class_id = #{classId}
+</select> -->
+
+<!-- <select id="queryMetaDataByParentIdAndNotId" resultType="cn.com.infohold.entity.Metadata">
+SELECT metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow
+FROM metadata
+WHERE parent_metadata = #{parentId}
+    AND metadata_id NOT IN(#{metadataId})
+</select> -->
+
+<select id="queryMetadataById" resultType="cn.com.infohold.entity.Metadata">
+SELECT
+  a.metadata_id AS metadataId,
+	a.metadata_code AS metadataCode,
+	a.metadata_name AS metadataName,
+	a.parent_metadata AS parentMetadata,
+	a.catalog_id AS catalogId,
+	a.class_id AS classId,
+	a.notshow,
+	a.create_name AS createName,
+	a.create_date AS createDate,
+  b.class_name AS className
+FROM metadata a,
+  metamodel_class b
+WHERE a.class_id = b.class_id
+    AND a.metadata_id = #{metadataId}
+</select>
+<select id="queryMetaDataListByCodeOrName" resultType="cn.com.infohold.entity.Metadata">
+SELECT a.metadata_id AS metadataId,
+	a.metadata_code AS metadataCode,
+	a.metadata_name AS metadataName,
+	a.parent_metadata AS parentMetadata,
+	a.catalog_id AS catalogId,
+	a.class_id AS classId,
+	a.notshow,
+	a.create_name AS createName,
+	a.create_date AS createDate,
+	b.class_code AS classCode,
+	b.class_name AS className
+FROM metadata a,
+  metamodel_class b
+WHERE a.class_id = b.class_id
+    AND (a.metadata_code LIKE #{codeOrName}
+          OR a.metadata_name LIKE #{codeOrName})
+</select>
+<select id="queryMataByclassId" resultType="cn.com.infohold.entity.Metadata">
+SELECT metadata_id AS metadataId,
+	metadata_code AS metadataCode,
+	metadata_name AS metadataName,
+	parent_metadata AS parentMetadata,
+	catalog_id AS catalogId,
+	class_id AS classId,
+	notshow,
+	create_name AS createName,
+	create_date AS createDate
+FROM metadata
+WHERE metadata_id IN(SELECT
+                       parent_metadata 
+                     FROM metadata
+                     WHERE class_id = #{classId})
+</select>
+<select id="queryRelationAndMetaDataByClassId" resultType="cn.com.infohold.entity.Metadata">
+SELECT
+  mr.metadata_relation_id AS metadataRelationId,
+  r.relation_name AS relationName,
+  m.metadata_code AS metadataCode,
+  m.metadata_name AS metadataName,
+  m.catalog_id AS catalogId,
+  mr.metadata_relationed AS metadataRelationed
+FROM metadata m,
+  metamodel_relation r,
+  metadata_relation mr
+WHERE 1 = 1
+    AND r.classed_id = m.class_id
+    AND mr.metadata_relationed = m.metadata_id
+    AND mr.relation_id = r.relation_id
+    AND r.classed_id = #{classId}
+    AND r.relation_id = #{relationId}
+    AND mr.metadata_id = #{metadataId} 
+</select>
+
+<select id="queryMetadataByMap" resultType="cn.com.infohold.entity.Metadata">
+SELECT
+	m.metadata_id AS metadataId,
+	m.metadata_code AS metadataCode,
+	m.metadata_name AS metadataName,
+	m.parent_metadata AS parentMetadata,
+	m.catalog_id AS catalogId,
+	m.class_id AS classId,
+	notshow,
+  mc.property_code AS propertyCode,
+	mp.property_value AS propertyValue
+FROM
+	metadata m
+LEFT JOIN metadata_property mp ON m.metadata_id = mp.metadata_id
+LEFT JOIN metamodel_classproperty mc ON mp.class_property_id = mc.property_id
+WHERE 1=1 
+	<if test="map.metadata_code != null and map.metadata_code != ''">
+			and m.metadata_code = #{map.metadata_code}
+	</if>
+	<if test="map.metadata_id != null and map.metadata_id != ''">
+			and m.metadata_Id = #{map.metadata_id}
+	</if>
+	
+</select>
+
+<select id="querySubMetadataByListId" resultType="cn.com.infohold.entity.Metadata">
+SELECT
+	m.metadata_id AS metadataId,
+	m.metadata_code AS metadataCode,
+	m.metadata_name AS metadataName,
+	m.parent_metadata AS parentMetadata,
+	m.catalog_id AS catalogId,
+	m.class_id AS classId,
+	notshow,
+  mc.property_code AS propertyCode,
+	mp.property_value AS propertyValue
+FROM
+	metadata m
+LEFT JOIN metadata_property mp ON m.metadata_id = mp.metadata_id
+LEFT JOIN metamodel_classproperty mc ON mp.class_property_id = mc.property_id
+WHERE parent_metadata IN 
+		<foreach collection="pids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach> 
+ORDER BY m.create_date DESC
+</select>
+
+
+<select id="queryRelationMetadataByListId" resultType="cn.com.infohold.entity.Metadata">
+
+SELECT DISTINCT
+	md.metadata_id AS metadataId,
+	md.metadata_code AS metadataCode,
+	md.metadata_name AS metadataName,
+	md.parent_metadata AS parentMetadata,
+	md.catalog_id AS catalogId,
+	md.class_id AS classId,
+	notshow,
+	mc.property_code AS propertyCode,
+	mp.property_value AS propertyValue,
+	mr.metadata_id AS relationMeta,
+	mr.metadata_relationed AS beRelationMeta
+FROM
+	metadata md
+LEFT JOIN metadata_property mp ON md.metadata_id = mp.metadata_id
+LEFT JOIN metamodel_classproperty mc ON mp.class_property_id = mc.property_id
+JOIN metadata_relation mr ON mr.metadata_id = md.metadata_id
+OR mr.metadata_relationed = md.metadata_id
+WHERE md.class_id = #{class_id} AND 
+	(
+		mr.metadata_id IN 
+			<foreach collection="pids" item="id" index="index" open="("
+				close=")" separator=",">
+				#{id}
+			</foreach> 
+		OR mr.metadata_relationed IN 
+			<foreach collection="pids" item="id" index="index" open="("
+				close=")" separator=",">
+				#{id}
+			</foreach> 
+	)
+AND md.metadata_id NOT IN 
+	<foreach collection="pids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+	</foreach> 
+</select>
+
+<select id="queryMetadataByListId" resultType="cn.com.infohold.entity.Metadata">
+SELECT DISTINCT 
+	me.metadata_id AS metadataId,
+	me.metadata_code AS metadataCode,
+	me.metadata_name AS metadataName,
+	me.parent_metadata AS parentMetadata,
+	me.catalog_id AS catalogId,
+	me.class_id AS classId,
+	me.notshow,
+ 	mc.property_code AS propertyCode,
+	mp.property_value AS propertyValue
+FROM
+	metadata me
+LEFT JOIN metadata_property mp ON me.metadata_id = mp.metadata_id
+LEFT JOIN metamodel_classproperty mc ON mp.class_property_id = mc.property_id
+WHERE me.metadata_id IN 
+		<foreach collection="pids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach> 
+</select>
+
+<select id="queryAllRelationMetadata" resultType="cn.com.infohold.entity.Metadata">
+SELECT DISTINCT
+	md.metadata_id AS metadataId,
+	md.metadata_code AS metadataCode,
+	md.metadata_name AS metadataName,
+	md.parent_metadata AS parentMetadata,
+	md.catalog_id AS catalogId,
+	md.class_id AS classId,
+	notshow,
+	mc.property_code AS propertyCode,
+	mp.property_value AS propertyValue
+FROM
+	metadata md
+LEFT JOIN metadata_property mp ON md.metadata_id = mp.metadata_id
+LEFT JOIN metamodel_classproperty mc ON mp.class_property_id = mc.property_id 
+where md.class_id = #{class_id} order by md.metadata_id 
+</select>
+<select id="selectMetadataCodeById" resultType="cn.com.infohold.entity.Metadata">
+		SELECT
+		a.metadata_id AS metadataId,
+		a.metadata_code AS metadataCode,
+		a.metadata_name AS metadataName,
+		a.parent_metadata AS parentMetadata
+		FROM metadata a
+		WHERE a.metadata_id = #{metadataId}
+</select>
+</mapper>

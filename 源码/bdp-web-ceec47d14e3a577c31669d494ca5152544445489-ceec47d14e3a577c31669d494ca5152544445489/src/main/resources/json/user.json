@@ -1,0 +1,36 @@
+[{
+	"title": [{
+		"field": "name",
+		"lable": "姓名"
+	},
+	{
+		"field": "work",
+		"lable": "岗位"
+	},
+	{
+		"field": "age",
+		"lable": "年龄"
+	},
+	{
+		"field": "rework",
+		"lable": "备注"
+	}],
+	"content": [{
+		"name": "张三三",
+		"work": "程序员",
+		"age": "30",
+		"rework": "工作5年"
+	},
+	{
+		"name": "黄务",
+		"work": "管理员",
+		"age": "40",
+		"rework": "工作10年"
+	},
+	{
+		"name": "李四",
+		"work": "会计",
+		"age": "15",
+		"rework": "工作8年"
+	}]
+}]

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+</head>
+<body>
+
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="header.shtml"-->
+	<!-- wrap star -->
+	<div class="wrap">
+		<div class="index-advan ptb">
+			<ul class="multnav-list clearfix" id="multnav">
+			</ul>
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="footer.shtml"-->
+
+	<script type="text/javascript">
+		$(function() {
+			var menuCode = GetQueryString("menuCode");
+			var param = {
+				"parentId" : menuCode
+			};
+			var navlist = '';
+			ajaxSend("/bdp-web/sysMenu/selectMenuByParentId",param, function(data) {
+				$.each(data.list, function(j, child) {
+					if(child.menuUrl.indexOf('?') >= 0){
+						navlist += '<li><a href="' + child.menuUrl + '&menuCode=' + child.menuCode + '"><span><img src="' + child.menuImage
+						+ '"></span>' + child.menuName + '</a></li>';
+					}else{
+						navlist += '<li><a href="' + child.menuUrl + '?menuCode=' + child.menuCode + '"><span><img src="' + child.menuImage
+						+ '"></span>' + child.menuName + '</a></li>';
+					}
+					
+				});
+				$("#multnav").html(navlist);
+			});
+		});
+	</script>
+</body>
+</html>

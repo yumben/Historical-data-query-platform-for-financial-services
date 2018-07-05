@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetadataRelationMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetadataRelation">
+		<id column="metadata_relation_id" property="metadataRelationId" />
+		<result column="metadata_id" property="metadataId" />
+		<result column="metadata_relationed" property="metadataRelationed" />
+		<result column="condition_id" property="conditionId" />
+		<result column="relation_id" property="relationId" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+
+	<delete  id="deleteByMetadataIdList">
+	DELETE FROM metadata_relation 
+		WHERE metadata_id IN 
+			<foreach collection="mids" item="id" index="index" open="("
+				close=")" separator=",">
+				#{id}
+			</foreach> 
+		 OR metadata_relationed IN 
+			<foreach collection="mids" item="rid" index="index" open="("
+				close=")" separator=",">
+				#{rid}
+			</foreach>
+	</delete>
+	
+	<delete  id="deleteByMetadataIdListInMetadataId">
+	DELETE FROM metadata_relation 
+		WHERE metadata_id IN 
+			<foreach collection="mids" item="id" index="index" open="("
+				close=")" separator=",">
+				#{id}
+			</foreach>
+	</delete>
+	<select id="selectMetadataRelation" resultType="cn.com.infohold.entity.MetadataRelation">
+	SELECT metadata_relation_id AS metadataRelationId FROM metadata_relation 
+		WHERE metadata_relationed IN 
+			<foreach collection="mids" item="rid" index="index" open="("
+				close=")" separator=",">
+				#{rid}
+			</foreach>
+		
+		
+	</select>
+
+</mapper>

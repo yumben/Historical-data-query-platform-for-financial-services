@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%file] [%thread] %n%level : %msg%n" />
+        </Console>
+        
+         <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
+        <RollingFile name="RollingFile" filename="log/automation.log" filepattern="log/%d{yyyyMMddHHmmss}-automation.log">
+            <PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%file] [%thread] %n%level : %msg%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="100 MB"/>
+			</Policies>	
+			<DefaultRolloverStrategy max="20"/>
+		</RollingFile>
+    </Appenders>
+    
+    <Loggers>
+        
+        <!-- 减少部分debug日志 -->
+        <logger name="druid.sql" level="INFO"/>
+        <logger name="net.sf.ehcache" level="INFO"/>
+        <logger name="org.apache.shiro" level="INFO"/>
+        <logger name="org.mybatis.spring" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+       
+        <!-- 业务debug日志 -->
+        <logger name="cn.com.infohold" level="INFO"/>
+        
+        <Root level="debug">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFile" />
+        </Root>
+        
+    </Loggers>
+</Configuration>

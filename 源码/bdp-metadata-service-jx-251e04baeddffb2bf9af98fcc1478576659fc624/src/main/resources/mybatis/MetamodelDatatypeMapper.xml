@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelDatatypeMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelDatatype">
+		<id column="datatype_id" property="datatypeId" />
+		<result column="package_id" property="packageId" />
+		<result column="datatype_code" property="datatypeCode" />
+		<result column="datatype_name" property="datatypeName" />
+		<result column="datatype_describe" property="datatypeDescribe" />
+		<result column="visibility" property="visibility" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+<select id="selectMetamodelDatatypeByIdAndCode" resultType ="cn.com.infohold.entity.MetamodelDatatype">
+SELECT 
+	a.datatype_id AS datatypeId,
+	a.package_id AS packageId,
+	a.datatype_code AS datatypeCode,
+	a.datatype_name AS datatypeName,
+	a.datatype_describe AS datatypeDescribe,
+	a.visibility,
+	a.create_date AS createDate,
+	a.create_name AS createName,
+	a.edit_date AS editDate,
+	a.edit_name AS editName,
+	b.package_name AS packageName
+FROM metamodel_datatype a,
+  metamodel_package b 
+<where>
+a.package_id = b.package_id 
+<if test="null != packageId and '' != packageId">
+ AND a.package_id = #{packageId}
+</if>
+<if test="null != datatypeName and '' != datatypeName">
+  	AND (a.datatype_name LIKE #{datatypeName}
+     OR a.datatype_code LIKE #{datatypeName})
+</if>
+order by a.datatype_id desc
+</where>
+</select>
+
+</mapper>

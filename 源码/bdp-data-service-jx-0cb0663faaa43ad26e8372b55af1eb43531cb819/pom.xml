@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>cn.com.infohold</groupId>
+	<artifactId>bdp-data-service</artifactId>
+	<version>0.0.72-jx</version>
+	<description>
+		0.0.72-jx 批量插入接口优化
+	    0.0.69-jx 使用basic-util-http 0.0.14
+		0.0.68-jx 不使用连接池
+		0.0.67-jx 不使用连接池
+		0.0.66-jx 修改mongo工具类
+		0.0.65-jx 增加了一个插入权限的方法
+		0.0.64-jx 合计bug修改
+		0.0.63-jx 合计的顺序
+		0.0.62-jx 合计bug修改
+		0.0.61-jx 合计bug修改
+		0.0.60-jx 查询元数据库信息为直连jdbc
+		0.0.59-jx 合计并行
+		0.0.58-jx 合计的顺序
+        0.0.57-jx 使用最新basic-util-http 0.0.9 设置 ExpectContinueEnabled(false) 
+		0.0.56-jx 语句顺序
+		0.0.55-jx 语句顺序
+		0.0.54-jx修改并行count
+		0.0.53-jx 修改http工具
+        0.0.52-jx  删除inceptor-driver的依赖
+		0.0.51-jx 十大户bug修改
+	    0.0.50-jx 修改版本号
+		0.0.50合计bug
+		0.0.49增加pg
+	    0.0.48 修改jdbc连接版本
+		0.0.47合计和count 合并
+		0.0.46还原
+		0.0.45异步加载count和data
+		0.0.44主从平均分配
+		0.0.43判断空
+		0.0.42随机切换mongo连接
+		0.0.40优化多表SQL解析
+    	0.0.33优化配置文件
+    	0.0.31非空去重
+    	0.0.30修改count
+    	0.0.29多表查询
+    	0.0.28多表查询
+    	0.0.27多表查询
+    	0.0.26 排序
+    	0.0.25  字符的计数修改
+    	0.0.24  字符的计数修改
+        0.0.23 修复空条件的问题
+        0.0.22 日志作成异步，增加耗时日志
+        0.0.21 增加时间计算，统计灵活查询耗时
+        0.0.21 合计 平均值总合计也是平均
+        0.0.20 增加时间计算，修改http请求包，使用basic-util
+        0.0.19 修改日志，不输出结果
+        0.0.18 批量查询修改为并发查询，减少等待时间
+        0.0.17 合计 平均值总合计也是平均
+        0.0.16修复别名排序问题
+        0.0.15 sql语句拼接修改为占位符
+        0.0.14 mjx 修复分页问题
+        0.0.12 lfh 修复分页问题
+        0.0.9 增加根据sql操作
+        0.0.8  修改数据连接
+        0.0.7  增加去重计数count distinct
+        0.0.6 去掉log4j-over-slf4j，避免报错
+        0.0.5 去掉logbak的引用，避免报错
+        0.0.4 修改引用
+        0.0.3 修改引用
+        0.0.2 修改query返回的数据格式
+        0.0.1 修改完成query的功能
+    </description>
+	<packaging>jar</packaging>
+	<name>bdp-data-service</name>
+	<url>http://maven.apache.org</url>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.4.0.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<start-class>cn.com.infohold.ServiceApplication</start-class>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>jdk.tools</groupId>
+			<artifactId>jdk.tools</artifactId>
+			<version>1.8</version>
+			<scope>system</scope>
+			<systemPath>${JAVA_HOME}/lib/tools.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>log4j-over-slf4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<!-- 加入Eureka的服务治理体系 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>
+		<!-- 开启重试功能 -->
+		<dependency>
+			<groupId>org.springframework.retry</groupId>
+			<artifactId>spring-retry</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+		<!-- 实现客户端应用配置信息的重新获取与刷新 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-json</artifactId>
+			<version>0.0.1</version>
+			<type>jar</type>
+		</dependency>
+
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>bdp-springmvc-core</artifactId>
+			<version>0.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.4.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-tools</artifactId>
+			<version>0.0.3</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-mongo</artifactId>
+			<version>0.0.16</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-jdbc</artifactId>
+			<version>0.0.26</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>bdp-commons-bean</artifactId>
+			<version>0.0.136</version>
+			<type>jar</type>
+		</dependency>
+		<!-- <dependency> <groupId>cn.com.infohold</groupId> <artifactId>inceptor-driver</artifactId> 
+			<version>0.1</version> <type>jar</type> </dependency> -->
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.2</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>1.3</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>basic-util-http</artifactId>
+			<version>0.0.14</version>
+			<type>jar</type>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>Brixton.SR5</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<distributionManagement>
+
+		<repository>
+			<id>localnexus-re</id>
+			<name>localnexus-re</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/releases/</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>localnexus-snapshot</id>
+			<name>User Porject Snapshot</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<script type="text/javascript">
+  var typess=GetQueryString("typess");
+  var type=decodeURI(typess);
+
+  $(document).ready(function($){
+    
+  var params={"type":type,"flag":"showDictionaries"};
+  ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,showDictionaries);
+  });
+  
+  function showDictionaries(data){
+    var listDictionary=data.listDictionaryVO;
+    var ul=$("#site-l-list");
+    if(listDictionary!=null){
+    $.each(listDictionary,function(i,vo){
+       var li=$("<li><em >"+vo.value+"</em><span value='0'  dictionaryId="+vo.id+" >添加</span></li>");
+       ul.append(li);
+    });
+    }
+  }
+  
+  
+
+
+
+</script>
+
+<title>筛选器</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+</body>
+</html>
+<!-- 左边菜单增加 -->
+<div class="dialog" id="addcon">
+  <p class="showMeta" id="siteBtnground">
+	  <!-- <span>请选择筛选类型:</span> -->
+	  <label class="radio-inline"><input type="radio" name="name" id="siteBtn1" checked="checked" >精确筛选</label>
+	  <label class="radio-inline"><input type="radio" name="name" id="siteBtn2">条件筛选</label>
+  </p>
+   <div class="sitebox1 sitebox" id="siteDiv">
+       <div class="border-site"></div>
+       <div class="site-num-l">
+          <p>年份：</p>
+          <p class="site-inputbox"><input type="text" class="site-input"><i class="glyphicon glyphicon-search"></i></p>
+          <div class="site-scrol-l">
+            <ul class="site-listli" id="site-l-list">
+<!--               <li><em>2004年</em><span value="0">添加</span></li>
+              <li><em>2005年</em><span value="0">添加</span></li>
+              <li><em>2006年</em><span value="0">添加</span></li>
+              <li><em>2007年</em><span value="0">添加</span></li>
+              <li><em>2008年</em><span value="0">添加</span></li>
+              <li><em>2009年</em><span value="0">添加</span></li>
+              <li><em>2010年</em><span value="0">添加</span></li>
+              <li><em>2006年</em><span value="0">添加</span></li>
+              <li><em>2007年</em><span value="0">添加</span></li>
+              <li><em>2008年</em><span value="0">添加</span></li>
+              <li><em>2009年</em><span value="0">添加</span></li>
+              <li><em>2010年</em><span value="0">添加</span></li>  -->             
+            </ul>             
+          </div>
+          <p class="tip-site"><em class="clearbtn allbtn" id="allBtn">全部添加</em></p>
+       </div>
+       <div class="site-num-r">
+          <div class="drow">
+            <button type="button" class="drowbtn">包含下列选项<i class="glyphicon glyphicon-chevron-down"></i></button>
+            <ul class="drowlist">
+               <li><a>包含下列选项</a></li>
+               <li><a>不包含下列选项</a></li>
+            </ul>
+          </div> 
+          <div class="site-scrol">
+             <ul class="site-listli" id="site-r-li">   
+            </ul>      
+          </div>
+          <p class="tip-site">已添加<em>1</em><em class="clearbtn" id="clearbtnSite">清空</em></p>
+       </div>       
+       
+   </div>
+   
+   <div class="sitebox1" id="siteDiv1"> 
+	 <div class="select-show" style="padding-left:30px;">
+	     <h3>筛选条件</h3>
+	     <p class="numinput">
+	        <span>字典编号：</span>	       
+	         <span class="numinput10">
+	           <input type="text" class="form-control width-site" placeholder="输入数值"  id="text1">
+	        </span>
+	      </p>
+	  </div>
+   </div>
+   
+</div>

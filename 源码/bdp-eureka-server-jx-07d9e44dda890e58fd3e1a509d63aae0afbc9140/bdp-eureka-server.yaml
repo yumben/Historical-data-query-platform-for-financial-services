@@ -1,0 +1,51 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: bdp-eureka-server
+  name: bdp-eureka-server
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bdp-eureka-server
+  template:
+    metadata:
+      labels:
+        app: bdp-eureka-server
+    spec:
+      containers:
+      - name: bdp-eureka-server
+        image: 192.168.31.72:5000/bdp-eureka-server:version	
+        ports:
+        - containerPort: 8767
+          protocol: TCP
+        volumeMounts: 
+            - name: timezone-pv 
+              mountPath: /etc/timezone
+            - name: localtime-pv 
+              mountPath: /etc/localtime
+      volumes:
+        - name: timezone-pv
+          hostPath:
+           path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: localtime-pv
+          hostPath:
+           path: /etc/localtime
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: bdp-eureka-server
+  name: bdp-eureka-server
+  namespace: test
+spec:
+  type: NodePort
+  ports:
+  - port: 8767
+    targetPort: 8767
+    nodePort: 30301
+  selector:
+    app: bdp-eureka-server

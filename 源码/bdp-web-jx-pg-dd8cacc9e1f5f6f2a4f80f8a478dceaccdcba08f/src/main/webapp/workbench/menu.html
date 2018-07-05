@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>工作台</title>
+</head>
+<body>
+
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="header.shtml"-->
+	<!-- wrap star -->	
+	<div class="wrap">
+	    <div class="index-advan pt145">
+		    <ul class="menu-list clearfix">
+		        <li class="one">
+			        <div><span></span></div>
+			        <h5>业务应用</h5>
+			        <p id="oneList">
+			         <!--   <a href="../metadata/flexiblequery-index.html?menuCode=154">灵活查询 </a>
+			           <a href="../customer/customer.html?identify=credit">信用评分</a>
+			           <a href="../workbench/backlog.html?identify=group&index=2">客户标签</a>
+			           <a href="../customer/customer.html?menuCode=116">客户分析</a>
+			           <a href="../marketing/sale.html?identify=sale">营销辅助</a>
+			           <a href="../report/report_commodity.html?identify=business">市场分析</a>
+			           <a href="../index/flexiblequery-index.html?menuCode=182">综合业务分析</a>
+			           <a href="../chart/chart01.html?menuCode=199">资金结算</a>
+			           <a href="../chart/chart02.html?menuCode=199">经营管理资管分析</a>
+			           <a target="_blank" href="../chart/chart-index.html">交易监控</a>
+			         -->
+			         </p>
+		        </li>
+		        <li class="twe">
+			        <div><span></span></div>
+			        <h5>平台应用</h5>
+			        <p id="twoList">
+			         <!--   <a href="../index/index-index.html?classType=2&menuCode=192">指标定义</a>
+			           <a href="../metadata/flexiblequery-index.html?menuCode=154">查询定义</a>
+			           <a href="../metadata/metadata-index2.html?menuCode=191">模型定义</a>
+			           <a href="../tags/tags.html?menuCode=194">标签定义</a>
+			           <a target="_blank" href="../pannelPage/query-pannel.html">仪表盘</a> -->
+			        </p>
+		        </li>
+			    <li class="three">
+				    <div><span></span></div>
+				    <h5>平台支撑</h5>
+				    <p id="threeList">
+				      <!--  <a href="../monitor/schedulerTableList.html?menuCode=187">处理中心</a>
+			           <a href="../sys/menulist.html?menuCode=106&index=6">系统管理</a>
+			           <a href="../metadata/metadata-index.html?menuCode=186">元数据</a>
+			           <a href="../metamodel/model-index.html?menuCode=186">元模型</a>
+			           <a>平台服务</a>
+			           <a>能力接口</a>
+			           <a>数据质量</a>		 -->	           
+				    </p>
+			    </li>
+			</ul>
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- <div id="all">
+		<div id="main" class="w1170 clearfix">
+			<div class="content box">
+				<div class="layout">
+					<div id="menulist" class="margin-minus"></div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="footer.shtml"-->
+	
+	<script type="text/javascript">
+		$(function() {
+			//获取屏幕宽度
+			var screenWidth = document.body.clientWidth;
+			$(".dots").css("right", (screenWidth - 1170) / 2);
+						
+			getMenuList();
+		});
+		$(document).ready(function() {
+			var index = GetQueryString("index");
+			if (index == 3){
+				$(document).attr("title","标签工厂");
+			} else if (index == 4){
+				$(document).attr("title","营销与服务");
+			}
+		});
+		function getMenuList(){
+			var oneList = "";
+			var twoList ="";
+			var threeList = "";
+			var param = {};
+			ajaxSend("/bdp-web/sysMenu/selectMenuAll", param, function(data) {
+				$.each(data.list, function(index, obj) {
+					if ("1"==obj.deskType ) {
+						oneList += " <a href='"+obj.menuUrl+"?menuCode="+obj.menuCode+"'>"+obj.menuName+" </a>";
+					} else if("2"==obj.deskType) {
+						twoList += " <a href='"+obj.menuUrl+"?menuCode="+obj.menuCode+"'>"+obj.menuName+"</a>";
+					}else if("3"==obj.deskType){
+						threeList += " <a href='"+obj.menuUrl+"?menuCode="+obj.menuCode+"'>"+obj.menuName+"</a>";
+					}
+				});
+				$("#oneList").html(oneList);
+				$("#twoList").html(twoList);
+				$("#threeList").html(threeList);
+	
+			});
+		
+		}
+	</script>
+</body>
+</html>

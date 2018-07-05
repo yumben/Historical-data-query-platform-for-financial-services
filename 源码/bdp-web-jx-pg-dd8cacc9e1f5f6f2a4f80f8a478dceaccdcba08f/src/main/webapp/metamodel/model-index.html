@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>元模型管理</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap">
+		<!-- aside star -->
+		<div class="aside-nav asider queryasider">
+			<!-- <h3 class="menu-title">菜单列表</h3>-->
+			<div class="navmenu" id="nav-left"></div>
+		</div>
+		<!-- aside end -->
+		<!-- right-num star -->
+		<div class="right-num">
+			<iframe class="mainFrame" id="mainFrame" name="mainFrame"
+				width="100%" height="100%" src="" frameborder="0"></iframe>
+
+		</div>
+		<!-- right-num end -->
+	</div>
+	<!-- wrap end -->
+
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+</body>
+</html>
+<!-- <script type="text/javascript" src="../resource/js/modal.js"></script> -->
+<script type="text/javascript">
+	var classId = null;
+	var id = null;
+
+	$(document).on('click', 'li[newNode="true"] > p', function() {
+		var p = $(this);
+		var li = p.parent('li');
+		id = li.attr("id");
+		classId = li.attr("classId");
+		if (classId != null) {
+			//修改iframe页面
+			//alert("修改iframe页面");
+			$("#mainFrame").attr("src", "/bdp-web/metamodel/model-management-column.html?classId=" + classId);
+		} else {
+			// $(".navmenu li > p").removeClass("current");
+			//$(this).addClass("current");	   
+			if (li.children('ul').hasClass('unstyled')) {
+				$("#mainFrame").attr("src", "/bdp-web/metamodel/model-management.html?id=" + id);
+				var params = {
+					"parentId" : id,
+					"classId" : classId
+				};
+				initLeftMenu(params);
+				p.children("i").addClass("glyphicon-plus").removeClass("glyphicon-minus");
+				//隐藏
+				//li.children('ul').css('display','block');
+				//清空ul
+				li.children('ul').remove();
+
+			} else {
+				p.children("i").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+				$("#mainFrame").attr("src", "/bdp-web/metamodel/model-management.html?id=" + id);
+				var params = {
+					"parentId" : id,
+					"classId" : classId
+				};
+				initLeftMenu(params);
+			}
+		}
+	});
+	var flag = true;
+	$(document).ready(function($) {
+		initLeftMenu(null);
+
+	});
+	function initLeftMenu(params) {
+		ajaxSendService(metadataControl, params, "metamodelClass/ajaxQueryModelMenuAction", calFun);
+	}
+
+
+	function calFun(data) {
+		console.log(JSON.stringify(data) + "###############");
+		var parentId = data.parentId;
+		var classId = data.classId;
+		var curent;
+
+		if (parentId == null && classId == null) {
+			curent = $("#nav-left");
+		} else if (parentId != null) {
+			curent = $('#' + parentId);
+		}
+		var count = 20;
+		var tempCount = 0;
+		var tempUl = curent.parent('ul');
+		while (tempUl.hasClass('unstyled')) {
+			tempUl = tempUl.parent('li').parent('ul');
+			tempCount++;
+		}
+		if (tempCount > 2) {
+			count = count - (tempCount - 2) * 2;
+			if (count < 2) {
+				count = 2;
+			}
+		}
+
+		var ul = $("<ul class='unstyled'></ul>");
+		var packageList = data.packageList;
+		packageList.forEach(function(e, i) {
+			var newName = e.packageName;
+			if (getLength(e.packageName) > count) {
+				newName = cutstr(e.packageName, count);
+			}
+			if (idIndex == e.packageId) {
+				var li = $("<li id=" + e.packageId + " title='" + e.packageName + "'><p><i class='glyphicon glyphicon-minus' ></i> " + newName + "</p></li>");
+				idIndex == null;
+			} else {
+				var li = $("<li id=" + e.packageId + " title='" + e.packageName + "'><p><i class='glyphicon glyphicon-plus' ></i> " + newName + "</p></li>");
+			}
+			li.attr("newNode", "true");
+			ul.append(li).appendTo(curent);
+			if (flag) {
+				flag = false;
+				$("#" + e.packageId).children('p').trigger("click");
+			}
+		});
+
+		var classList = data.classList;
+		if (classList == null) {
+			return;
+		}
+		classList.forEach(function(e, i) {
+			var newName = e.className;
+			if (getLength(e.className) > count) {
+				newName = cutstr(e.className, count);
+			}
+			var li = $("<li id=" + e.classId + " title='" + e.className + "' classId=" + e.classId + "><p>"
+				+ newName + "</p></li>"); 
+			li.attr("newNode", "true");
+			ul.append(li).appendTo(curent);
+		});
+	}
+
+	function initMenu() {
+		$("#nav-left").children("ul").remove();
+		params = {
+			"packageId" : id,
+			"classId" : classId
+		};
+		ajaxSendService(metadataControl, params, "metamodelClass/ajaxInitModelMenuAction", initSuccess);
+	}
+
+	var packageIdArray = null;
+	var idIndex = null;
+	function initSuccess(data) {
+		console.log(JSON.stringify(data) + "@@@@@@@@@@@@@");
+		packageIdArray = data.packageIdStr.split("/");
+		// 刷新目录
+		if (packageIdArray.length == 1) {
+			idIndex = packageIdArray[0];
+			initLeftMenu(null);
+			var params = {
+				"parentId" : packageIdArray[0],
+				"classId" : null
+			};
+			initLeftMenu(params);
+			return;
+		}
+		for (var i = 0; i < packageIdArray.length; i++) {
+			idIndex = packageIdArray[i];
+			if (i == 0) {
+				initLeftMenu(null);
+			} else if (i == packageIdArray.length - 1) {
+				var params = {
+					"parentId" : packageIdArray[i - 1],
+					"classId" : null
+				};
+				initLeftMenu(params);
+				var params = {
+					"parentId" : packageIdArray[i],
+					"classId" : classId
+				};
+				initLeftMenu(params);
+			} else {
+				var params = {
+					"parentId" : packageIdArray[i - 1],
+					"classId" : null
+				};
+				initLeftMenu(params);
+			}
+		}
+	}
+</script>
+
+<script>
+	window.onload = function() {
+		var iframe = parent.document.getElementById("mainFrame");
+		//取得框架元素
+		iframe.height = document.body.scrollHeight || document.documentElement.scrollHeight;
+	//取得框架内容的高度并改变
+	}
+</script>

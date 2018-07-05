@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>图表目录查询入口</title>
+		<style>
+		.tableBox{margin-top:34px}
+        .tableBox ul{margin:0 0 0 30px}
+        .tableBox p{display:inline-block;float:right;margin-right:30px}
+        .searchForTable{display:inline-block;float:right}
+        .selectForTable{height:28px !important;margin-right:10px}
+        .wrap>em{color:#414648;font-size:16px;font-weight:bold;font-style:normal;display:inline-block;padding-top:5px}
+        .wrap>button{float:right}
+        .table-form{margin-top:10px}
+	</style>
+  </head>
+  
+  <body>
+   <!-- 引入的头部文件不可删-->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<script type="text/javascript" src="../resource/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../resource/js/jsplumb.min.js"></script>
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap" id="app">
+		<em>简易图表</em>
+		<button type="button" class="btn btn-primary btn-defin" id="btncheck" >
+			<img src="../resource/img/query-ico4.png">  图表定义
+		</button>
+		<div class="table-form">
+
+			<div class="scorll-x">
+				<div class="searchForTable">
+					目录编码:&nbsp;
+					<input type="text" placeholder="输入编码" name="search_code" v-model="searchinput.chart_catalog_code">&nbsp;&nbsp;&nbsp;&nbsp;
+					目录名称:&nbsp;
+					<input type="text" placeholder="输入名称" name="search_name" v-model="searchinput.chart_catalog_name">
+					<button type="button" v-on:click="getInputVal" class="btn btn-default">查询</button>
+				</div>
+				<el-table :tabledata="tableDataOne[0]" ref="eltable"></el-table>
+			</div>
+		</div>
+		<div id="inputDiv" title="请输入相关内容">
+			图表ID：<input type="text">
+			目录编号：<input type="text">
+			目录名称：<input type="text">
+		</div>
+		<!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删-->
+	<!--#include virtual="../workbench/footer.shtml"-->
+
+	<script type="text/javascript" src="../resource/js/easychart/chartcatalog.js"></script>
+	<script type="text/javascript" src="../resource/js/vue.js"></script>
+	<script type="text/javascript" src="../resource/js/commons-vue/table-vue.js"></script>
+	<script type="text/javascript" src="../resource/js/easychart/chartcatalogTable.js"></script>
+  </body>
+</html>

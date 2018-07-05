@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+	<script>
+		$(function() {
+			var catalogId = GetQueryString("catalogId");
+			//alert(catalogId);
+			$("input[type=file]").change(function() {
+				$(this).parents(".uploader").find(".filename").val($(this).val());
+			});
+			$("input[type=file]").each(function() {
+				if ($(this).val() == "") {
+					$(this).parents(".uploader").find(".filename").val("未选择文件");
+				}
+			});
+		});
+	</script>
+</body>
+</html>
+<div class="dialog importfile" id="addcon">
+	<form name="uploadForm"  id="uploadForm" method="post"  target='frameFile' enctype="multipart/form-data">
+		<table width="100%" border="0" cellpadding="0" class="table_input_a">
+
+			<tr>
+				<th><span class="red">*</span>上传文件：</th>
+				<td>
+					<div class="uploader">
+						<input type="text" class="filename form-control widthfile" name="fileurl"
+							readonly="readonly" />
+						<input type="button" name="file"
+							class="btn btn-primary" value="选择文件" />
+						<input type="file"
+							name="uploadFile" id="uploadFile" class="file" size="30" />
+					</div>
+				</td>
+				<td colspan="1"></td>
+			</tr>
+		</table>
+		</form>
+</div>

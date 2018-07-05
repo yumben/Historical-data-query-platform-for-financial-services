@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>菜单管理</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->	 
+	<div class="wrap">
+		<div class="contentbox">
+		    <input id="param" type="hidden" value=""/>
+		    <div class="title-query">
+              <em>监控器</em>
+              <!-- <span><img src="../resource/img/query-ico2.png"><a>首页</a>><a>调度监控器</a>><a class="current">监控器</a></span> -->
+           </div>
+			<div class="contentload">
+				<div class="table-form">
+					<table id="table" data-id-field="processInstanceId"
+						class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th data-field="businessId">外部id</th>
+								<th data-field="processId">流程id</th>
+								<th data-field="processName">流程名称</th>
+								<th data-field="status">运行状态</th>
+								<th data-field="createTime">创建时间</th>
+								<th data-field="remark">备注</th>
+								<th data-field="" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+    
+	<div class="showbox" id="showbox" style="display: none;">
+		<div class="show-form">
+			<div class="item"><span>流程key：</span><input  value="{{form.processKey}}" v-model="form.processKey" type="text" name="" class="form-control"></div>
+			<div class="item"><span>流程名称：</span><input value="{{form.processName}}" v-model="form.processName" type="text" name="" class="form-control"></div>
+			<div class="item"><span>是否执行：</span>是<input v-model="form.isexecutable" value="1"  type="radio" name="" >否<input v-model="form.isexecutable" value="0"  type="radio" name="" ></div>
+			<div class="item"><span>版本：</span><input value="{{form.version}}" v-model="form.version" type="text" name="" class="form-control"></div>
+			<div class="item"><span>备注：</span><input value="{{form.remark}}" v-model="form.remark" type="text" name="" class="form-control"></div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../resource/js/jsonp4Table.js"></script>
+<script type="text/javascript" src="../resource/js/monitor/monitorTableList.js"></script>
+</html>

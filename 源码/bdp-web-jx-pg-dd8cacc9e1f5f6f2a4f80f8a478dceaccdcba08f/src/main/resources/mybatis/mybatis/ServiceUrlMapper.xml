@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.ServiceUrlMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.ServiceUrl">
+		<id column="url_id" property="urlId" />
+		<result column="url_code" property="urlCode" />
+		<result column="url_name" property="urlName" />
+		<result column="url_value" property="urlValue" />
+	</resultMap>
+	<select id="selectQueryTemplate" resultType="java.util.HashMap">
+		select * from
+		query_template where id=#{query_template_id}
+	</select>
+	<select id="selectQueryCondition" resultType="java.util.HashMap">
+		select * from
+		query_condition where query_template_id=#{query_template_id} order by
+		order_index
+	</select>
+	<select id="selectQueryFields" resultType="java.util.HashMap">
+		select * from
+		query_fields where query_template_id=#{query_template_id} order by
+		order_index
+	</select>
+	<select id="selectQueryGroup" resultType="java.util.HashMap">
+		select * from
+		query_group where query_template_id=#{query_template_id}
+	</select>
+	<select id="selectQueryTables" resultType="java.util.HashMap">
+		select * from
+		query_tables where query_template_id=#{query_template_id} order by
+		order_index
+	</select>
+	<select id="selectQueryOrder" resultType="java.util.HashMap">
+		select * from
+		query_order where query_template_id=#{query_template_id}
+	</select>
+	<select id="selectAuthOperations" resultType="java.util.HashMap">
+		SELECT
+		ee.operation_code AS operation_code, ee.operation_name AS
+		operation_name FROM
+		auth_resource aa, auth_privilege bb,
+		auth_privilege_operation cc, auth_token dd,
+		auth_operation ee
+		WHERE
+		aa.resource_business_id = #{query_template_id} AND aa.resource_id =
+		bb.resource_id AND dd.token = #{token}
+		AND dd.user_id =
+		bb.privilege_master_id AND cc.resource_id =
+		aa.resource_id AND
+		cc.privilege_id = bb.privilege_id AND ee. ID =
+		cc.operation_id
+	</select>
+
+	<select id="selectToken" resultType="java.util.HashMap">
+		select * from auth_token
+		where token=#{token}
+	</select>
+
+	<select id="selectMetadataPK" resultType="java.util.HashMap">
+		SELECT metadata_id,parent_metadata,property_value FROM
+		v_metadata_property WHERE property_code = 'dict_id' AND metadata_id in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="selectMetadataDictType" resultType="java.util.HashMap">
+		SELECT * FROM metadata_dict_type WHERE id IN(SELECT property_value
+		FROM v_metadata_property WHERE property_code = 'dict_id' AND
+		metadata_id in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		)
+	</select>
+	
+	
+	<select id="getUnitList" resultType="java.util.HashMap">
+		SELECT unit_id as value,unit_id||'--'||unit_name as label,manage_unit as parent FROM unit_info_define  order by unit_id
+	</select>
+</mapper>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>权限管理</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap clearpsition">
+		<div class="contentbox">
+			<div class="title-query">
+				<em>权限管理</em>
+			</div>
+			<ul class="tab-right-menu">
+				<li class="current"><a onclick="authHref()">用户权限</a></li>
+				<li><a onclick="roleHref()">角色权限</a></li>
+			</ul>
+			<div class="contentload">
+				<div class="search-form-model">
+					<div class="item">
+						<span>用户名称：</span><input id="user_cn_name" class="form-control"
+							placeholder="用户名称" />
+					</div>
+					<div class="item">
+						<button id="btn-search" class="btn btn-primary">
+							<img src="../resource/images/search.png">查询
+						</button>
+					</div>
+				</div>
+				<div class="table-form">
+					<table id="table" data-id-field="user_id"
+						class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th data-field="user_code">用户代码</th>
+								<th data-field="org_id">所属机构</th>
+								<th data-field="user_cn_name">中文名</th>
+								<th data-field="phone">手机号</th>
+								<th data-field="user_type">用户类型</th>
+								<th data-field="" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+	<!-- 保存模板弹窗star -->
+	<div class="showbox" id="setAuth" style="display:none;">
+		<p class="authSearchP">
+			<input class="form-control setAuthInput" id="setAuthInput">
+			<button type="button" class="btn btn-default setAuthBtn"
+				id="setAuthBtn">
+				<i class="fa fa-search"></i> 查询
+			</button>
+		</p>
+		<p class="authSearchP">
+			<label><input type="checkbox" id="allAuthCheck">全选</label>
+		</p>
+		<ul class="perList"></ul>
+	</div>
+	<!-- 保存模板弹窗end -->
+	<!-- 遮罩 -->
+	<div id="load">
+		<span class="checkshow"><img src="../resource/img/load-mon.gif"><em>请稍后，数据处理中....</em></span>
+	</div>
+</body>
+</html>
+<script type="text/javascript" src="../resource/js/authPublic.js"></script>
+<script type="text/javascript" src="../resource/js/auth.js"></script>

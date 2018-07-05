@@ -1,0 +1,142 @@
+﻿<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>监控调度系统</title>
+
+</head>
+<body>
+
+	<div class="contentbox">
+		<div class="title-query">
+	      <em>任务动作参数列表</em>	     
+	   </div>
+
+
+		<div class="detailList-form" id="vueArea">
+			<div class="text-form">
+			    <span class="addbtn fl" id="batBtn" id="batBtn" onClick="addTaskActionParam()"></span>
+				<!-- <button class="btn btn-primary" type="type" class="btn btn-primary" id="batBtn" onClick="addTaskActionParam()">添加</button> -->
+				<button class="btn btn-default" type="type" class="btn btn-primary" id="batBtn" onClick="backToTaskAction('taskActionTableList.html?menuCode=187')">返回</button>
+			</div>
+		<h3 class="title-task">任务动作名称【{{param.actionName}}】</h3>
+		    <div class="table-form">
+				<table id="table" data-id-field="paramId"
+					class="table table-striped">
+					<thead>
+						<tr>
+							<th data-field="paramName">动作参数名称</th>
+				    		<th data-field="paramType">动作参数类型</th>
+				    		<th data-field="paramSeq">动作参数序号</th>
+				    		<th data-field="paramContext">动作参数内容</th>
+				    		<th data-field="paramRemark">备注</th>
+							<th data-field="paramId" data-formatter="operateFormatter">操作</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		    
+			<div class="text-center">
+				<ul class="pagination pagination-centered" id="page"></ul>
+			</div>
+		     <!-- 编辑弹窗 -->
+			<div class="showbox" id="Editbox" style="display: none;">
+				<div class="show-form">
+					<div v-if="editTaskActionParamList!=''">
+					    <table class="item-table">
+					    	<tbody>
+					    		<tr>
+					    			<th>动作参数名称：</th>
+					    			<td><input value="{{editTaskActionParamList.paramName}}" v-model="editTaskActionParamList.paramName" type="text" name="" class="form-control"></td>
+					    		</tr>
+					    		<tr>
+					    			<th>动作参数类型：</th>
+					    			<td><input value="{{editTaskActionParamList.paramType}}" v-model="editTaskActionParamList.paramType" type="text" name="" class="form-control"></td>
+					    		</tr>
+					    		<tr>
+					    			<th>动作参数序号：</th>
+					    			<td><input onkeypress="return event.keyCode >= 49 && event.keyCode <= 57" value="{{editTaskActionParamList.paramSeq}}" v-model="editTaskActionParamList.paramSeq" type="text" name="" class="form-control"></td>
+					    		</tr>
+					    		<tr>
+					    			<th>动作参数内容：</th>
+					    			<td><input value="{{editTaskActionParamList.paramContext}}" v-model="editTaskActionParamList.paramContext" type="text" name="" class="form-control"></td>
+					    		</tr>
+					    		<tr>
+					    			<th>备注：</th>
+					    			<td><input value="{{editTaskActionParamList.paramRemark}}" v-model="editTaskActionParamList.paramRemark" type="text" name="" class="form-control"></td>
+					    		</tr>
+					    	</tbody>
+					    </table>
+					</div>
+			</div> 
+			</div> 	
+			
+			<!-- 添加弹窗 -->
+			<div class="showbox" id="addTaskActionParam" style="display: none;">
+				<div class="show-addTaskActionParam show-form">
+				    <table class="item-table">
+				    	<tbody>
+				    		<tr>
+				    			<th>参数名：</th>
+				    			<td><input value="{{addTaskActionParam.paramName}}" v-model="addTaskActionParam.paramName" type="text" name="" class="addTaskActionParam-control form-control"></td>
+				    		</tr>
+				    		<tr>
+				    			<th>参数类型：</th>
+				    			<td><input value="{{addTaskActionParam.paramType}}" v-model="addTaskActionParam.paramType" type="text" name="" class="addTaskActionParam-control form-control"></td>
+				    		</tr>
+				    		<tr>
+				    			<th>参数序号：</th>
+				    			<td><input onkeypress="return event.keyCode >= 49 && event.keyCode <= 57" value="{{addTaskActionParam.paramSeq}}" v-model="addTaskActionParam.paramSeq" type="text" name="" class="addTaskActionParam-control form-control"></td>
+				    		</tr>
+				    		<tr>
+				    			<th>参数内容：</th>
+				    			<td><input value="{{addTaskActionParam.paramContext}}" v-model="addTaskActionParam.paramContext" type="text" name="" class="addTaskActionParam-control form-control"></td>
+				    		</tr>
+				    		<tr>
+				    			<th>备注：</th>
+				    			<td><input value="{{addTaskActionParam.paramRemark}}" v-model="addTaskActionParam.paramRemark" type="text" name="" class="addTaskActionParam-control form-control"></td>
+				    		</tr>
+				    	</tbody>
+				    </table>					
+				</div>
+			</div>
+		</div> 
+
+
+
+
+	</div>
+
+
+</body>
+
+<script type="text/javascript" src="../resource/js/monitor/taskActionParamList.js"></script>
+<script type="text/javascript" src="../resource/js/jsonp4Table.js"></script>
+<script type="text/javascript">
+
+var MyJson4Table = new $.jsonp4Table({
+		action : baseUrl + "TaskActionParam/getTaskActionParamList",
+		jsonpCallback:'callBack',
+		formatter : optFormatter,
+		callback:function(data){
+			taskActionParamsList.table = data.list;
+		}
+	});
+	
+$(function(){
+	loadData();
+});
+
+function loadData(){
+	MyJson4Table.drewTable(taskActionParamsList.param);
+}
+
+function optFormatter(id) {
+		var opt = "<a onclick=\"editTaskActionParam('" + id + "')\">编辑</a> "
+				+ "<a onclick=\"delTaskActionParam('" + id + "')\">删除</a> ";
+		return opt;
+}
+
+
+</script>
+</html>
+

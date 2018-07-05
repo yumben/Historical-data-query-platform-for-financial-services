@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<title>元模型管理</title>
+<script type="text/javascript">
+	$(document).ready(function($) {
+		var classCode = GetQueryString("classCode");
+		$("#classCode").attr("value", classCode);
+	});
+</script>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;"></body>
+</html>
+<!-- 基本信息增加 -->
+<div class="dialog" id="addbasiccon">
+	<table>
+		<tr>
+			<th>属性代码:</th>
+			<td><input type="text" class="form-control" id="propertycode"></td>
+			<th>属性名称:</th>
+			<td><input type="text" class="form-control" id="propertyname"></td>
+		</tr>
+		<tr class="hide">
+			<th>所属类代码:</th>
+			<td><input type="text" id="classCode" class="form-control"
+				readonly></td>
+			<th>所属类名:</th>
+			<td><input type="text" id="className" class="form-control"
+				readonly></td>
+		</tr>
+		<tr>
+			<th>继承性:</th>
+			<td><input type="text" class="form-control" id="inheritance"
+				value="1"></td>
+			<th>控件类型:</th>
+			<td><select class="form-control" id="Editcontrolname">
+					<option value="select">下拉框</option>
+					<option value="input">文本框</option>
+			</select> <!-- <input type="text" class="form-control" id="Editcontrolname"> -->
+			</td>
+		</tr>
+		<tr>
+			<th>长度:</th>
+			<td><input type="text" class="form-control" id="lengths"></td>
+			<th>默认值:</th>
+			<td><input type="text" class="form-control" id="defaultvalue"></td>
+		</tr>
+		<tr>
+			<th>显示顺序:</th>
+			<td><input type="text" class="form-control" id="displayorder"></td>
+			<th>属性数据类型:</th>
+			<td><select class="form-control" id='datatypename'><option
+						value=""></option>
+			</select></td>
+		</tr>
+		<tr>
+
+			<th>是否可为空:</th>
+			<td><label class="radio-inline" id="pl"><input
+					type="radio" value="是" name="isnull" checked="checked">是</label><label
+				class="radio-inline" id="al"><input type="radio"
+					name="isnull" value="否">否</label></td>
+			<th>是否显示:</th>
+			<td><label class="radio-inline" id="show"><input
+					type="radio" value="是" name="isshow" checked="checked">是</label> <label
+				class="radio-inline" id="show1"><input type="radio"
+					value="否" name="isshow">否</label></td>
+		</tr>
+		<tr>
+			<th>是否可编辑:</th>
+			<td><label class="radio-inline" id="edit"><input
+					type="radio" value="是" name="isedit" checked="checked">是</label> <label
+				class="radio-inline" id="edit"><input type="radio" value="否"
+					name="isedit">否</label></td>
+			<th>是否加密:</th>
+			<td><label class="radio-inline" id="password"><input
+					type="radio" value="是" name="ispassword">是</label> <label
+				class="radio-inline" id="password"><input type="radio"
+					value="否" name="ispassword" checked="checked">否</label></td>
+		</tr>
+	</table>
+</div>

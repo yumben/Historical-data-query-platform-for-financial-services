@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="../resource/js/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/layer.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/css/style.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/css/mainModel.css">
+<script type="text/javascript" src="../resource/js/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="../resource/js/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="../resource/js/ajax.js"></script>
+<script type="text/javascript" src="../resource/js/main.js"></script>
+<script type="text/javascript" src="../resource/js/initmenu.js"></script>
+<script type="text/javascript" src="../resource/js/layer.js"></script>
+<script type="text/javascript" src="../resource/js/modal.js"></script>
+
+<script type="text/javascript" src="../resource/js/json4Table.js"></script>
+<script type="text/javascript" src="../resource/js/config.js"></script> -->
+
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<script type="text/javascript">
+
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryModelEnumitemsAction",
+		formatter : operateFormatter
+	});
+
+	$(document).ready(function() {
+        var params={"queryType":"enumitemslist"};
+		_json4Table.drewTable(params);
+	});
+	//刷新
+	function enumtiems(){
+		var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryModelEnumitemsAction",
+		formatter : operateFormatter
+	});
+
+	$(document).ready(function() {
+        var params={"queryType":"enumitemslist"};
+		_json4Table.drewTable(params);
+	});
+	}
+	
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		enumtiems();
+	}
+</script>
+
+
+<title>元模型管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;"></body>
+</html>
+<!-- 枚举项管理 -->
+<div class="dialog" id="editenumitem" style="padding-left:30px;">
+    <div class="search-form-model">
+        <div class="item"><a class="btn btn-warning" id="addenume01"><i class="fa fa-plus-circle"></i> 增加枚举项</a></div>
+        <!-- <div class="item"><a class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除枚举项</a></div> -->
+    </div>
+    <div class="table-form">
+        <table id="table" data-id-field="id" class="table table-striped alltable tableitem">
+            <thead>
+                <tr>
+                    <!-- <th><input class="selectinput" type="checkbox" value="0">全选</th> -->
+                    <th data-field="code">枚举项代码</th>
+                    <th data-field="name">枚举项名称</th>
+                    <th data-field="describes">描述信息</th>
+                    <th data-field="id" data-formatter="operateFormatter">操作</th>
+                    
+                </tr>
+            </thead>
+<!--             <tbody>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>metadata_package </td>
+                    <td>否</td>
+                    <td>王翰</td>                                            
+                </tr>
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>metadata_package </td>
+                    <td>否</td>
+                    <td>王翰</td>  
+                </tr>
+            </tbody> -->
+        </table>
+        <!--<div class="page">
+              <nav>
+                  <ul class="pagination">
+                      <li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                      <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                      <li class="active"><a href="#">1</a></li>
+                      <li><a href="#" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                      <li><a href="#" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                  </ul>
+                  <span class="count">总共 4条记录，每页显示10条记录，共1页</span>
+              </nav>
+        </div>-->
+    </div>                         
+</div>
+
+
+<script>
+//增加枚举项管理
+//关闭窗口
+function closeWindows(){
+	//alert("close");
+}
+$("#addenume01").on("click",function(){
+	//var main = $("#addneumcon01");
+	top.layer.open({
+		title:'增加枚举项',
+		closeBtn: 2, 
+		type:2,
+		area:['430px','320px'],
+		shadeClass:true,
+		content:"model-addenume01.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+
+		},		
+		yes: function(index, layero){
+		var doc=$(layero).find("iframe")[0].contentWindow.document;
+		   var code = $(doc).find("#code").val();
+		   var name = $(doc).find("#name").val();
+		   var describes = $(doc).find("#describes").val();
+		   		if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+		   var params = {
+						"queryType" : "saveAddEnumitems",
+                        "metamodelEnumitemsVO.code" : code,
+						"metamodelEnumitemsVO.name" : name,
+						"metamodelEnumitemsVO.describes" : describes,
+
+			};
+		
+		ajaxSend("/pms-web/ajax/ajaxQueryModelEnumitemsAction", params, callfunction);
+		 top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+		
+		
+	});
+});
+
+function edit(id){
+	//var main = $("#addenumcon");
+	top.layer.open({
+		title:'修改枚举项',
+		closeBtn:2,
+		type:2,
+		area:['450px','400px'],
+		shadeClass:true,
+		content:"model-editenume01.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+	
+	    var doc=$(layero).find("iframe")[0].contentWindow.document;
+        var params={"queryType":"goeditEnumitems","id":id};
+	    ajaxSend("/pms-web/ajax/ajaxQueryModelEnumitemsAction", params,function initVO1(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("加载类失败！");
+		} else {
+		        
+		        //var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    $(doc).find("#code").val(data.metamodelEnumitemsVO.code);
+    		    $(doc).find("#name").val(data.metamodelEnumitemsVO.name);
+    		    $(doc).find("#describes").val(data.metamodelEnumitemsVO.describes);
+ 
+		}
+	});
+				
+		},		
+		
+		yes: function(index, layero){
+		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val();
+				var name = $(doc).find("#name").val();
+				var describes = $(doc).find("#describes").val();
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+				var params = {
+						"queryType" : "saveEditEnumitems",
+                        "metamodelEnumitemsVO.id" : id,
+                        "metamodelEnumitemsVO.code" : code,
+						"metamodelEnumitemsVO.name" : name,
+						"metamodelEnumitemsVO.describes" : describes,
+			};
+			ajaxSend("/pms-web/ajax/ajaxQueryModelEnumitemsAction", params, callfunction);
+
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	});
+
+}
+
+//删除枚举
+	function remove(id) {
+		top.layer.confirm('是否确认删除？',{
+		btn:['确定','取消']
+		}, function(index) {
+			var params = {
+				"queryType" : "delEnumitems",
+				"id" : id
+			};
+			ajaxSend("/pms-web/ajax/ajaxQueryModelEnumitemsAction", params,function call(data){
+				if(data.enumerateVOs.length!=0){
+					alert("该枚举项正在被使用中，无法删除！");
+				}else{
+					callfunction();
+				}
+			});
+			top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		}, function() {
+		});
+	}
+
+
+</script>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>用户操作查询入口</title>
+		<style>
+		.tableBox{margin-top:34px}
+        .tableBox ul{margin:0 0 0 30px}
+        .tableBox p{display:inline-block;float:right;margin-right:30px}
+        .searchForTable{display:inline-block;float:right}
+        .selectForTable{height:28px !important;margin-right:10px}
+        .wrap>em{color:#414648;font-size:16px;font-weight:bold;font-style:normal;display:inline-block;padding-top:5px}
+        .wrap>button{float:right}
+        .table-form{margin-top:10px}
+	</style>
+	<link rel="stylesheet" href="../resource/style/jquery-ui-custom/jquery-ui.min.css">
+  </head>
+  
+  <body>
+   <!-- 引入的头部文件不可删-->
+	<!--#include virtual="../workbench/header.shtml"-->
+    <script type="text/javascript" src="../resource/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="../resource/js/jsplumb.min.js"></script>
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap" id="app">
+		<em>简易图表</em>
+		<button type="button" class="btn btn-primary btn-defin" id="btncheck" >
+			<img src="../resource/img/query-ico4.png">  图表定义
+		</button>
+		<div class="table-form">
+
+			<div class="scorll-x">
+				<div class="searchForTable">
+					操作代码:&nbsp;
+					<input type="text" placeholder="输入代码" name="search_code" v-model="searchinput.operation_code">&nbsp;&nbsp;&nbsp;&nbsp;
+				<button type="button" v-on:click="getInputVal" class="btn btn-default">查询</button>
+				</div>
+				<el-table :tabledata="tableDataOne[0]" ref="eltable"></el-table>
+			</div>
+		</div>
+		<div id="inputDiv" title="请输入相关内容">
+			<span>用户ID：</span><input type="text"><br>
+			<span>操作代码：</span><input type="text"><br>
+			<span>操作名称：</span><input type="text"><br>
+			<span>操作类型：</span><input type="text"><br>
+			<span>备注：</span><input type="text">
+		</div>
+		<!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删-->
+	<!--#include virtual="../workbench/footer.shtml"-->
+
+	<script type="text/javascript" src="../resource/js/authoperation/authoperation.js"></script>
+	<script type="text/javascript" src="../resource/js/vue.js"></script>
+	<script type="text/javascript" src="../resource/js/commons-vue/table-vue.js"></script>
+	<script type="text/javascript" src="../resource/js/authoperation/authTable.js"></script>
+  </body>
+</html>

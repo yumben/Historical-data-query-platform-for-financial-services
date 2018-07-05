@@ -1,0 +1,266 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.com.infohold</groupId>
+	<artifactId>bdp-web</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.93-jx-pg</version>
+	<name>bdp-web</name>
+	<url>http://maven.apache.org</url>
+	<description>
+	    0.0.93-jx-pg 数据字典
+		0.0.90-jx-pg ajax异步
+		0.0.90-jx-pg 灵活查询字段分类显示
+	    0.0.88-jx-pg 修改basic-util.http版本0.0.14，提高性能
+        0.0.87-jx-pg 修改check.js，机构弹出框数据量问题
+		0.0.86-jx-pg 版本优化
+		0.0.85-jx-pg http修改
+		0.0.84-jx-pg http修改
+		0.0.83-jx-pg 导出修改
+		0.0.82-jx-pg 导出修改
+		0.0.81-jx-pg 导出修改
+		0.0.80-jx-pg 导出修改
+		0.0.79-jx-pg 导出
+		0.0.78-jx-pg 导出
+		0.0.77-jx-pg 修改合计单位
+		0.0.76-jx-pg 修改http版本
+            0.0.74-jx-pg 修改http版本
+	    0.0.70 修改http util的版本
+	    0.0.69修改jdbc util的版本
+		0.0.43新增指标配置控制层
+		0.0.41修改图表控制层
+		0.0.40修改指标控制层
+		0.0.39 修改指标目录控制层
+		0.0.38简易指标控制层
+		0.0.37简易图表模板查询
+		0.0.36简易图表接口调用
+		0.0.35多表查询字段
+		0.0.34导出
+		0.0.33使用1.8JDK
+	    0.0.32  2018－1－26版本
+		0.0.31关联表查询
+		0.0.30版本
+		0.0.29回退用户控制类
+		0.0.28回退
+		0.0.27清理废代码
+		0.0.26菜单直接调用数据服务
+		0.0.25 20180118版本
+		0.0.24登陆以后直接跳到查询页面
+		0.0.23查询页面口径修改为拖拉方式回退
+		0.0.22查询页面口径修改为拖拉方式，输出全选没有效果
+		0.0.21 输出字段托运调整顺序
+		0.0.20 多选择设置 
+		0.0.19 更新BEAN 0.0.70
+		0.0.18 修改前几名
+    	0.0.17登录返回中文名
+        0.0.16 分析 sysMenu/getMenuTree
+        0.0.15 修改bug，返回数据
+        0.0.14 修改post方法，不使用jsoup，使用基础工具包，并使用utf-8编码
+    	0.0.12 通用配置页面增加密码框
+    	0.0.11 提示信息,金额字段需设定千分位，小数点后保留2位数
+    	0.0.10 下拉框可选机构范围
+    	0.0.9 导出
+    	0.0.6 修改项目编码
+    </description>
+	<properties>
+		<spring.version>4.3.2.RELEASE</spring.version>
+		<jdk.version>1.8</jdk.version>
+		<servlet.version>4.0.0-b01</servlet.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<log4j.version>1.2.17</log4j.version>
+		<log4j2.version>2.6.2</log4j2.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- mybatis -->
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>1.1.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- mysql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.40</version>
+		</dependency>
+		<!--web -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.abel533</groupId>
+			<artifactId>ECharts</artifactId>
+			<version>2.2.7</version>
+		</dependency>
+		<!--log -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>bdp-springmvc-core</artifactId>
+			<version>0.0.8</version>
+		</dependency>
+		<!-- postgres椹卞姩 -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+		<!-- jdbc鍖� -->
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-jdbc</artifactId>
+			<version>0.0.26</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>bdp-commons-bean</artifactId>
+			<version>0.0.226</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scala-lang</groupId>
+			<artifactId>scala-library</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>xalan</groupId>
+			<artifactId>xalan</artifactId>
+			<version>2.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.easybdp</groupId>
+			<artifactId>basic-util-http</artifactId>
+			<version>0.0.14</version>
+			<type>jar</type>
+		</dependency>
+
+		<dependency>
+			<groupId>cn.com.infohold</groupId>
+			<artifactId>basic-util-mongo</artifactId>
+			<version>0.0.10</version>
+			<type>jar</type>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<finalName>bdp-web-${version}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.1.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.4.3</version>
+				<configuration>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<distributionManagement>
+
+		<repository>
+			<id>localnexus-re</id>
+			<name>localnexus-re</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/releases/</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>localnexus-snapshot</id>
+			<name>User Porject Snapshot</name>
+			<url>http://192.168.31.72:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+</project>

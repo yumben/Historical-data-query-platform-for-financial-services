@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+<script type="text/javascript">
+
+$(document).ready(function($){
+  var params={"flag":"BusinessTe"};
+
+  ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,showDictionaries);
+  });
+  
+  function showDictionaries(data){
+    var select = $("#theme");
+    var listMetadataVO=data.listMetadataVO;
+    var listObjMetadataVO=data.listObjMetadataVO;
+    var listProMetadataVO=data.listProMetadataVO
+    if(listMetadataVO!=null){
+      $.each(listMetadataVO,function(i,vo){
+         var option = $("<option id='"+vo.id+"' value='"+vo.classId+"' >"+vo.name+"</option>");
+          option.appendTo(select);
+      });
+
+    }
+    businessObject(listObjMetadataVO);
+    ObjectPro(listProMetadataVO);
+    
+  }
+   //初始化业务对象
+   function  businessObject(listObjMetadataVO){
+
+       var select = $("#object");
+       select.empty();
+      if(listObjMetadataVO!=null){
+        $.each(listObjMetadataVO,function(i,vo){
+         var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+          option.appendTo(select);
+        });
+    }
+   }
+  //初始化对象属性
+  var listVO = null;
+  function ObjectPro(listProMetadataVO){
+      var ul = $("#pro");
+      var se=$("#filter");
+      ul.empty();
+      se.empty();
+      listVO = listProMetadataVO;
+      if(listProMetadataVO!=null){
+      var option = $("<option  value='无'>无</option>");
+       option.appendTo(se);
+        $.each(listProMetadataVO,function(i,vo){
+         //var li = $("<li id='"+vo.id+"' value='"+vo.classId+"'>"+vo.name+"</li>");
+         var li=$("<li id="+vo.id+"><i class='glyphicon glyphicon-ok'></i><span value='0' id="+vo.code+" >"+vo.name+"</span></li>");
+          li.appendTo(ul);
+           option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           option.appendTo(se);
+        });
+        
+    }
+  }
+  
+  function initSelect(){
+  	$("select[name='con']").each(function() {
+  		var select = $(this);
+  		if(select.val() == "无" || select.val() == null){
+  			select.empty();
+  			var option = $("<option  value='无'>无</option>");
+        	select.append(option);
+  			$.each(listVO,function(i,vo){
+          		var option = $("<option id='"+vo.id+"' value='"+vo.code+"'>"+vo.name+"</option>");
+           		select.append(option);
+           		//option.appendTo();
+        	});
+  		}
+	});
+  	
+  }
+  
+ function selectMetada(){
+     var id = $("#theme option:selected").attr("id");
+     //alert(id);
+     var params={"flag":"BusinessChange","id":id};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        businessObject(data.listObjMetadataVO);
+        ObjectPro(data.listProMetadataVO);
+       //$("#pro").empty();
+       $(".downinput").empty();
+       arr.splice(0,arr.length);
+       arrs.splice(0,arrs.length);
+     });
+ }
+ 
+  function selectMetada2(){
+     var id = $("#object option:selected").attr("id");
+     //alert(id);
+     var params={"flag":"ObjectChange","id":id};
+     ajaxSend("/pms-web/ajax/ajaxBusinessAction",params,function show(data){
+        ObjectPro(data.listProMetadataVO);
+        $(".downinput").empty();
+       arr.splice(0,arr.length);
+       arrs.splice(0,arrs.length);
+     });
+ }
+ 
+ 
+ function  businSave(){
+	 ajaxSend("/pms-web/ajax/ajaxCaculateBusinessAction",null,function success(){alert("hhh");});
+	 return;
+
+ 
+   //获取表名
+   var  obtain_table=$("#object option:selected").attr("value");  
+   //alert(obtain_table);
+   //获取属性
+    var  obtain_pro=[];
+    obtain_pro=arrs;
+    if(obtain_pro.length==0){
+       alert("请选择查询属性");
+       return false;
+    }
+    //alert(obtain_pro.length);
+    //获取条件
+    var   obtain_condition=[];
+    //obtain_condition.push($("#filter option:selected").attr("value"));
+    // alert(obtain_condition.length);
+    $("select[name='con']").each(function() {
+ 		//alert($(this).val());
+ 		obtain_condition.push($(this).val());
+	});
+     //获取符号
+     var obtain_symbol=[];
+    // obtain_symbol.push( $("#numselsects:checked").attr("values"));
+   // alert(obtain_symbol.length);
+   
+   $("select[name='conn']").each(function() {
+   		//alert($(this).val());
+ 		obtain_symbol.push($(this).val());
+	});
+   
+    //获取参数
+    var text=[];
+    var text2=[];
+    //text = $("#text").val();
+	//text2 = $("#text2").val();
+	
+	$("input[name='star']").each(function() {
+   		//alert($(this).val());
+ 		text.push($(this).val());
+	});
+	
+	$("input[name='end']").each(function() {
+   		//alert($(this).val());
+ 		text2.push($(this).val());
+	});
+	 
+	
+	var params={
+	"obtain_table":obtain_table,
+	"obtain_pro":obtain_pro,
+	"obtain_condition":obtain_condition,
+	"obtain_symbol":obtain_symbol,
+	"text":text,
+	"text2":text2
+	};
+	 //ajaxSend("/pms-web/ajax/ajaxCaculateBusinessAction",params,success);
+	 
+	 $("#thead").empty();
+	  for(var i =0;i<arr.length;i++){
+			  strHead = "<th>"+arr[i]+"</th>"	;  
+			  $("#thead").append(strHead);          
+	  }
+      //alert(obtain_pro);
+       _json4Table.drewTable(params);
+ }
+	
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxCaculateBusinessAction",
+		formatter : operateFormatter
+	});
+	
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+	
+/* 	 function success(data){
+	  alert("oo");
+	  alert(arr);
+	  $("#thead").empty();
+	  for(var i =0;i<arr.length;i++){
+			  strHead = "<th>"+arr[i]+"</th>"	;  
+			  $("#thead").append(strHead);          
+	  }
+				
+	 var listcalu=data.listcalu;
+	  alert(data.listcalu);
+	// alert("baba="+$("#tbody1").value()); 
+	$("#tbody1").empty();
+	  for(var i in listcalu) {
+      //alert(listcalu[i]);
+      //alert("a");
+      var tep="trr-"+i;
+      var str=$("<tr id="+tep+"  > </tr>");
+       //$("#tb").appendTo(strHead);
+       str.appendTo($("#tbody1"));
+      for(var j in listcalu[i]){
+      //alert("b");
+          // alert("bb="+ listcalu[i][j]);
+          var stt=$("<td>"+listcalu[i][j]+"</td>");
+          stt.appendTo($("#"+tep));
+      }
+   } 
+	 } */
+
+</script>
+</head>
+<body>
+<a name="return"></a>
+<header>
+    <div class="personal">
+        <div class="w1170">
+            <span>当前时间：2016/01/01 10:10:10 星期三</span> <span class="username">
+                欢迎您，wuli凯凯！ <span class="exit">[退出]</span> </span>
+        </div>
+    </div>
+    <div class="w1170">
+        <nav>
+            <ul id="ulmenu" class="clearfix"><li><a href="/pms-web/workbench/index.html">首页</a></li><li><a href="/pms-web/workbench/menu.html?index=2">工作台</a></li><li><a href="/pms-web/workbench/menu.html?index=3">标签工厂</a></li><li><a href="/pms-web/workbench/menu.html?index=4">营销与服务</a></li><li><a href="/pms-web/report/report_commodity.html">分析</a></li><li><a href="/pms-web/sys/task_scheduling.html">系统管理</a></li><li class="current"><a href="/pms-web/customer/customer.html">信用评价</a></li><li><a href="/pms-web/metadata/metadata-index.html">元数据管理</a></li></ul>
+        </nav>
+    </div>
+</header>
+<div id="all">
+    <div id="main" class="w1170 clearfix">
+        <div class="content box minheight">
+            <div class="obj-search">                
+                <h5 class="obj-title"><i class="showbtnico fa fa-angle-double-up"></i>查询内容筛选</h5>
+                <div class="search_form obj-search-form obj-search-formtop">
+	                    <div class="item"><span>业务主题：</span>
+	                    <select class="form-control" id="theme" onchange="selectMetada()">
+	                    <!-- <option value="客户">客户</option>
+	                    <option value="网贷平台">网贷平台</option>
+	                    <option value="业务">业务</option>
+	                    <option value="产品">产品</option> -->
+	                    </select>
+                    </div>
+                    <div class="item"><span>业务对象：</span>
+	                    <select class="form-control" id="object" onchange="selectMetada2()">
+	                    <!-- <option value="客户">客户</option>
+	                    <option value="网贷平台">网贷平台</option>
+	                    <option value="业务">业务</option>
+	                    <option value="产品">产品</option> -->
+	                    </select>
+                    </div>
+                    <!-- <div class="item"><span>查询属性</span><select class="form-control"><option value="客户">客户</option><option value="网贷平台">网贷平台</option><option value="业务">业务</option><option value="产品">产品</option></select></div> -->
+
+                    <div class="item">
+                        <span class="fl">查询属性：</span>
+                         <!--  <div class="drow">
+                           <button type="button" class="drowbtn">不包含下列选项<i class="glyphicon glyphicon-chevron-down"></i></button>
+                           <ul class="drowlist" style="display: none;">
+                              <li><a>包含下列选项</a></li>
+                              <li><a>不包含下列选项</a></li>
+                           </ul>
+                         </div> -->
+                         <div class="downbox">
+                            <button type="button" class="form-control downinput" type="text" id="downinput"></button><em class="glyphicon glyphicon-triangle-bottom"></em>
+                            <ul class="downlist" id="pro">
+                                <!-- <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性1</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性2</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性3</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性4</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性5</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性6</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性7</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性8</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性9</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性10</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性11</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性12</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性13</span></li>
+                                <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性14</span></li> -->
+                            </ul>
+                        </div>                        
+                    </div>
+                    <div style="clear:both"></div>
+                </div>
+            </div>
+            <div class="obj-search">                
+                <h5 class="obj-title"><i class="showbtnico fa fa-angle-double-up"></i>查询过滤</h5>
+                <div class="search_form obj-search-form" id="searchForm">
+                    <button type="button"  class="btn btn-warning" id="addObject"><i class="fa fa-plus-circle"></i> 增加过滤条件</button>                    
+                    <div class="item display_term">
+                        <span>过滤属性：</span><select class="form-control" id="filter" name="con">
+                        </select><select class="form-control section-control" name="conn">
+                          <option value="=" values="=" id="numselsects">等于</option>
+                          <option value="!=" values="!=" id="numselsects">不等于</option>
+                          <option value=">" values=">" id="numselsects">大于</option>
+                          <option value="<" values="<" id="numselsects">小于</option>
+                          <option value=">=" values=">=" id="numselsects">大于等于</option>
+                          <option value="<=" values="<=" id="numselsects">小于等于</option>
+                          <option selected="" value="yes" values="yes" id="numselsects">区间</option>
+                          <option value="no" values="no" id="numselsects">不在区间</option>
+                        </select><span class="search-item"><input type="text"  class="form-control input-interva input01" id="text" name="star"><em class="equal">~</em><input type="text"  class="form-control input-interva input02" id="text2" name="end"></span>
+                        <span class="close-form">删除</span>
+                    </div>
+                </div>
+            </div>
+            <div class="item pt prtext"><a id="btn-search-class" class="btn btn-primary" onclick="businSave();"><i class="fa fa-search"></i> 查询</a></div>
+            <div class="table-form scorll-x" >               
+                <table id="table"  class="table table-striped" >
+                    <thead>
+                        <tr id="thead">
+                            <!-- <th>客户编号</th>
+                            <th>客户名称</th>
+                            <th>客户类型</th>
+                            <th>电话</th>
+                            <th>年龄</th>
+                            <th>性别</th>
+                            <th>所属城市</th>    -->                         
+                        </tr>
+                    </thead>
+                    <tbody id="tbody1" >
+                        <!-- <tr>
+                            <td>126345</td>
+                            <td>王思</td>
+                            <td>经济用户</td>
+                            <td>182365478953</td>
+                            <td>26</td>
+                            <td>男</td>
+                            <td>深圳市</td>
+                        </tr>
+                        <tr>
+                            <td>126345</td>
+                            <td>王思</td>
+                            <td>经济用户</td>
+                            <td>182365478953</td>
+                            <td>26</td>
+                            <td>男</td>
+                            <td>深圳市</td>
+                        </tr>
+                        <tr>
+                            <td>126345</td>
+                            <td>王思</td>
+                            <td>经济用户</td>
+                            <td>182365478953</td>
+                            <td>26</td>
+                            <td>男</td>
+                            <td>深圳市</td>
+                        </tr>
+                        <tr>
+                            <td>126345</td>
+                            <td>王思</td>
+                            <td>经济用户</td>
+                            <td>182365478953</td>
+                            <td>26</td>
+                            <td>男</td>
+                            <td>深圳市</td>
+                        </tr> -->
+                    </tbody>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <div class="page">
+                    <nav>
+                        <!-- <ul class="pagination"><li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                            <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="javascript:onPageIndex(1);">2</a></li><li><a href="javascript:onPageIndex(2);">3</a></li>
+                            <li><a href="javascript:onPageNext();" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                            <li><a href="javascript:onPageLast();" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                        </ul>
+                         <span class="count">总共 30条记录，每页显示10条记录，共3页</span> -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="w1170">
+        <div class="about">
+            <span>关于平台</span> | <span>案例展示</span> | <span>咨询分享</span> | <span>联系我们</span>
+        </div>
+        <div class="Copyright">京ICP 14007766 &copy;1996-2020 INFOHOLD ALL
+            Rights Reserved 京公网安备 11010802013522号</div>
+    </div>
+</footer>
+<div class="fixTop">
+    <a class="mss"></a> <a class="return" href="#return"></a>
+</div>
+<script type="text/javascript">
+    var arr = [];
+    var arrs=[];
+    var strHead = "";
+    $(function(){    
+        $(".downinput").click(function(event){
+            event.stopPropagation();
+            var sibling = $(this).siblings('ul');
+            if(sibling.is(":hidden")){              
+               sibling.show(); 
+            }else{
+                sibling.hide(); 
+            }
+        });
+        $(document).on('click', '.downlist li > span', function(event) {	
+        //$(".downlist li > span").click(function(event){  
+            event.stopPropagation(); 
+           
+            var that = $(this);
+            var Val = that.attr("value");
+            var text = that.html();
+            var code= that.attr("id"); 
+            if(Val == "0"){ 
+             //arrs.splice(0,arrs.length);   
+                that.attr("value","1");
+                that.siblings('i').show();                
+                arr.push(text);
+                arrs.push(code);  
+                $(".downinput").text(arr); 
+                
+               /*  for(var i =0;i<arr.length;i++){
+			        strHead = "<th>"+arr[i]+"</th>"	           
+				}
+				$("#thead").append(strHead); */
+                                      
+            }else if(Val == "1"){
+               
+                that.attr("value","0");
+				that.siblings('i').hide();
+				arr.splice($.inArray(text,arr),1);
+				arrs.splice($.inArray(code,arrs),1);
+				$(".downinput").text(arr);
+				  
+				/* var thLen = $("#thead th");
+				thLen.each(function(){
+					if($(this).html() == that.html()){							
+					     $(this).remove();
+					}
+				}); */
+            }
+			if(arr.length == 0){
+			  $(".downinput").text("请选择属性");
+			}
+        });
+        $(document).click(function(){
+            $(".downlist").hide(); 
+           // $(".downlist li").find('span').attr("value","0");
+           // $(".downlist li").find('i').hide(); 
+        });
+    })
+</script>
+</body>
+</html>

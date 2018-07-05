@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>关联关系设置</title>
+<script type="text/javascript">
+
+	// 当前元数据的ID
+	var metadataId;
+	// 被选中关联关系的元模型ID
+	var classedId;
+	// 被选中的元数据的ID
+	var metadataedId = new Array();
+	// 被选中的字典
+	var dictionaryVo = new Array();
+	// 被选中的关联关系ID
+	var relationId;
+	var indexMetadata = null;
+	var globalClassId = null;
+	var conditionMetadataId = null;
+
+	$(function(){
+		metadataId = GetQueryString("metadataId");
+		indexMetadata = GetQueryString("indexMetadata");
+		var classId = GetQueryString("classId");
+		globalClassId = classId;
+		var param={"metadataId":metadataId};
+		ajaxSend("/pms-web/ajax/ajaxQueryMetadataObjectAction",param,initBase);
+		if(classId=="3")//主键
+	    {
+	     params = {"classId":classId,"flag":"metamodelRelation","metadataId":metadataId,"field":"false"}; 
+	     ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,showSelect); 
+	    }else if(classId=="95")//维度
+	    {
+	     params = {"classId":classId,"flag":"dimensionRelation","metadataId":metadataId}; 
+	     ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,showSelect); 
+	    }else if(classId == 2) {  
+			var params = {"classId":classId,"metadataId":metadataId,"flag":"metamodelRelation","field":"true"}; 
+			ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,showSelect);
+		}else if(classId == 96){ //指标约束条件
+			params = {"classId":classId,"flag":"constraintCondition","metadataId":metadataId}; 
+	     	ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,showSelect); 
+		}
+		else{
+			var params = {"classId":classId,"metadataId":metadataId,"flag":"metamodelRelation"}; 
+			ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,showSelect);
+	    }
+	});
+	//初始化基本信息
+	function initBase(data){
+	
+		var metadataVO = data.metadataVO;
+		
+		$("#className").text("关联关系设置 -- "+metadataVO.className);
+		$("#objectCode").attr("value",metadataVO.code);
+		$("#objectName").attr("value",metadataVO.name);
+		$("#objectType").attr("value",metadataVO.className);
+		$("#contextCatalog").attr("value",metadataVO.contextCatalog);
+		$("#createDate").attr("value",metadataVO.createDate);			
+		$("#createName").attr("value",metadataVO.createName);
+
+	}
+	//画表格
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryRelationAction",
+		formatter : operateFormatter
+	});
+	
+    var delId;//保存删除要删除的id（仅对计算对象删除一条）
+	function operateFormatter(id) {
+	   delId=id;
+		return [
+				'<a class="remove" href="javascript:removeRelation(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>',
+				'</a>  ' ]
+				.join('');
+	}
+	
+	// 初始化下拉框
+	function showSelect(data){
+		var mList = data.mMetamodelRelationVOList;
+		var mMetadataVOList = data.mMetadataVOList;
+		var type=data.metamodelClassVO.type;
+		var name = data.metamodelClassVO.name;
+		var select = $("#relation");
+		var classId = GetQueryString("classId");
+		var param = null;
+		select.empty();
+		if(mList != null){
+			$.each(mList, function(i,vo){
+				if(i == 0){
+					var dictionary = dictionaryVo[0];
+					param = {"classId" : vo.classedId, "metadataId":metadataId, "relationId":vo.id, "type":type, "flag":"", "name":name,"id":classId,"dictionary":dictionary};
+					classedId = vo.classedId;
+					relationId = vo.id;
+				}
+        		var option = $("<option id='"+vo.id+"' value='"+vo.classedId+"'>"+vo.name+"</option>");
+        		option.appendTo(select);
+        		if(vo.name=="字段关联字典"){
+        			param = {"classId" : vo.classedId, "metadataId":metadataId, "relationId":vo.id, "type":type, "flag":"", "name":name,"radio":"true"};
+        		} 
+			});
+		}
+		initLeftMenu(param, mMetadataVOList);
+	}
+	var type;
+	var radiotype;
+	// 动态生成左边菜单
+	function initLeftMenu(param, mMetadataVOList){
+	for(var i in param){
+	   if(i=="type"){
+	       type=param[i];
+	    }
+	    if(i=="name"){
+	    	name=param[i];
+	    }
+	    if(i=="radio"){
+	    	radiotype=param[i];
+	    }
+	}
+	/* if(name=="指标计算规则库"){
+		 type=1;
+	} */
+	//判断是否是主键的关联关系设置
+	var classId = GetQueryString("classId");
+	if(classId=="3"){
+		type=2;
+	}
+	if(type=="2"){
+	//判断是否是指标
+    indexLeftMenu(param, mMetadataVOList);
+    
+	if(param != null){
+	 	for(var i in param){
+	   if(i=="flag"&& name!="指标约束条件"){
+	       param[i]="calculationobject";
+	    }else if(i=="flag" && name=="指标约束条件"){
+	    	param[i] = "coditionShowTableData";
+	    }
+	    } 
+		_json4Table.drewTable(param);
+		if(classId=="106"){
+		if(delId==null){
+		
+		//清除属性
+		var params={"metadataId":metadataId};
+		ajaxSend("/pms-web/ajax/ajaxQueryMetadataPropertyAction",params,function succs(){alert("清除属性成功");});
+		}else{
+		
+		indexMetadata = GetQueryString("indexMetadata");
+		var params={"metadataId":indexMetadata};
+		ajaxSend("/pms-web/ajax/ajaxCaculateIndexAction",params,function succ(){alert("成功回显");});
+		};
+		
+		}
+	}
+	}else{
+		var curent = $("#nav-left");
+		curent.empty();
+		
+		var relalist=null;
+			   ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",param,function flag(data){
+			      relalist=data.list;
+			      mMetadataVOList=data.mMetadataVOList;
+			      });
+		if(mMetadataVOList != null){
+			$.each(mMetadataVOList, function(i,vo){
+			if(radiotype){
+				var li = $("<li><input type='radio' class='checkbox-inline' name='metadataVO' id='object' value='"+vo.id+"'> <i class='fa fa-file-text-o'></i>"+vo.name+"</li>");
+        		li.appendTo(curent); 
+			}else{
+			   $.each(relalist,function(j,e){
+			        if(e.name==vo.name){
+			         vo="";
+			       }  
+			   }); 
+			   if(vo==""){
+			   }else{
+        		var li = $("<li><input type='checkbox' class='checkbox-inline' name='metadataVO' value='"+vo.id+"'> <i class='fa fa-file-text-o'></i>"+vo.name+"</li>");
+        		li.appendTo(curent); 
+        		 }
+        		}
+			});
+		}
+		if(param != null){
+			_json4Table.drewTable(param);
+		}
+	}
+	}
+	// 选择下拉框中某个选项
+	function selectRelation(){
+		metadataId = GetQueryString("metadataId");
+		classedId = $("#relation option:selected").attr("value");
+		relationId = $("#relation option:selected").attr("id");
+		var classId = GetQueryString("classId");
+		if(classId=="3")//主键
+		{
+		  var params = {"classId":classedId,"relationId":relationId,"flag":"metadata","metadataId":metadataId}; 
+		  ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,success);
+		}
+		else if(classId=="95")//维度
+		{
+		  var params = {"classId":classedId,"relationId":relationId,"flag":"dimensionRelation","metadataId":metadataId}; 
+		  ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,success);
+		
+		}else if(classId == 96){ //指标约束条件
+			params = {"classId":classId,"flag":"constraintCondition","metadataId":metadataId}; 
+	     	ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,showSelect); 
+		}
+		else{
+		  var params = {"classId":classedId,"relationId":relationId,"metadataId":metadataId,"flag":"metadata"}; 
+		  ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,success);
+	    }
+		//var params = {"classId":classedId,"relationId":relationId,"metadataId":metadataId,"flag":"metadata"}; 
+		//ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,success);
+	}
+	
+	function success(data){
+		var classId = GetQueryString("classId");
+		var dictionary = dictionaryVo[0];
+		var params = {"classId":classedId,"relationId":relationId,"metadataId":metadataId,"flag":"","id":classId,"dictionary":dictionary};
+		var mMetadataVOList = data.mMetadataVOList;
+		initLeftMenu(params, mMetadataVOList);
+		//清空数组
+		dictionaryVo.splice(0,dictionaryVo.length);
+	}
+	
+	// 增加关联关系
+	function sumbit(){
+	    //保存字典
+	    var  contype=null;
+		var dictionaryId=null;
+		var datevalue=null;
+		metadataedId.length = 0;
+		var classId = GetQueryString("classId");
+		
+		if(classId!="96"){
+			$('input[name="metadataVO"]:checked').each(function(){ 
+				metadataedId.push($(this).val()); 
+			});
+			if(metadataedId.length == 0){
+				alert("请至少选择一个指标");
+				return;
+			}
+		}else{
+			$('input[name="dictionaryVO"]:checked').each(function(){ 
+				dictionaryVo.push($(this).val()); 
+				dictionaryId=$(this).attr("dictionaryId");
+				contype=$(this).attr("typess");
+				datevalue=$(this).attr("datevalue");
+			});
+			metadataedId.push(conditionMetadataId);
+			if(dictionaryVo.length == 0){
+				alert("请至少选择一个指标");
+				return;
+			}
+		}
+		if(classId=="95")//如果是维度的话跳过替换
+		{
+		   
+		}else{
+		
+		//替换原来的关联关系
+		//var object=$("#object").val();	
+		if(delId==null||delId==""){
+		}else{
+		     /* if(object!=null&&object!=""){
+		     var params = {"vo.id":delId,"flag":"delete"};
+		     ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,selectRelation);
+		     } */
+		     //删除根据前一个计算对象所保留的维度,约束条件，规则
+		     if(classId=="93"){
+		     var params = {"metadataId":metadataId,"flag":"dimension"};
+		     ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,function deleRelation(){});   	
+		     }
+		     
+		      //删除根据前一个维度所保留的约束条件(34为元模型中约束条件关联字段)
+		     if(classId=="95"){
+		        var params = {"metadataId":metadataId,"flag":"dimen","flags":"dimen"};
+		     	ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,function deleRelation(){ });
+		     }
+		     
+		     if(classId=="96"){
+		        var params = {"metadataId":metadataId,"flag":"dimens","flags":"dimen"};
+		     	ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,function deleRelation(){ });
+		     }
+		    
+		     
+		     }
+		}
+        //把字典加入到条件表中
+        var conditionId=null;
+        if(contype=="字符型"||contype=="数值型"){
+        var params = {
+			"dictionarytype" : contype,
+			"dictionaryvalue" : datevalue,
+			"condition" : "=",
+			"note" : datevalue
+		    };
+       ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,function callfunction1(data) {
+       conditionId=data.conditionId;
+       });
+        }
+        if(contype=="日期型"){
+        var params = {
+			"dictionarytype" : contype,
+			"dictionaryvalue" : datevalue,
+			"condition" : "=",
+			"note" : dictionaryVo
+		    };
+       ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,function callfunction1(data) {
+       conditionId=data.conditionId;
+       });
+        }
+         
+        
+		var createDate = getNowFormatDate();
+		var params = {
+		    "metadataId":metadataId,"metadataedId":metadataedId,"conditionId":conditionId,
+			"createDate":createDate,"relationId":relationId,"flag":"add"}; 
+		ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+		
+		
+		//更新计算规则的入口参数
+		/* indexMetadata = GetQueryString("indexMetadata");
+		var params={"metadataId":indexMetadata};
+		ajaxSend("/pms-web/ajax/ajaxCaculateIndexAction",params,function succ(){alert("成功回显");}); */
+		
+	}
+	//删除关联关系
+	function removeRelation(id) {
+		top.layer.confirm('是否确认删除？',{
+		btn:['确定','取消']
+		}, function(index) {
+		if(classId=="93"||classId=="95"||classId=="96"){
+		}else{
+			var params = {"vo.id":id,"flag":"delete"};
+			ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params, selectRelation);
+			delId=null;
+			}
+			top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		}, function() {
+		});
+		     var classId = GetQueryString("classId");
+			 if(classId=="93"){
+		     var params = {"metadataId":metadataId,"flag":"dimension"};
+		     ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,selectRelation);
+		     delId=null;   
+		     }
+		     //删除根据前一个维度所保留的约束条件(34为元模型中约束关联字段)
+		      if(classId=="95"){
+		        var params = {"metadataId":metadataId,"flag":"dimen","flags":"dimen"};
+		     	ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,selectRelation);
+		     	delId=null;
+		     }
+		     
+		     if(classId=="96"){
+		        var params = {"metadataId":metadataId,"flag":"dimens","flags":"dimen"};
+		     	ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction", params,selectRelation);
+		     	delId=null;
+		     }
+		     
+		     
+	}
+
+	 function indexLeftMenu(params, mMetadataVOList){
+        var ul = $("<ul class='unstyled'></ul>");
+	    var curent = $("#nav-left");
+	    curent.empty();
+		if(mMetadataVOList != null){
+			mMetadataVOList.forEach(function(e,i){
+			var tempId = "metadataId-"+e.id;
+        	//var li = $("<li id=" + tempId + " metadataId="+e.id+ " classId="+e.classId+" ><p><i class='fa fa-plus-square'></i> " + e.name + "<p></li>");
+        	var li = $("<li id=" + tempId + " metadataId="+e.id+"><h5><i class='fa fa-plus-square'></i> " + e.name + "</h5></li>");
+			li.attr("newNode", "true");
+			ul.append(li).appendTo(curent); 
+			});
+		}
+	}
+	//点击表出现字段
+		$(document).on('click', 'li[newNode="true"] > h5', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var id = li.attr("metadataId");
+		var classIds = li.attr("classId");
+
+/* 		if(classId != null){
+			$("#metadataType").attr("value",$(p).text());
+			$("#classId").attr("value",classId);
+			var param = {"classId" : classId,"flag":"metamodelClassPropertyVO"};
+			ajaxSend("/pms-web/ajax/ajaxQueryMetamodelPropertyAction",param,showProperty);
+		
+		}else { */
+		    p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+			if(li.children('ul').hasClass('unstyled')){
+				//隐藏
+				//li.children('ul').css('display','block');
+				//清空ul
+				li.children('ul').remove();	
+				p.children("i").addClass("fa-plus-square").removeClass("fa-minus-square");	
+			}else{
+			var classId = GetQueryString("classId");
+			
+			if(classId=="3"){//判断类是否是主键
+			var params={"classId":"2","metadataId":id};
+				//initLeftMenu(params);
+				ajaxSend("/pms-web/ajax/ajaxQueryMetadataMenuAction",params,calFun);
+			}else if(classId=="96"){//判断是指标约束条件
+				var params1={"metadataId":id,"indexMetadata":indexMetadata,"classId":2,"queryType":"indexConstraitTab"};
+				ajaxSend("/pms-web/ajax/ajaxQueryMetadataMenuAction",params1,calFun1);
+			}
+			else{
+				var params={"metadataId":id,"flags":"querymetadata"};
+				//initLeftMenu(params);
+				ajaxSend("/pms-web/ajax/ajaxQueryMetadataMenuAction",params,calFun);
+			}
+			}
+		/* }	 */	
+	});
+	
+	//点击字段出现字典
+	$(document).on('click', 'li[new="true"] > h5', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var id = li.attr("metadataId");
+		var classIds = li.attr("classId");
+		conditionMetadataId = id;
+		p.children("i").addClass("fa-minus-square").removeClass("fa-plus-square");
+			if(li.children('ul').hasClass('unstyled')){
+				li.children('ul').remove();	
+				p.children("i").addClass("fa-plus-square").removeClass("fa-minus-square");	
+		}else{//查询对应类型字典
+			var params = {"classId":classIds,"metadataId":id,"flag":"constraitIndex"}; 
+			ajaxSend("/pms-web/ajax/ajaxQueryRelationAction",params,calFun2);	
+		}
+	});
+	
+	
+	function calFun(data){
+	var curent;
+	var parentId = "metadataId-"+data.metadataId;
+	curent = $('#'+parentId);	
+	var ul = $("<ul class='unstyled'></ul>");
+	metadataList = data.metadataList;
+		if(metadataList != null){
+			metadataList.forEach(function(e,i){
+				var li = $("<li>&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='metadataVO' id='object' value='"+e.id+"'> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+				ul.append(li).appendTo(curent);
+			});
+		}
+
+	} 
+	
+	function calFun1(data){
+	var curent;
+	var parentId = "metadataId-"+data.metadataId;
+	curent = $('#'+parentId);	
+	var ul = $("<ul class='unstyled'></ul>");
+	var metadataList = data.metadataList;
+		if(metadataList != null){
+			metadataList.forEach(function(e,i){
+				/* var li = $("<li><input type='radio' class='checkbox-inline' name='metadataVO' id='object' value='"+e.id+"'> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+				ul.append(li).appendTo(curent); */
+				
+				var tempId = "metadataId-"+e.id;
+				var li = $("<li id=" + tempId + " metadataId="+e.id+"><h5><i class='fa fa-plus-square'></i> " + e.name + "</h5></li>");
+				li.attr("new", "true");
+				ul.append(li).appendTo(curent);
+			});
+		}
+
+	}
+	
+	function calFun2(data){
+	var curent;
+	var types=null;
+	var parentId = "metadataId-"+data.metadataId;
+	curent = $('#'+parentId);	
+	var ul = $("<ul class='unstyled'></ul>");
+	metadataList = data.mdictionaryVOList;
+		if(metadataList != null){
+			metadataList.forEach(function(e,i){
+			types=e.type;
+				if(e.type=="日期型"){
+					var li = $("<li >&emsp;&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='dictionaryVO' id='object' value='"+e.name+"' dictionaryId="+e.id+" typess="+e.type+" datevalue="+e.value+"> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+					ul.append(li).appendTo(curent);
+					if(metadataList.length-1==i){
+					     li = $("<li  id='datetype'><h5>&emsp;自定义</h5></li>");
+			             ul.append(li).appendTo(curent);
+					}
+				}else if(e.type=="字符型"){
+					var li = $("<li >&emsp;&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='dictionaryVO' id='object' value='"+e.value+"' dictionaryId="+e.id+" typess="+e.type+" datevalue="+e.value+"> <i class='fa fa-file-text-o'></i>"+e.value+"</li>");
+					ul.append(li).appendTo(curent);
+					if(metadataList.length-1==i){
+					    li = $("<li  id='chartlistshow' typess="+e.type+"><h5>&emsp;自定义</h5></li>");
+			           ul.append(li).appendTo(curent);
+					}
+				}else{
+				    var li = $("<li >&emsp;&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='dictionaryVO' id='object' value='"+e.name+"' dictionaryId="+e.id+" typess="+e.type+" datevalue="+e.value+"> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+					ul.append(li).appendTo(curent);
+					if(metadataList.length-1==i){
+					    li = $("<li  id='numericaltype'><h5>&emsp;自定义</h5></li>");
+			            ul.append(li).appendTo(curent);
+					}
+				}
+			});
+		}
+
+
+
+	}
+
+	function back() {
+		var doc = window.parent.document;
+		$(doc).find("#mainFramedata").attr(
+				"src",
+				"/pms-web/index/index-infor.html?metadataId="
+						+ metadataId + "&indexMetadata=" + indexMetadata);
+		$(doc).find("#mainFramedata").reload();
+	}
+
+	/**
+		获取当前的系统时间
+	 */
+	function getNowFormatDate() {
+		var date = new Date();
+		var seperator1 = "-";
+		var seperator2 = ":";
+		var month = date.getMonth() + 1;
+		var strDate = date.getDate();
+		if (month >= 1 && month <= 9) {
+			month = "0" + month;
+		}
+		if (strDate >= 0 && strDate <= 9) {
+			strDate = "0" + strDate;
+		}
+		var currentdate = date.getFullYear() + seperator1 + month + seperator1
+				+ strDate + " " + date.getHours() + seperator2
+				+ date.getMinutes() + seperator2 + date.getSeconds();
+		return currentdate;
+	}
+</script>
+</head>
+<body style="min-width:auto;">
+            <div class="content">
+                <div class="title-query">  
+                 <p class="btnquery">
+		             <a class="btn btn-primary" onclick="back();"><i class="fa fa-reply-all"></i> 返回</a>
+                  </p>        
+		          <em>指标定义</em>          
+		        </div>
+               <!--  <p class="back-top"><a class="btn btn-primary" onclick="back();"><i class="fa fa-reply-all"></i> 返回</a></p> -->
+                <div class="metadatarulid" style="margin-top:0;">
+                    <div class="metadatarulid-title"><span class="fa fa-angle-double-up"></span><h3 id="className"></h3></div>  
+                    <div class="metadata-con">
+                         <div class="search-form-basic pt15">
+                            <div class="basic"><span>指标代码：</span><input class="form-control" readonly placeholder="指标代码" id="objectCode"></div>
+                            <div class="basic"><span>指标名称：</span><input class="form-control" readonly placeholder="指标名称" id="objectName"></div>
+                            <div class="basic"><span>指标类型：</span><input class="form-control" readonly placeholder="指标类型" id="objectType"></div>
+                            <div class="basic"><span>上下文路径：</span><input class="form-control" readonly placeholder="上下文路径" id="contextCatalog"></div>
+                            <div class="basic"><span>创建时间：</span><input class="form-control" readonly placeholder="创建时间" id="createDate"></div>
+                            <div class="basic"><span>创建人：</span><input class="form-control" readonly placeholder="创建人" id="createName"></div>                                
+                        </div>
+                    </div>              
+                </div>
+
+                <div class="metadatarulid">
+                    <div class="metadatarulid-title"><span class="fa fa-angle-double-up"></span><h3>属性信息</h3></div>  
+                    <div class="metadata-con">
+                        <div class="metadata-con-infor">属性信息动态生成
+                        </div>
+                    </div>              
+                </div>
+                
+                <div class="metadata-rele">
+                   <div class="search-form-basic">
+                       <div class="basic" ><span>选择关联关系：</span><select class="form-control" id="relation" onchange="selectRelation()"></select></div>
+                   </div>
+                   <div class="meta-rele-menu">
+                      <div class="aside-nav01">
+                        <div class="navmenu">
+                           <ul id="nav-left">             
+                             <!-- <li>
+                               <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">大数据支撑平台</h5>
+                               <ul>
+                                 <li>
+                                   <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">数据库</h5>
+                                   <ul>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 表</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 外键</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 主键</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 表分区</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 字段</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 存储过程</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 存储过程参数</a></li> 
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 视图</a></li> 
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 表空间</a></li> 
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 触发器</a></li> 
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 目录</a></li> 
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 库</a></li>
+                                   </ul>
+                                 </li>
+                                 <li>
+                                   <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">大数据库包</h5>
+                                   <ul>
+                                      <li>
+                                           <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">HDFS文件系统</h5>
+                                           <ul>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> HDFS文件系统</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 文件夹</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 文件</a></li>
+                                           </ul>
+                                      </li>
+                                      <li>
+                                           <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">HBASE库</h5>
+                                           <ul>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> HBASE</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 命名空间</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 成员</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 扩展信息</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 表</a></li>
+                                           </ul>
+                                      </li>
+                                   </ul>
+                                 </li>
+                                 <li>
+                                   <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">功能服务包</h5>
+                                   <ul>
+                                      <li>
+                                         <h5><i class="fa fa-plus-square"></i><input type="checkbox" class=" checkbox-inline"> ETL功能</h5>
+                                         <ul>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> ETL任务</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> ETL脚本</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> ETL转换</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 常量</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> ETL文件</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> ETL工程</a></li>
+                                          </ul>
+                                      </li>
+                                      <li>
+                                         <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">计算组件</h5>
+                                         <ul>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 组件描述</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 计算方法</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 输入参数</a></li>
+                                              <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 输出结果</a></li>
+                                         </ul>
+                                      </li>
+                                   </ul>
+                                 </li>
+                                 <li>
+                                   <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">第三方工具包</h5>
+                                   <ul>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> ERWIN包</a></li>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> PowerCenter包</a></li>
+                                   </ul>
+                                 </li>
+                                 <li>
+                                   <h5><i class="fa fa-plus-square"></i> <input type="checkbox" class=" checkbox-inline">系统包</h5>
+                                   <ul>
+                                      <li><a href="javascript:;"><input type="checkbox" class=" checkbox-inline"> <i class="fa fa-file-text-o"></i> 系统</a></li>
+                                   </ul>
+                                 </li>
+                               </ul>
+                             </li> -->            
+                           </ul>
+                        </div>
+                      </div>
+                      <div class="meta-rele-menu-right">
+                            <div class="search-form-model">
+                                <div class="item"><a class="btn btn-success" onclick="sumbit();" id="addre"><i class="fa fa-plus"></i> 新增</a></div>
+                                <!-- <div class="item"><a class="btn btn-danger"><i class="fa fa-trash-o"></i> 删除</a></div> -->
+                            </div>
+                            <div class="table-form">
+                                <table id="table" data-id-field="id" class="table table-striped alltable">
+                                    <thead>
+                                        <!-- <tr>
+                                            <th><input class="selectinput" type="checkbox" value="0">全选</th>
+                                            <th>关联关系类型</th>
+                                            <th>元数据代码</th>
+                                            <th>元数据名称</th>
+                                            <th>上下文路径</th>
+                                            <th>操作</th>
+                                        </tr> -->
+                                        <tr>
+                        					<th data-field="relationName">关联关系类型</th>
+                        					<th data-field="code">指标代码</th>
+                         					<th data-field="name">指标名称</th>
+                         					<th data-field="contextCatalog">上下文路径</th>
+                         					<th data-field="" data-formatter="operateFormatter">操作</th>
+                     					</tr>
+                                    </thead>
+                                    <!-- <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_package </td>
+                                            <td>index_client_info</td>
+                                            <td>王翰</td>
+                                            <td>业务模型/指标模型/表</td>                                            
+                                            <td><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_package </td>
+                                            <td>index_client_info</td>
+                                            <td>王翰</td>   
+                                            <td>业务模型/指标模型/表</td>                                         
+                                            <td><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                                <!-- <div class="page">
+                                      <nav>
+                                          <ul class="pagination">
+                                              <li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                                              <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                                              <li class="active"><a href="#">1</a></li>
+                                              <li><a href="#" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                                              <li><a href="#" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                                          </ul>
+                                          <span class="count">总共 4条记录，每页显示10条记录，共1页</span>
+                                      </nav>
+                                </div> -->
+                            </div>                         
+                      
+                      </div>
+                   </div>
+                
+                </div>
+
+               
+              </div>
+            </div>  
+</body>
+<script>
+//筛选器-字符型
+	/* $(document).on("click","#chartlistshow ",function(){
+	 top.layer.open({
+		title:'筛选器-字符型',
+		closeBtn: 2, 
+		type:2,
+		area:['500px','400px'],
+		shadeClass:true,
+		content:"custom-character.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+    		closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	});
+	}); */
+	$(document).on("click","#chartlistshow ",function(){
+	//var main = $("#editcon");	
+	var typess=$("#chartlistshow").attr("typess");
+	top.layer.open({
+		title:'条件筛选',
+		closeBtn: 2, 
+		type:2,
+		area:['580px','450px'],
+		shadeClass:true,
+		content:"Filtershow.html?typess="+encodeURI(typess),
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+
+		},
+		yes: function(index, layero){
+    	//按钮【确定】的回调    	
+    	alert("点击确定后");
+	    var doc=$(layero).find("iframe")[0].contentWindow.document;
+	    //精确筛选
+	    if($(doc).find("#siteBtn1").is(":checked")){
+        var conditionId="";
+        var ul=$(doc).find("#site-r-li");
+	    var lis = ul.children();
+	     var dictionName="";
+	    $.each(lis,function(i,value){
+         dictionName+=$(this).attr("dictionName")+",";
+	    });
+	    dictionName=dictionName.substring(0,dictionName.length-1);
+	       var params = {
+			"dictionarytype" : typess,
+			"dictionaryvalue" : dictionName,
+			"condition" : "in",
+			"note" : dictionName
+		    };
+	    ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,function callfunction2(data){
+	     conditionId = data.conditionId;
+	    });
+	    
+	    //替换原来的关联关系	
+				if (delId == null|| delId == "") {
+				} else {
+				var params = {
+					"vo.id" : delId,
+					"flag" : "delete"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				}
+		//增加关联关系
+		var metadataedIds=conditionMetadataId;
+	   // alert("aaa="+conditionMetadataId);
+	   // metadataedId.push(conditionMetadataId);
+	    var params1 = {
+					"metadataId" : metadataId,
+					"metadataedId" : metadataedIds,
+					"conditionId" : conditionId,
+					"relationId" : relationId,
+					"flag" : "add"
+				};
+		ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params1,selectRelation);
+		
+	    //更新计算规则的入口参数
+		indexMetadata = GetQueryString("indexMetadata");
+		var params={"metadataId":indexMetadata};
+		ajaxSend("/pms-web/ajax/ajaxCaculateIndexAction",params,function succ(){alert("成功回显");});
+	    }
+	    
+	    //条件筛选
+	    if($(doc).find("#siteBtn2").is(":checked")){ 
+  	    var text=$(doc).find("#text1").val();
+        if(text!=""){
+            var params = {
+			"dictionarytype" : type,
+			"dictionaryvalue" : text,
+			"condition" : "=",
+			"note" : text
+		    };
+       ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,function callfunction1(data) {
+				//自定义成功后直接新增关联关系
+				//$("#addre").trigger("click");
+				var conditionId = data.conditionId;
+				metadataedId.push(conditionMetadataId);
+				//替换原来的关联关系	
+				if (delId == null|| delId == "") {
+				} else {
+				var params = {
+					"vo.id" : delId,
+					"flag" : "delete"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				}
+				var params = {
+					"metadataId" : metadataId,
+					"metadataedId" : metadataedId,
+					"conditionId" : conditionId,
+					"relationId" : relationId,
+					"flag" : "add"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				});
+        }
+        } 
+        
+				
+	
+				//addOrUpdate(null, doc, radio);
+				top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+			}
+		});
+	});
+
+	$(document).on("click","#numericaltype ",function() {
+	   top.layer.open({
+	   title : '筛选器-数值型',
+	   closeBtn : 2,
+	   type : 2,
+	   area : [ '500px', '400px' ],
+	   shadeClass : true,
+	   content : "custom-numerical.html",
+	   btn : [ '确定', '取消' ],
+	   btnAlign : 'c',
+	   closeBtn : 1,
+		yes : function(index, layero) {
+			var doc = $(layero).find("iframe")[0].contentWindow.document;
+			var condition = $(doc).find("#numselsects:checked").attr("values");
+			var value = $(doc).find("#text").val();
+			var value1 = $(doc).find("#text1").val();
+			var value2 = $(doc).find("#text2").val();
+			var note = $(doc).find("#note").val();
+			//alert("1111="+types);
+			var params = {
+			"dictionarytype" : "数值型",
+			"condition" : condition,
+			"dictionaryvalue" : value,
+			"start" : value1,
+			"end" : value2,
+			"note" : note
+			};
+			ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,function callfunction1(data) {
+				//自定义成功后直接新增关联关系
+				//$("#addre").trigger("click");
+				var conditionId = data.conditionId;
+				metadataedId.push(conditionMetadataId);
+				//替换原来的关联关系	
+				if (delId == null|| delId == "") {
+				} else {
+				var params = {
+					"vo.id" : delId,
+					"flag" : "delete"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				}
+				var params = {
+					"metadataId" : metadataId,
+					"metadataedId" : metadataedId,
+					"conditionId" : conditionId,
+					"relationId" : relationId,
+					"flag" : "add"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				});
+				//更新计算规则的入口参数
+		indexMetadata = GetQueryString("indexMetadata");
+		var params={"metadataId":indexMetadata};
+		ajaxSend("/pms-web/ajax/ajaxCaculateIndexAction",params,function succ(){alert("成功回显");});
+					//按钮【确定】的回调
+					top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+					},
+					btn2 : function(index, layero) {
+						//按钮【取消】的回调
+						closeWindows();
+					},
+					cancel : function(index) {
+						//【右上角关闭】的回调
+						closeWindows();
+					}
+				});
+			});
+
+	$(document).on("click","#datetype ",function() {
+		top.layer.open({
+		title : '筛选器-日期型',
+		closeBtn : 2,
+		type : 2,
+		area : [ '500px', '500px' ],
+		shadeClass : true,
+		content : "custom-date.html",
+		btn : [ '确定', '取消' ],
+		btnAlign : 'c',
+		closeBtn : 1,
+		yes : function(index, layero) {
+			var doc = $(layero).find("iframe")[0].contentWindow.document;
+			var startdate = $(doc).find("#startdate").val();
+			var enddate = $(doc).find("#enddate").val();
+			var note = $(doc).find("#note").val();
+			if (enddate < startdate) {
+				alert("结束时间不能小于开始时间");
+				return;
+			}
+			var params = {
+				"dictionarytype" : "日期型",
+				"condition" : "yes",
+				"start" : startdate,
+				"end" : enddate,
+				"note" : note
+			};
+			ajaxSend("/pms-web/ajax/ajaxAddDictionariesAction",params,
+			function callfunction1(data) {
+			  //自定义成功后直接新增关联关系
+			//$("#addre").trigger("click");
+				var conditionId = data.conditionId;
+				metadataedId.push(conditionMetadataId);
+				//替换原来的关联关系	
+				if (delId == null|| delId == "") {
+				} else {
+				var params = {
+				  "vo.id" : delId,
+				   "flag" : "delete"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				}
+				var params = {
+					"metadataId" : metadataId,
+					"metadataedId" : metadataedId,
+					"conditionId" : conditionId,
+					"relationId" : relationId,
+					"flag" : "add"
+				};
+				ajaxSend("/pms-web/ajax/ajaxAddOrDeleteRelationAction",params,selectRelation);
+				});
+                 //更新计算规则的入口参数
+		indexMetadata = GetQueryString("indexMetadata");
+		var params={"metadataId":indexMetadata};
+		ajaxSend("/pms-web/ajax/ajaxCaculateIndexAction",params,function succ(){alert("成功回显");});
+				//按钮【确定】的回调
+				top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+			     },
+				btn2 : function(index, layero) {
+				//按钮【取消】的回调
+				closeWindows();
+			     },
+			  cancel : function(index) {
+				//【右上角关闭】的回调
+				closeWindows();
+			   }
+			});
+	});
+
+	//关闭窗口
+	function closeWindows() {
+		//alert("close");
+	}
+</script>
+</html>

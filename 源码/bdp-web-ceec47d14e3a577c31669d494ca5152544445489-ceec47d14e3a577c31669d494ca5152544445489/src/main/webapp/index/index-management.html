@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>指标定义</title>
+
+<script type="text/javascript">	
+	 var menuCode = GetQueryString("menuCode");
+	var _json4Table = new $.json4Table({
+		action : "/bdp-web/index/queryIndexMetadataAction",
+		formatter : operateFormatter
+	});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:bloodAlert(\'' + id
+						+ '\')" title="血缘分析">',
+				'<i class="glyphicon glyphicon-edit">血缘分析</i>',
+				'</a>  ',
+				'<a class="edit" href="javascript:details(\'' + id
+						+ '\')" title="影响分析">',
+				'<i class="glyphicon glyphicon-edit">影响分析</i>',
+				'</a>  ',
+				'<a class="edit" href="javascript:details(\'' + id
+						+ '\')" title="查看版本">',
+				'<i class="glyphicon glyphicon-edit">查看版本</i>',
+				'</a>  ',
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ','<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>',
+				'</a>  ' ]
+				.join('');
+	}	
+		
+	function details(id){
+		window.location.href="/bdp-web/index/index-infor.html?metadataId="+id+"&menuCode="+menuCode;
+	}
+	
+	function addIndex(){
+		if(window.parent.catalogSize > 0){
+			window.open("/bdp-web/index/Index-definition.html?identify=index&classType=2&index=4&catalogId="+window.parent.catalogId+"&menuCode="+menuCode,"_top");
+		}else {
+			alert("请建立至少一个目录");
+		}
+		
+	}
+	
+	// 删除指标
+	function remove(id){
+		qiao.bs.confirm({
+			msg : "是否确认删除该指标？"
+		}, function() {
+			var params = {"indexId":id}; 
+			ajaxSend("/bdp-web/index/removeIndextAction",{"param" : JSON.stringify(params)},function(data){
+			
+				var params = {"catalogId":window.parent.catalogId, "classType":classType};
+				
+				var param = {"param":JSON.stringify(params)};
+				 
+				_json4Table.drewTable(param);
+		
+			});
+		
+		}, function() {
+		});
+	}
+	
+	// 跳转修改页面
+	function edit(id){
+		window.open("/bdp-web/index/Index-definition.html?metadataId="+id+"&classType=2&menuCode="+menuCode,"_top");
+	}
+	
+	function bloodAlert(id) {
+	qiao.bs.dialog({
+			url : 'indexInfo.html',
+			title : '血缘关系',
+			okbtn : '关闭',
+			//area : ['1000','1000'],
+			callback : function() {
+				getBlood(id);
+			}
+		}, function() {
+			return true;
+		}, function() {
+		});
+	}
+
+	function getBlood(id){
+		var canvas = document.getElementById('canvas');
+		var stage = new JTopo.Stage(canvas);
+		var scene = new JTopo.Scene(stage);
+		scene.alpha = 1;
+		//scene.background = '/pms-web/resource/images/bg.jpg';
+		var icons = [ 'green', 'blue', 'red1', 'red2' ];
+		var param = {
+			"metadataId" : id
+		};
+		ajaxSendCloud("/pms-web/ajax/distributionAction", {
+			"param" : JSON.stringify(param),
+			"menuUrl" : relationshipUrl + 'metadata/getBlood'
+		}, function(data) {
+			var json = string4jsonObject(data);
+			var vo = json.vo;
+			var indexInfo = json.indexInfo;
+			var locationInfo = json.locationInfo;
+			var nodes = [];
+			$("#canvas").attr('height',locationInfo['y'] + 100 + 'px');
+			$("#canvas").attr('width',locationInfo['x'] + 100 + 'px');
+			
+			//遍历指标详情信息
+			$("#area2").html('');
+			$.each(indexInfo, function(i, entity) {
+				$("#area2").append("<tr><th>"+ entity.class_name +":</th><td> "+ entity.metadata_name + "</td></tr>");	
+			});
+			
+			$.each(vo.nodes, function(i, obj) {
+				var node = addNode(obj.text, obj.image, obj.x, obj.y,obj.nodeType);
+				nodes.push(node);
+			});
+			$.each(vo.links, function(i, obj) {
+				var fn;
+				var tn;
+				var text2='';
+				var text3 = "";
+				
+				
+				$.each(nodes, function(i, node) {
+					if (node.text === obj.fromNode) {
+						fn = node;
+					}
+					if (node.text === obj.toNode) {
+						tn = node;
+					}
+				});
+				var link = addLink(fn, tn, text2);
+			});
+		});
+		function addNode(text, icon, x, y,nodeType) {
+			var node = new JTopo.Node();
+			if (icon != null) {
+				node.setImage(icon, true);
+			}
+			if(nodeType == "index"){
+				node.dbclick(function(event){                
+					layer.open({
+						title:'指标详情',
+						closeBtn: 2, 
+						type:1,
+						//area: ['850px', '610px'],
+						shadeClass:true,
+						content:$("#area1"),
+						btn:['确定'],
+						btnAlign:'c',
+						closeBtn:1,	
+						yes: function(index, layero){
+						  layer.close(index); //如果设定了yes回调，需进行手工关闭
+							
+						},
+						cancel: function(index, layero){ 			 
+							layer.close(index);
+						}	
+					});             
+				});
+			}
+			node.fontColor = '0,0,0';
+			node.setLocation(x, y);
+			node.textPosition = "Bottom_Center";
+			node.text = text;
+			scene.add(node);
+			return node;
+		}
+
+		function addLink(nodeA, nodeZ, text) {
+			var link = new JTopo.FlexionalLink(nodeA, nodeZ);
+			link.direction = 'horizontal';
+			link.strokeColor = '0,200,255';
+			link.lineWidth = 3;
+			link.text = text;
+			link.fontColor = '0,0,0';
+			link.arrowsRadius = 13; // 箭头大小
+			scene.add(link);
+			return link;
+		}
+	}
+	
+	var classType = null;
+	
+	$(document).ready(function($) {	
+	
+		classType = GetQueryString("classType");
+		
+		var params = {"catalogId":window.parent.catalogId, "classType":classType}; 
+		
+		var param = {"param":JSON.stringify(params)};
+		
+		_json4Table.drewTable(param);
+		
+	});
+	window.onload = function(){
+	
+	}
+	
+	function submit(){
+		var indexName=$("#indexName").val();
+		var params = {"catalogId":window.parent.catalogId,"indexName" : indexName, "classType":classType};
+		var param = {"param":JSON.stringify(params)};
+		_json4Table.drewTable(param);
+	}
+	
+	// 测试用
+	function caculate(){
+		var params = {"metadataId":"86", "flag":""};
+		ajaxSend("/pms-web/ajax/ajaxQueryMetamodelPropertyAction",params,success);
+	}
+	
+	function success(data){ 
+		var metadataPropertyVOList = data.metadataPropertyVOList;
+		metadataPropertyVOList.forEach(function(e,i){
+			if(i == 3){
+				//alert(e.propertyValue);
+				var params = {"jsonString":e.propertyValue};
+				ajaxSend("/pms-web/ajax/ajaxCaculateAction",params,successful);
+			}
+		});
+	}
+	
+	function successful(data){
+		alert(data.result);
+	} 
+
+</script>
+</head>
+<body style="min-width:auto;">
+
+	<div class="content">
+		<div class="title-query">
+			<em>指标定义</em>
+		</div>
+		<div class="search-form-model">
+			<div class="item fr">
+				<a class="btn btn-success" onclick="addIndex();" id="addre"><i
+					class="fa fa-plus"></i> 新增指标</a>
+			</div>
+			<div class="item">
+				<span id="htt">指标名称：</span><input class="form-control" id="indexName"
+					placeholder="指标名称">
+			</div>
+			<div class="item">
+				<a onclick="submit();" class="btn btn-primary"><i
+					class="fa fa-search"></i> 查询</a>
+			</div>
+			<!-- <div class="item"><a id="caculate" onclick="caculate()" class="btn btn-danger" href="javascript:;"><i class="fa fa-qrcode"></i> 计算指标</a></div> -->
+		</div>
+		<!-- <div class="metaset">根据时间动态显示元数据操作信息 </div>-->
+		<div class="table-form">
+			<table id="table" data-id-field="id"
+				class="table table-striped alltable">
+				<thead>
+					<tr>
+						<!-- <th><input class="selectinput" type="checkbox" value="0">全选</th> -->
+						<th data-field="code">指标编号</th>
+						<th data-field="name">指标名称</th>
+						<th data-field="meaning">指标业务含义</th>
+						<th data-field="characterization">统计口径描述</th>
+						<th data-field="updateFrequency">指标更新频率</th>
+						<th data-field="startTime">指标启动时间</th>
+						<th data-field="" data-formatter="operateFormatter">操作</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="showbox" id="area1" style="display:none;">
+		<div class="show-form">
+			<table class="item-table table" style="border:1px solid #ddd;"
+				id="area2">
+
+			</table>
+		</div>
+	</div>
+	
+</body>
+</html>

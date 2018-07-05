@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+<script>
+    var classType = null;
+	$(document).ready(function($) {
+		classType = GetQueryString("classType");
+		/* if(type != null){
+			//从标签工厂-->指标或业务模型菜单进来的，把二级菜单屏蔽
+			$("#menu2").css('display','none');
+			classType = type;
+		} */
+		initLeftMenu(null);
+		//changeManagement();
+	});
+
+
+	
+	
+	
+	
+
+
+function Keypress_err_1(){
+	if(!(event.keyCode==46)&&!(event.keyCode==8)&&!(event.keyCode==37)&&!(event.keyCode==39))
+    if(!((event.keyCode>=48&&event.keyCode<=57)||(event.keyCode>=96&&event.keyCode<=105)))
+    event.returnValue=false; 
+}
+
+</script>
+</body>
+</html>
+<!-- 左边菜单增加 -->
+<div class="dialog" id="addcon">
+  <p class="showMeta"><span>请选择结构类型:</span><label class="radio-inline"><input type="radio" name="name" id="metaList" value="catalogue">分类目录</label><label id="metadata-radio" class="radio-inline"><input type="radio" name="name" id="metaList1" value="metadata">元数据</label></p>
+   <div class="metdDiv">
+       <table>
+          <tr>
+             <th>分类目录代码:</th>
+             <td><input type="text" id="code" class="form-control"></td>
+          </tr>
+          <tr>
+             <th>分类目录名称:</th>
+             <td><input type="text" id="name" class="form-control"></td>
+          </tr>
+          <tr>
+             <th>上下文路径:</th>
+             <td><input type="text" id="parentId" value="" placeholder="" readonly="readonly" class="form-control"></td>
+          </tr>
+       </table>
+   </div>
+   <div class="metdDiv1"> 
+       <h3 class="title-basic ml mt"><em>模型信息</em></h3>
+       <div class="navmenu showmenu" id="nav-left">         
+       </div>
+       <h3 class="title-basic ml mt"><em>属性信息</em></h3>
+       <table id="property"></table>
+       <div class="atrshow">
+       </div>
+       <h3 class="title-basic ml mt"><em>基本信息</em></h3>
+       <table>
+          <tr>
+             <th>元数据代码:</th>
+             <td><input type="text" id="metadataCode" class="form-control"></td>
+          </tr>
+          <tr>
+             <th>元数据名称:</th>
+             <td><input type="text" id="metadataName" class="form-control"></td>
+          </tr>
+          <tr>
+             <th>元数据类型:</th>
+             <td><input type="text" class="form-control" id="metadataType" readonly>
+             <input  type="hidden" id="classId" value=""></td>
+          </tr>
+          <tr>
+             <th>上下文路径:</th>
+             <td><input type="text" id="contextCatalog" readonly class="form-control">
+              <input type="hidden" id="metadataParentId" value=""></td>
+          </tr>
+       </table>
+   </div>
+   
+</div>

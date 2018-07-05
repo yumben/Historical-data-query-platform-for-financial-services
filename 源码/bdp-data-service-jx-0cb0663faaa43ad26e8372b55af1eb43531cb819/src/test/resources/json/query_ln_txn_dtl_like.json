@@ -1,0 +1,32 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "ln_txn_dtl",
+    "if_count": true,
+    "fields": [
+        {
+            "name": "ln_acc_opnorg_utid"
+        } ,
+         {
+            "name": "biz_cgy_nm"
+        } 
+    ],
+    "conditions": [
+        {
+            "and": [
+                {
+                    "field1": "data_date",
+                    "cond": "=",
+                    "value1": "20171017"
+                }
+                ,
+                {
+                    "field1": "biz_cgy_nm",
+                    "cond": "like",
+                    "value1": "%个人%"
+                } 
+            ]
+        }
+    ] 
+}

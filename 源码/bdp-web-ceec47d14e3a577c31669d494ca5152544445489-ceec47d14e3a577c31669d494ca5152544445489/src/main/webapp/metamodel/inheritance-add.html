@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="../resource/js/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/layer.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/css/style.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/css/mainModel.css">
+<script type="text/javascript" src="../resource/js/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="../resource/js/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="../resource/js/layer.js"></script>
+<script type="text/javascript" src="../resource/js/main.js"></script>
+<script type="text/javascript" src="../resource/js/config.js"></script> -->
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<title>元模型管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;"></body>
+</html>
+<!-- 关联关系增加 -->
+<div class="dialog" id="addnheritance">
+   <table>
+      <tr>
+         <th>关系代码:</th>
+         <td><input type="text" class="form-control" id="inheritanceCode"></td>
+      </tr>
+      <tr>
+         <th>关系名称:</th>
+         <td><input type="text" class="form-control" id="inheritanceName"></td>
+      </tr>
+      <tr>
+         <th>继承类代码:</th>
+         <td><input type="text" class="form-control" id="fromInheritanceCode" readonly></td>
+      </tr>
+      <tr>
+         <th>继承类名称:</th>
+         <td><input type="text" class="form-control" id="fromInheritanceName" readonly></td>
+      </tr>
+      <!-- <tr>
+         <th>被关联类代码:</th>
+         <td><input type="text" class="form-control"id="classCoded"></td>
+      </tr> -->
+      <tr>
+         <th>继承类名称:</th>
+<!--          <td><select class="form-control"><option selected>检查校验</option><option>表</option></select></td> -->
+      <td><select class="form-control" id="toInheritanceName"><option value='1'>metadata_relational_table</option><option value='2'>metadata_relational_column</option></select></td>
+      </tr>
+      <tr>
+         <th>描述:</th>
+         <td><textarea rows="3" class="form-control" id="describes"></textarea></td>
+      </tr>
+   </table>
+</div>  

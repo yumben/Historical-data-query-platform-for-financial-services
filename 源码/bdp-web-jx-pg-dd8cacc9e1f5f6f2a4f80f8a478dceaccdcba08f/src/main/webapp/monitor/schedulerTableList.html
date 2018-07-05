@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<title>菜单管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->
+	<div class="wrap clearpsition">
+		<div class="contentbox">
+			<div class="title-query">
+				<em>调度器</em>
+			</div>
+			<input id="param" type="hidden" value="" /> <input id="dataList"
+				type="hidden" value="" /><input id="paramData" type="hidden"
+				value="" />
+			<div class="contentload">
+				<div class="search-form-model">
+					<span class="addbtn fr" id="addBtn1"
+						onclick="lookScheduler('scheduler.html','add')" title="新增"></span>
+					<div class="item">
+						<span>流程名称：</span><input class="form-control" id="processName"
+							placeholder="流程名称">
+					</div>
+					<div class="item">
+						<a onclick="submit();" class="btn btn-primary"><i
+							class="fa fa-search"></i> 查询</a>
+					</div>
+				</div>
+				<div class="table-form">
+					<table id="table" data-id-field="processId"
+						class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th data-field="processName">流程名称</th>
+								<th data-field="processKey">流程key</th>
+								<th data-field="isexecutable">是否执行</th>
+								<th data-field="version">版本</th>
+								<th data-field="remark">备注</th>
+								<th data-field="processId" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+	<!--#include virtual="../workbench/footer.shtml"-->
+	<div id="paramInfoBox" style="display: none;">
+		<div class="show-form">
+			<table class="item-table" id="paramInfoTable">
+				
+			</table>
+		</div>
+	</div>
+	<div class="showbox" id="showbox" style="display: none;">
+		<div class="show-form">
+			<table class="item-table">
+				<tr>
+					<th>流程key：</th>
+					<td><input value="{{form.processKey}}"
+						v-model="form.processKey" type="text" name="" class="form-control"></td>
+				</tr>
+				<tr>
+					<th>流程名称：</th>
+					<td><input value="{{form.processName}}"
+						v-model="form.processName" type="text" name=""
+						class="form-control"></td>
+				</tr>
+				<tr>
+					<th>是否执行：</th>
+					<td><label>是<input v-model="form.isexecutable"
+							value="1" type="radio" name=""></label><label>否<input
+							v-model="form.isexecutable" value="0" type="radio"
+							name="isexecutable"></label></td>
+				</tr>
+				<tr>
+					<th>版本：</th>
+					<td><input value="{{form.version}}" v-model="form.version"
+						type="text" name="isexecutable" class="form-control"></td>
+				</tr>
+				<tr>
+					<th>备注：</th>
+					<td><input value="{{form.remark}}" v-model="form.remark"
+						type="text" name="" class="form-control"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</body>
+
+<script type="text/javascript" src="../resource/js/json4Table.js"></script>
+<script type="text/javascript"
+	src="../resource/js/monitor/schedulerTableList.js"></script>
+</html>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelClassgroupMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelClassgroup">
+		<id column="classgroup_id" property="classgroupId" />
+		<result column="class_id" property="classId" />
+		<result column="relationship_code" property="relationshipCode" />
+		<result column="relationship_name" property="relationshipName" />
+		<result column="classgrouped_id" property="classgroupedId" />
+		<result column="describes" property="describes" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+
+	<select id="queryModelClassGroup" resultType="cn.com.infohold.entity.MetamodelClassgroup"
+		parameterType="Map">
+		SELECT
+		m.classgroup_id AS classgroupId,
+		m.class_id AS classId,
+		m.relationship_code AS relationshipCode,
+		m.relationship_name AS
+		relationshipName,
+		m.classgrouped_id AS classgroupedId,
+		m.describes AS
+		describes,
+		m.create_date AS createDate,
+		m.create_name AS createName,
+		m.edit_date AS editDate,
+		m.edit_name AS editName,
+		c.class_code AS
+		classCoded,
+		c.class_name AS classNamed
+		FROM
+		metamodel_classgroup m,
+		metamodel_class c
+		<where>
+			m.classgrouped_id = c.class_id
+			AND m.class_id = #{map.classId}
+			<if test="map.groupedClassName != null and map.groupedClassName != ''">
+				AND (c.class_code like
+				CONCAT(CONCAT('%',#{map.groupedClassName}),'%') OR
+				c.class_name like
+				CONCAT(CONCAT('%',#{map.groupedClassName}),'%'))
+			</if>
+			<if test="map.groupName != null and map.groupName != ''">
+				AND (m.relationship_code like
+				CONCAT(CONCAT('%',#{map.groupName}),'%') OR
+				m.relationship_name like
+				CONCAT(CONCAT('%',#{map.groupName}),'%'))
+			</if>
+			order by m.classgroup_id desc
+		</where>
+	</select>
+	
+	<select id="queryModelClassGroupByClassId" resultType="cn.com.infohold.entity.MetamodelClassgroup"
+		parameterType="Map">
+		SELECT
+		m.classgroup_id AS classgroupId,
+		m.class_id AS classId,
+		m.relationship_code AS relationshipCode,
+		m.relationship_name AS
+		relationshipName,
+		m.classgrouped_id AS classgroupedId,
+		m.describes AS
+		describes,
+		m.create_date AS createDate,
+		m.create_name AS createName,
+		m.edit_date AS editDate,
+		m.edit_name AS editName,
+		c.class_code AS
+		classCode,
+		c.class_name AS className
+		FROM
+		metamodel_classgroup m,
+		metamodel_class c
+		<where>
+			m.class_id = c.class_id
+			AND m.class_id = #{map.classId}
+			<if test="map.groupedClassName != null and map.groupedClassName != ''">
+				AND (c.class_code like
+				CONCAT(CONCAT('%',#{map.groupedClassName}),'%') OR
+				c.class_name like
+				CONCAT(CONCAT('%',#{map.groupedClassName}),'%'))
+			</if>
+			<if test="map.groupName != null and map.groupName != ''">
+				AND (m.relationship_code like
+				CONCAT(CONCAT('%',#{map.groupName}),'%') OR
+				m.relationship_name like
+				CONCAT(CONCAT('%',#{map.groupName}),'%'))
+			</if>
+			order by m.classgroup_id desc
+		</where>
+	</select>
+	
+	
+	<select id="queryModelClassGrouped" resultType="cn.com.infohold.entity.MetamodelClassgroup"
+		parameterType="Map">
+		SELECT
+		m.classgroup_id AS classgroupId,
+		m.class_id AS classId,
+		m.relationship_code AS relationshipCode,
+		m.relationship_name AS
+		relationshipName,
+		m.classgrouped_id AS classgroupedId,
+		m.describes AS
+		describes,
+		m.create_date AS createDate,
+		m.create_name AS createName,
+		m.edit_date AS editDate,
+		m.edit_name AS editName,
+		c.class_code AS
+		classCoded,
+		c.class_name AS classNamed,
+		v.class_code AS
+		classCode,
+		v.class_name AS className
+		FROM metamodel_classgroup m
+  LEFT JOIN metamodel_class c
+    ON m.classgrouped_id = c.class_id
+  LEFT JOIN metamodel_class v
+    ON m.class_id = v.class_id 
+		<where>
+			m.classgrouped_id = #{map.classId}
+			<if test="map.groupedClassName != null and map.groupedClassName != ''">
+				AND (c.class_code like
+				CONCAT(CONCAT('%',#{map.groupClassName}),'%') OR
+				c.class_name like
+				CONCAT(CONCAT('%',#{map.groupClassName}),'%'))
+			</if>
+			<if test="map.groupName != null and map.groupName != ''">
+				AND (m.relationship_code like
+				CONCAT(CONCAT('%',#{map.groupName}),'%') OR
+				m.relationship_name like
+				CONCAT(CONCAT('%',#{map.groupName}),'%'))
+			</if>
+			order by m.classgrouped_id desc
+		</where>
+	</select>
+
+</mapper>

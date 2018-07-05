@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<script type="text/javascript" src="../resource/js/jtopo-0.4.8-min.js"></script>
+
+<title>指标管理</title>
+<script type="text/javascript">
+
+	var metadataVO = null;
+	var propertyId = new Array();
+	var propertyValue = new Array();
+	var metadataPropertyVOList = new Array();
+	var oldCode = null;
+	var oldName = null;
+	var classIdList = new Array();
+	var indexMetadata = null;
+	function queryBaseData(params){
+		ajaxSend("/pms-web/ajax/ajaxQueryMetadataObjectAction",params,calFun);
+	}
+	
+	$(document).ready(function($) {
+		var metadataId = GetQueryString("metadataId");
+		
+		indexMetadata = GetQueryString("indexMetadata");
+		if(metadataId == "null" || metadataId == "0"){
+			metadataId = "";
+		}
+		var classId = GetQueryString("classId");
+		console.log(classId);
+		//查询基本信息和属性信息
+		if(metadataId == null){
+			alert("获取不到与数据ID，请刷新页面");
+		}else{
+			var params={"metadataId":metadataId};
+			queryBaseData(params);
+		}
+	});
+	var metadataClassVOList;
+	//初始化视图信息
+	function showView(data){
+		
+		 metadataClassVOList = data.metadataClassVOList;
+		if(metadataClassVOList != null){
+			var div = $("#objectView");
+			var child_div = $("<div id='child_div' class='tab-content'>");
+			div.append(child_div);
+			var ul = $("<ul class='surface-list'></ul>");
+			child_div.append(ul);
+			metadataClassVOList.forEach(function(e,i){
+				var li = $("<li id='"+e.id+"' class='viewBtn'  classId='"+e.classId+"'>"+e.name+"</li>");
+				ul.append(li);
+			});
+		}
+	}
+	
+	//刷新视图信息
+	function initView(classId){
+		$("#objectView").children("div").remove();
+		var params={"metadataId":metadataVO.id, "classId":classId};
+		ajaxSend("/pms-web/ajax/ajaxQueryClassListAction",params,showView);
+	}
+	var modelClassList=null;
+	//初始化基本信息
+	function calFun(data){
+		metadataVO = data.metadataVO;
+		var param = {"classId":metadataVO.classId,"metadataId":metadataVO.id,"flag":""};
+		ajaxSend("/pms-web/ajax/ajaxQueryMetamodelPropertyAction",param,showProperty);
+		
+		var propertyList = data.propertyList;
+		 modelClassList = data.modelClassList;
+		
+		oldCode = metadataVO.code;
+		oldName = metadataVO.name;
+		
+		$("#objectCode").attr("value",metadataVO.code);
+		$("#objectName").attr("value",metadataVO.name);
+		$("#objectType").attr("value",metadataVO.className);
+		$("#contextCatalog").attr("value",metadataVO.contextCatalog);
+		$("#createDate").attr("value",metadataVO.createDate);			
+		$("#createName").attr("value",metadataVO.createName);
+
+		if(modelClassList != null){
+			var curent = $("#viewlist");
+			var div = $("#objectView");
+			div.empty();
+			var ul = $("<ul class='tab-right-menu viewedit'></ul>");
+			div.append(ul);
+			modelClassList.forEach(function(e,i){
+				var li = $("<li id="+e.id+" title="+e.name+" class='metaListbtn' isadd="+e.isadd+"><i class='fa fa-file-text-o'></i> 增加-"+e.name+"</li>");
+				curent.append(li);
+				var li2 = $("<li id='"+"view"+e.id+"' onclick='initView("+e.id+")'><a href='javascript:;'>"+e.name+"</a></li>");
+				ul.append(li2);
+				if(i == 0){
+					$("#"+"view"+e.id).attr("class", "current");
+				}
+				classIdList.push(e.id);
+			});
+		}
+		if(classIdList.length > 0){
+			var params={"metadataId":metadataVO.id, "classId":classIdList[0]};
+			ajaxSend("/pms-web/ajax/ajaxQueryClassListAction",params,showView);
+		}
+	}
+	
+	// 展示属性信息
+	function showProperty(data){
+		var mList = data.mList;
+		metadataPropertyVOList.length = 0;
+		metadataPropertyVOList = data.metadataPropertyVOList;
+		var table = $("#property");
+		table.empty();
+		propertyId.length = 0;
+		propertyValue.length = 0;
+		$.each(mList, function(i,metamodelClassPropertyVO){
+			propertyId.push(metamodelClassPropertyVO.id);
+			var tr=$("<tr></tr>");
+        	tr.appendTo(table);
+        	var th = $("<th>"+metamodelClassPropertyVO.name+":</th>");
+        	th.appendTo(tr);
+        	var td = $("<td>"+"</td>");
+        	td.appendTo(tr);
+        	var input = $("<input type='text' maxlength='"+metamodelClassPropertyVO.lengths+"' "
+        		+"readonly class='form-control' id='"+metamodelClassPropertyVO.id+"' value='"+"'>"+"</input>");
+        	input.appendTo(td);     	
+		});
+		
+		$.each(metadataPropertyVOList, function(i,metadataPropertyVO){
+			propertyValue.push(metadataPropertyVO.propertyValue);
+			$("#"+propertyId[i]).attr("value", metadataPropertyVO.propertyValue);   	
+		});
+	}
+	
+	//跳转网页
+	function GetArgsFromHref()
+	{
+     	var sHref = "index-relevance.html?metadataId="+metadataVO.id+"&classId="+metadataVO.classId+"&indexMetadata="+indexMetadata;
+     	//alert(GetQueryString("indexMetadata"));
+     	window.location.replace(sHref);
+	}
+	
+	//修改元数据
+	function update()
+	{
+
+		window.open("/pms-web/index/Index-definition.html?metadataId="+metadataVO.id,"_top");
+
+	   	/* var param = {"classId":metadataVO.classId,"metadataId":metadataVO.id,"flag":""};
+		ajaxSend("/pms-web/ajax/ajaxQueryMetamodelPropertyAction",param,function showProperty1(data){
+		var mlist=data.mList;
+	
+		$("#objectCode").removeAttr("readOnly");
+		$("#objectName").removeAttr("readOnly");
+		
+		mlist.forEach(function(e,i){
+		if(e.isedit=="是"){
+	
+		$("#"+propertyId[i]).removeAttr("readOnly");
+		}
+		
+		});
+		
+		$("#update").attr("disabled", "true");
+		$("#save").show();
+		$("#cancel").show();
+		
+		}); */
+	}
+	
+	//保存修改
+	function save()
+	{
+		
+		metadataVO.code = $("#objectCode").val();
+		metadataVO.name = $("#objectName").val();
+		var editDate = getNowFormatDate();
+		
+		var flag = false;
+		// 判断属性是否修改，不修改则不进行数据库的查询操作
+		for(var i=0;i<propertyId.length;i++){
+			if(propertyValue[i] != $("#"+propertyId[i]).val()){
+				flag = true;
+				break;
+			}
+		}
+		if(flag == true){
+			propertyValue.length = 0;
+			for(var i=0;i<propertyId.length;i++){
+				propertyValue.push($("#"+propertyId[i]).val());
+			}
+		}else{
+			propertyValue.length = 0;
+		}
+		
+		var param = {"metadataVO.id":metadataVO.id,"code":metadataVO.code,
+			"editDate":editDate,"name":metadataVO.name,"propertyValue":propertyValue,"flag":"property"};
+		ajaxSend("/pms-web/ajax/ajaxUpdateMetadataMenuAction",param,change);
+	}
+	
+	// 取消修改
+	function cancel()
+	{
+		$("#objectCode").attr("value",oldCode);
+		$("#objectName").attr("value",oldName);
+		
+		for(var i=0;i<propertyId.length;i++){
+			$("#"+propertyId[i]).attr("value",propertyValue[i]);
+		}
+		
+		change();
+	}
+
+	// 改变输入框的状态
+	function change()
+	{
+		$("#update").removeAttr("disabled");
+		$("#save").hide();
+		$("#cancel").hide();
+		$("#objectCode").attr("readOnly", "readOnly");
+		$("#objectName").attr("readOnly", "readOnly");
+		for(var i=0;i<propertyId.length;i++){
+			$("#"+propertyId[i]).attr("readOnly", "readOnly");
+		}
+	}
+	
+	//导出
+	function excel()
+	{
+		$("#excel").submit();
+	}
+	
+	/**
+	获取当前的系统时间
+	*/
+	function getNowFormatDate() {
+    	var date = new Date();
+    	var seperator1 = "-";
+    	var seperator2 = ":";
+    	var month = date.getMonth() + 1;
+    	var strDate = date.getDate();
+    	if (month >= 1 && month <= 9) {
+     	   month = "0" + month;
+    	}
+    	if (strDate >= 0 && strDate <= 9) {
+    	    strDate = "0" + strDate;
+    	}
+    	var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+    	        + " " + date.getHours() + seperator2 + date.getMinutes()
+    	        + seperator2 + date.getSeconds();
+    	return currentdate;
+	}
+
+	function bloodAlert() {
+	var id = metadataVO.id;
+	qiao.bs.dialog({
+			url : 'indexInfo.html',
+			title : '血缘关系',
+			okbtn : '关闭',
+			callback : function() {
+				getBlood(id);
+			}
+		}, function() {
+			return true;
+		}, function() {
+		});
+	}
+
+	function getBlood(id){
+		var canvas = document.getElementById('canvas');
+		var cxt=canvas.getContext("2d");  
+    	cxt.clearRect(0,0,canvas.width,canvas.height);  
+		var stage = new JTopo.Stage(canvas);
+		var scene = new JTopo.Scene(stage);
+		scene.alpha = 1;
+		//scene.background = '/pms-web/resource/images/bg.jpg';
+		var icons = [ 'green', 'blue', 'red1', 'red2' ];
+		jsonpAjax(relationshipUrl + 'metadata/getBlood',{"metadataId":id},'jsonCall',function(data){
+			var json = string4jsonObject(data);
+			var vo = json.vo;
+			var indexInfo = json.indexInfo;
+			var nodes = [];
+			//遍历指标详情信息
+			$.each(indexInfo, function(i, entity) {
+				$("#area2").append("<tr><th>"+ entity.class_name +":</th><td> "+ entity.metadata_name + "</td></tr>");	
+			});
+			
+			$.each(vo.nodes, function(i, obj) {
+				var node = addNode(obj.text, obj.image, obj.x, obj.y,obj.nodeType);
+				nodes.push(node);
+			});
+			$.each(vo.links, function(i, obj) {
+				var fn;
+				var tn;
+				var text2='';
+				var text3 = "";
+				
+				
+				$.each(nodes, function(i, node) {
+					if (node.text === obj.fromNode) {
+						fn = node;
+					}
+					if (node.text === obj.toNode) {
+						tn = node;
+					}
+				});
+				var link = addLink(fn, tn, text2);
+			});
+		});
+		function addNode(text, icon, x, y,nodeType) {
+			var node = new JTopo.Node();
+			if (icon != null) {
+				node.setImage(icon, true);
+			}
+			if(nodeType == "index"){
+				node.dbclick(function(event){                
+					layer.open({
+						title:'指标详情',
+						closeBtn: 2, 
+						type:1,
+						//area: ['850px', '610px'],
+						shadeClass:true,
+						content:$("#area1"),
+						btn:['确定'],
+						btnAlign:'c',
+						closeBtn:1,	
+						yes: function(index, layero){
+						  layer.close(index); //如果设定了yes回调，需进行手工关闭
+							
+						},
+						cancel: function(index, layero){ 			 
+							layer.close(index);
+						}	
+					});             
+				});
+			}
+			node.fontColor = '0,0,0';
+			node.setLocation(x, y);
+			node.textPosition = "Bottom_Center";
+			node.text = text;
+			scene.add(node);
+			return node;
+		}
+
+		function addLink(nodeA, nodeZ, text) {
+			var link = new JTopo.FlexionalLink(nodeA, nodeZ);
+			link.direction = 'horizontal';
+			link.strokeColor = '0,200,255';
+			link.lineWidth = 3;
+			link.text = text;
+			link.fontColor = '0,0,0';
+			link.arrowsRadius = 13; // 箭头大小
+			scene.add(link);
+			return link;
+		}
+	}
+</script>
+</head>
+<body style="min-width:auto;">
+
+            <div class="content">
+                <div class="title-query">
+                  <em>指标定义</em>
+               </div>
+                <div class="search-form-model">
+                    <div class="item"><a id="update" onclick="update()" class="btn btn-info" href="javascript:;"><i class="glyphicon glyphicon-edit"></i> 修改</a></div>
+                    <div class="item"><a id="delete" onclick="del()" class="btn btn-danger" href="javascript:;"><i class="fa fa-trash-o"></i> 删除</a></div>
+                    <div class="item"><a class="btn btn-success"><i class="fa fa-sitemap" href="javascript:;"></i> 影响分析</a></div>
+                    <div class="item"><a class="btn btn-success" onclick="bloodAlert()"><i class="fa fa-sitemap" href="javascript:;"></i> 血缘分析</a></div>
+                    <div class="item"><a class="btn btn-success" onclick="GetArgsFromHref()" href="javascript:void(0)"><i class="fa fa-share-alt-square"></i> 关联关系设置</a></div>
+                    <div class="item-right">
+	                    <div class="item"><a id="save" style="display:none" onclick="save()" class="btn btn-primary" href="javascript:;"><i class="fa fa-check"></i> 保存</a></div>
+	                    <div class="item"><a id="cancel" style="display:none" onclick="cancel()" class="btn btn-default" href="javascript:;"><i class="fa fa-close"></i> 取消</a></div>
+	                    <div class="item"><a onclick="excel()" style="display:none" class="btn btn-warning"><i class="fa fa-upload" href="javascript:;"></i> 导出</a></div>
+                    </div>                   
+                </div> 
+                <div class="metadatarulid">
+                    <div class="metadatarulid-title"><span class="fa fa-angle-double-up"></span><h3>基本信息</h3></div>  
+                    <div class="metadata-con">
+                         <div class="search-form-basic pt15">
+                            <div class="basic"><span>指标代码：</span><input class="form-control" readonly placeholder="指标代码" id="objectCode"></div>
+                            <div class="basic"><span>指标名称：</span><input class="form-control" readonly placeholder="指标名称" id="objectName"></div>
+                            <div class="basic"><span>指标类型：</span><input class="form-control" readonly placeholder="指标类型" id="objectType"></div>
+                            <div class="basic"><span>上下文路径：</span><input class="form-control" readonly placeholder="上下文路径" id="contextCatalog"></div>
+                            <div class="basic"><span>创建时间：</span><input class="form-control" readonly placeholder="创建时间" id="createDate"></div>
+                            <div class="basic"><span>创建人：</span><input class="form-control" readonly placeholder="创建人" id="createName"></div>
+                        </div>
+                    </div>              
+                </div>
+
+                <div class="metadatarulid">
+                    <div class="metadatarulid-title"><span class="fa fa-angle-double-up"></span><h3>属性信息</h3></div>  
+                    <div class="metadata-con">
+                        <div class="metadata-con-infor">
+                        <table id="property"></table>
+                        </div>
+                    </div>              
+                </div>
+				<form id="excel" action="/pms-web/exportExcelAction"></form>
+                <div class="metadatarulid">
+                    <div class="metadatarulid-title"><span class="fa fa-angle-double-up"></span><h3>对象视图</h3></div>  
+                    <div class="metadata-con">
+                       <div class="metadata-con-view">
+                           <div class="metadata-con-view-l">
+                              <h5>对象设置</h5>
+                              <ul class="viewlist" id="viewlist">
+                                <!-- <li class="metaListbtn"><i class="fa fa-file-text-o"></i> 字段</li>
+                                <li class="metaListbtn"><i class="fa fa-file-text-o"></i> 主键</li>
+                                <li class="metaListbtn"><i class="fa fa-file-text-o"></i> 外键</li>
+                                <li class="metaListbtn"><i class="fa fa-file-text-o"></i> 表分区</li> -->
+                              </ul>
+                           </div>
+                           <div id="objectView" class="metadata-con-view-r">
+			                    <div class="tab-content">
+			                    	<!-- <ul class="surface-list">
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                              <li>表结构11</li>
+			                        </ul> -->
+			                     </div>			                    
+                           </div>
+                       </div>
+                    </div>              
+                </div>
+               
+              </div>
+            </div> 
+</body>
+<div class="showbox" id="area1" style="display:none;">
+		<div class="show-form">
+			<table class="item-table table" style="border:1px solid #ddd;"
+				id="area2">
+
+			</table>
+		</div>
+	</div>
+</html>
+
+<script>
+
+//字段弹出
+//$(".metaListbtn").on("click",function(){
+$(document).on('click', '.metaListbtn', function () { 
+	//var main = $("#metaListcon");
+	var li = $(this);
+	var title = li.attr("title");
+	var classId = li.attr("id");
+	
+	var isadd=li.attr("isadd");
+	
+   //判断对象是否存在
+   /*  if(isadd=="是"){
+   }else{
+    initView(classId);
+ 	if(metadataClassVOList.length!=0){
+	alert("已存在！");
+	initClass();
+	$("#view"+classId).attr("class", "current");
+	return;
+	  } 
+	}  */
+	
+	
+	initClass();
+	$("#view"+classId).attr("class", "current");
+	
+	top.layer.open({
+		title:'对象设置--'+title,
+		closeBtn: 2, 
+		type:2,
+		area:['500px','500px'],
+		shadeClass:true,
+		content:"filed.html?parentId="+metadataVO.id+"&classId="+classId,
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		var doc = $(layero).find("iframe")[0].contentWindow.document;
+    		var parent = $(layero).find("iframe")[0].contentWindow;
+    		
+    		var code = $(doc).find("#code").val().trim();
+    		var name = $(doc).find("#name").val().trim();
+    		
+    		if(code == ""){
+    			alert("指标代码不能为空！");
+      		  	return;
+    		}
+    		if(name == ""){
+    			alert("指标名称不能为空！");
+        		return;
+    		}
+    		var createDate = getNowFormatDate();
+    		var propertyId = new Array();
+			var propertyValue = new Array();
+    		propertyId = parent.propertyId;
+    		for(var i=0;i<propertyId.length;i++){
+    			propertyValue.push($(doc).find("#"+propertyId[i]).val().trim());
+    		}
+    		
+    		var params={"metadataVO.code":code,
+    		"metadataVO.name":name,"metadataVO.parentId":metadataVO.id,
+    		"metadataVO.classId":classId,"flag":"metadata",
+    		"metadataVO.catalogId":metadataVO.catalogId,"metadataVO.createDate":createDate,
+    		"classPropertyId":propertyId,"propertyValue":propertyValue};
+    		ajaxSend("/pms-web/ajax/ajaxAddMetadataMenuAction",params,success);
+    		initView(classId);
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+    		initView(classId);
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		initView(classId);
+	  	}
+	});
+});
+
+// 重置视图高亮
+function initClass(){
+	for(var i=0;i<classIdList.length;i++){
+		$("#"+"view"+classIdList[i]).attr("class", "");
+	}
+}
+
+function success(data){
+	alert("添加成功");
+	window.parent.initMenu();
+}
+
+$(document).on('click', '.viewBtn', function () { 
+	//var main = $("#metaListcon");
+	var li = $(this);
+	var id = li.attr("id");
+	var sHref = "index-infor.html?metadataId="+id+"&indexMetadata="+indexMetadata;
+    window.location.replace(sHref);
+});
+
+$("#delMeta").on("click",function(){
+	
+	
+});
+
+//删除当前元数据
+function del()
+{
+
+	top.layer.confirm('您确定要删除当前的指标？', {
+  		btn: ['确定','取消'] //按钮
+	}, function(index){
+		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		params = {"metadataVO.id":metadataVO.id,"flag":"metadata"};
+		ajaxSend("/pms-web/ajax/ajaxDeleteMetadataMenuAction",params,delSuccess);
+	}, function(){
+  		top.layer.msg('已取消当前操作', {btn: ['好的']});
+	});
+}
+	
+//删除成功回调
+function delSuccess(data)
+{
+	if(data.size > 0){
+		alert("请先删除其子指标!");
+		return;
+	}
+	alert("删除成功");
+	window.parent.initMenu();
+	var doc = window.parent.document;
+	$(doc).find("#mainFramedata").attr("src", "/pms-web/metadata/index-infor.html?metadataId="
+			+metadataVO.parentId);
+	$(doc).find("#mainFramedata").reload();
+}
+
+</script>

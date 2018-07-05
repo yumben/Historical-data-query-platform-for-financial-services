@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="header-file.shtml"-->
+<title>首页</title>
+</head>
+<body>
+	<!--锚点-->
+	<a name="return"></a>
+	<!--锚点 -->
+	<!-- topbox start -->
+	<div class="topbox" id="topbox">
+		<div class="top">
+			<h1 class="logo fl">
+				<img src="../resource/img/log_bdp.png">
+			</h1>
+			<p class="topLogin fr">
+				<span> <a class="login-top userTop"
+					href="/bdp-web/login/login.html"><i class="fa fa-user-circle-o"></i>
+						登录</a> <a class="login-top userCancel" href="javascript:;"><i
+						class="fa fa-user-circle-o"></i> 欢迎您，<b></b></a> <a
+					class="login-top userCancel" href="javascript:;"><em
+						id='cancel'><i class="fa fa-sign-out"></i> 注销</em></a>
+				</span>
+				<!-- <span>
+					<em>主题切换</em>
+				</span> -->
+			</p>
+			<ul id="ulmenuTop" class="menu fr"></ul>
+
+			<!-- <p class="skin"><em>主题切换</em><span><a value="1">黑色</a><a value="2">绿色</a></span></p> -->
+		</div>
+	</div>
+	<!-- topbox end -->
+	<script>
+		$(function() {
+			var token = getCookie('token');
+			var userName = getCookie('userName');
+			var userCNName = getCookie('userCNName');
+			var isHide = '';
+			if (token != '' && token != 'undefined' && token != undefined && token != 'null' && token != null) {
+				$('.userCancel').children('b').text(userCNName);
+				$('.userCancel').show();
+				$('.userTop').hide();
+			} else {
+				$('.userTop').show();
+				$('.userCancel').hide();
+				window.location.href = '/bdp-web/login/login.html';
+			}
+			$('#cancel').click(function() {
+			   // alert('!!!!')
+				clearCookie('token');
+				clearCookie('userName');
+				clearCookie('userCNName');
+				//console.log(token + '$$$')
+				$(this).parent('.userCancel').remove();
+				$('.userTop').show();
+				window.location.href = '/bdp-web/login/login.html';
+			})
+			
+			//头部菜单显示
+			ajaxSend('/bdp-web/sysMenu/getMenuTree', {}, menuIntTop);
+		})
+	</script>
+</body>
+</html>

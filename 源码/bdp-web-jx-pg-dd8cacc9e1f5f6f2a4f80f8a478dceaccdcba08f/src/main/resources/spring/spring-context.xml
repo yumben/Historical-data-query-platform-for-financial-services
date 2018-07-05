@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	default-lazy-init="true"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">	
+
+	<!-- 使用Annotation自动注册Bean。 base-package 如果多个，用“,”分隔 -->
+ 	<context:component-scan base-package="cn.com.infohold">
+		<!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/> -->
+	</context:component-scan>
+	<bean id="microservicesUrlBean" class="cn.com.infohold.bean.MicroservicesUrlBean" >
+		<property name="bdpMetadataService" value="bdp-metadata-service" />
+		<property name="bdpDataService" value="bdp-data-service" />
+		<property name="bdpEasyqueryService" value="bdp-easyquery-service" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	
+	<!-- mybatis -->
+	<import resource="classpath:spring/spring-context-mybatis.xml"/>
+	<import resource="classpath:spring/spring-context-convert.xml"/>
+	<import resource="classpath:spring/spring-cache-anno.xml"/>
+</beans>

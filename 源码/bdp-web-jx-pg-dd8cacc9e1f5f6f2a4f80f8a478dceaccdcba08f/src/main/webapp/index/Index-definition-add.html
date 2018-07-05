@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>指标定义增加</title>
+</head>
+
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<!-- wrapcontent star -->	
+	<div id="all">
+        <div id="main" class="w1170 clearfix">
+            <!-- index-definbox star -->
+            <p class="btnsave querybtn" style="border-left:1px solid #ccc;border-right:1px solid #ccc;border-bottom:0">
+              <button id="save" onclick="save();" type="button" class="btn btn-primary"><i class="fa fa-save"></i> 保存</button>
+              <button type="button" onclick="cancel();" class="btn btn-danger"><i class="fa fa-remove"></i> 重置</button>
+              <button type="button" onclick="back();" class="btn btn-default"><i class="fa fa-reply-all"></i> 返回</button>
+             </p>
+            <div class="index-definbox ">    
+                        
+                <!-- index-definbox-l star -->
+                <div class="index-definbox-l">
+                   
+                   <div class="index-definbox-l-top">
+                      <h3><span class="Choice-btn"><i class="fa fa-tasks"></i> 选择</span>选择统计对象</h3>
+                      <ul class="choice-list" id="object">
+                        <!--  <li><i class="fa fa-align-left"></i> 客户交易流水表</li>
+                         <li><i class="fa fa-align-left"></i> 客户交易流水表1</li>
+                         <li><i class="fa fa-align-left"></i> 客户交易流水表2</li> -->
+                      </ul>
+                   </div>
+                   <div class="index-definbox-l-top">
+                      <h3>选择统计对象属性</h3>
+                      <p class="search-l"><input id="pro_search" type="text"><span onclick="search('pro_search');"><i class="fa fa-search"></i> 检索</span></p>
+                      <ul class="choice-list timelist scrollY" id="choiceList">
+                        <!-- <li draggable="true" value="1" type="1"><i class="fa fa-calendar"></i> 交易日期</li>
+                        <li draggable="true" value="2" type="1"><i class="fa fa-paste"></i> 交易渠道</li>
+                        <li draggable="true" value="3" type="1"><i class="fa fa-paste"></i> 客户号</li>
+                        <li draggable="true" value="1" type="1"><i class="fa fa-paste"></i> 账户号</li>
+                        <li draggable="true" value="1" type="1"><i class="fa fa-paste"></i> 借贷标识</li>
+                        <li draggable="true" value="2" type="1"><i class="fa fa-paste"></i> 交易金额</li>
+                        <li draggable="true" value="2" type="1"><i class="fa fa-paste"></i> 交易时间</li>
+                        <li draggable="true" value="2" type="1"><i class="fa fa-paste"></i> 交易流水号</li>
+                        <li draggable="true" value="3" type="1"><i class="fa fa-paste"></i> 交易对手账号</li>
+                        <li draggable="true" value="3" type="1"><i class="fa fa-paste"></i> 交易机构</li>
+                        <li draggable="true" value="3" type="1"><i class="fa fa-paste"></i> 交易类型</li> -->
+                      </ul>
+                   </div>
+                </div>
+                <!-- index-definbox-l star -->
+                
+                <!-- index-definbox-r star -->
+                <div class="index-definbox-r">  
+                   <div class="title-defin-r">指标定义</div>
+                   <div id="choiceR">
+                      <!-- <div class="defin-r-lsit">
+                          <span>指标对象：</span>
+                          <div>
+                             <ul id="objelem">
+                             </ul>
+                          </div>
+                       </div> -->
+                       <div class="defin-r-lsit">
+                          <span>统计维度：</span>
+                          <div>
+                             <ul id="objdimen">
+                             </ul>
+                          </div>
+                       </div> 
+                       <div class="defin-r-lsit">
+                          <span>统计对象属性：</span>
+                          <div>
+                              <ul id="objattr">
+                             </ul>
+                          </div>
+                       </div>                    
+                   
+                   </div>
+                   
+                   
+                   <div class="defin-r-con">
+                   
+                      <div class="defin-r-con-l">
+                          <h3>可选统计维度</h3>
+                          <p class="search-l"><input id="relation_search" type="text"><span id="relation" onclick="search('relation_search');"><i class="fa fa-search"></i> 检索</span></p>
+                          <ul class="choice-list timelist vallist" id="vallist">                            
+                          </ul>
+                      </div>
+                      
+                      <div class="defin-r-con-l defin-r-con-c ">
+                          <h3>筛选器</h3>                         
+                          <ul class="choice-list timelist" id="Filter">
+                          </ul>
+                      </div>
+                      <div class="defin-r-con-r">
+                          <h3>指标信息</h3> 
+                          <table>
+                             <!-- <tr>
+                                <th>指标代码：</th>
+                                <td><input id="indexCode" type="text" class="form-control"></td>
+                             </tr> -->
+                             <tr>
+                                <th>指标名称：</th>
+                                <td><input id="indexName" type="text" class="form-control"></td>
+                             </tr>
+                             <tr>
+                                <th>指标分类：</th>
+                                <td><select id="indexType" class="form-control"><option>金融指标--零售指标--渠道类指标</option></select></td>
+                             </tr>
+                             <tr>
+                                <th>指标更新频率：</th>
+                                <td><select id="indexType" class="form-control"><option>分</option><option>时</option><option>秒</option></select></td>
+                             </tr>
+                             <!-- <tr>
+                                <th>创建人：</th>
+                                <td><input id="createName" type="text" class="form-control"></td>
+                             </tr>
+                             <tr>
+                                <th>创建时间：</th>
+                                <td><input id="createTime" type="text" class="form-control"></td>
+                             </tr> -->
+                             <tr>
+                                <th>业务含义：</th>
+                                <td><textarea id="indexBusiness" rows="3" class="form-control"></textarea></td>
+                             </tr>
+                             <tr>
+                                <th>统计口径描述：</th>
+                                <td><textarea id="indexDescribe" rows="3" class="form-control"></textarea></td>
+                             </tr>
+                          </table>
+                      </div>
+                      
+                      
+                   
+                   </div>                  
+                
+                </div>
+                <!-- index-definbox-r star -->
+                
+            </div>
+            <!-- index-definbox star -->
+            <!-- <div class="list-preview">               
+                <div class="table-form">
+                   <h3 class="previewTitle">指标数据预览</h3>
+                    <table id="table" data-id-field="tasks_code" class="table table-striped alltable">
+                        <thead>
+                            <tr>
+                                <th>交易渠道</th>
+                                <th>区域</th>
+                                <th>指标值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>手机银行</td>
+                                <td>华南</td>
+                                <td>260均值</td>
+                            </tr>
+                            <tr>
+                                <td>手机银行</td>
+                                <td>华南</td>
+                                <td>260均值</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> 
+             </div> -->
+       </div> 
+       
+	</div>	
+    <!-- wrapcontent end -->	
+    
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+</body>
+</html>
+
+<!--拖动js-->
+
+
+<!--弹框-->
+<!-- 选择统计对象 star -->
+<div class="dialog-defin" id="select-show" style="display:none;">
+  <div class="select-show">
+     <!--<h3>选择统计对象</h3>-->
+     <p><input id="search" type="text" placeholder="输入对象关键字进行检索" class="form-control"><button type="button" onclick="search('search');" class="btn btn-primary">检索</button></p>
+     <ul id="nav-left" class="navmenu showul">
+     	
+     </ul>  
+  </div>
+</div>
+<!-- 选择统计对象end -->
+
+<!-- 数据格式设置 star -->
+<div class="dialog-defin" id="patternshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">
+       <caption><input type="radio"> 格式设置</caption>
+       <tr>
+         <th>保存小数位数:</th>
+         <td><input type="text" class="form-control"></td>
+       </tr>
+       <tr>
+         <th>保存数值单位:</th>
+         <td><select class="form-control"><option>无</option><option>万</option><option>千</option></select></td>
+       </tr>
+     </table>
+  </div>
+</div>
+<!-- 数据格式设置end -->
+
+<!-- 设置属性信息 star -->
+<div class="dialog-defin" id="attrshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">       
+       <tr>
+         <th>设置属性别名:</th>
+         <td><input type="text" class="form-control"></td>
+       </tr>
+       <tr>
+         <th>属性描述:</th>
+         <td><textarea rows="3" class="form-control"></textarea></td>
+       </tr>
+     </table>
+  </div>
+</div>
+<!-- 设置属性信息end -->
+
+<!-- 设置维度信息 star -->
+<div class="dialog-defin" id="defineshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">       
+       <tr>
+         <th>设置维度别名:</th>
+         <td><input type="text" class="form-control"></td>
+       </tr>
+       <tr>
+         <th>描述:</th>
+         <td><textarea rows="3" class="form-control"></textarea></td>
+       </tr>
+     </table>
+  </div>
+</div>
+<!-- 设置维度信息 end -->
+
+<!-- 筛选器-日期型 star -->
+<div class="dialog-defin" id="timeFilter" style="display:none;">
+	<div class="dialog" id="addcon">
+	  <p class="showMeta" id="siteBtnground">
+		  <!-- <span>请选择筛选类型:</span> -->
+		  <label class="radio-inline"><input type="radio" name="date" id="siteBtn1" value="dictionary">精确筛选</label>
+		  <label class="radio-inline"><input type="radio" name="date" id="siteBtn2" value="custom">条件筛选</label>
+	  </p>
+	   <div class="sitebox1" id="siteDiv">
+	     <p class="searchForm"><input type="text" class="form-control" value="" id="searchInputchart01"><button type="button" class="btn btn-primary" id="searchBtnchart01">检索</button></p>
+	     <ul class="wordbook">
+	        <li>最近7天</li>
+	        <li>最近30天</li>
+	        <li>最近半年</li>
+	        <li>最近一年</li>
+	        <li>最近7天</li>
+	        <li>最近30天</li>
+	        <li>最近半年</li>
+	        <li>最近一年</li>
+	     </ul>	   
+	   </div>
+	   
+	   <div class="sitebox1" id="siteDiv1"> 
+	         <div class="select-show plr0">
+			     <table class="dialogcon">       
+			       <tr>
+			         <th>开始时间:</th>
+			         <td><input type="text" id="startTime" class="form-control datepicker" placeholder=""><!-- <span class="checkspan"><input type="checkbox" class="checkbox-inline"> 不限</span> --></td>
+			       </tr>
+			       <tr>
+			         <th>结束时间:</th>
+			         <td><input type="text" id="endTime" class="form-control datepicker" placeholder=""><!-- <span class="checkspan"><input type="checkbox" class="checkbox-inline"> 不限</span> --></td>
+			       </tr>
+			     </table>
+			  </div>	 
+	   </div>
+	   
+	</div>
+  
+</div>
+<!-- 筛选器-日期型 end -->
+
+<!-- 筛选器-字符型 star -->
+<div class="dialog-defin" id="charaFilter" style="display:none;">
+
+<div class="dialog" id="addcon">
+	  <p class="showMeta" id="siteBtnground1">
+		  <!-- <span>请选择筛选类型:</span> -->
+		  <label class="radio-inline"><input type="radio" name="chara" id="siteBtn3" value="dictionary">精确筛选</label>
+		  <label class="radio-inline"><input type="radio" name="chara" id="siteBtn4" value="custom">条件筛选</label>
+	  </p>
+	   <div class="sitebox1" id="siteDiv3">
+	      <div class="select-show">
+		     <!-- <h3>客户开户区域筛选器</h3> -->
+		     <p class="searchForm01"><input type="text" class="form-control" value="" id="searchInputchart"><button type="button" class="btn btn-primary" id="searchBtnchart">检索</button></p>
+		     <ul class="downlist chartul" id="searchChartlist">
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性1</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性2</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性3</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性4</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性5</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性6</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性7</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性8</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性9</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性10</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性11</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性12</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性13</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性14</span></li>
+              </ul>
+		     <!-- <div>
+		        <div class="item">                        
+		            <div class="downbox">
+		               <button type="button" class="form-control downinput" type="text" id="downinput">请选择</button><em class="glyphicon glyphicon-triangle-bottom"></em>
+		               
+		           </div>                        
+		       </div>
+		     </div> -->
+		  </div>
+
+	   </div>
+	   
+	   <div class="sitebox1" id="siteDiv4"> 
+	       <!-- <p class="searchForm"><input type="text" class="form-control" value="" id="searchInputchart"></p> -->
+	       <div class="select-show">
+		     <h3>字符型筛选器</h3>
+		     <p class="numinput"><select class="form-control" id="charaselsect">
+		          <option value="=">等于</option>
+		          <option value="!=">不等于</option>
+		          <option value="like">包含</option>
+		          <option value="not like">不包含</option>
+		          <option value="start">开头包含</option>
+		          <option value="end">结尾包含</option>
+		        </select>
+		         <span class="numinput1">
+		           <input type="text" id="charaValue" class="form-control" placeholder="请输入条件" style="width:200px;">
+		        </span>
+		        <!-- <span class="numinput2">
+		           <input type="text" class="form-control" placeholder="输入数值">
+		           <em>~</em>
+		           <input type="text" class="form-control" placeholder="输入数值">
+		        </span> -->
+		      </p>
+		  </div>
+	   </div>
+	   
+	</div>
+
+</div>
+<!-- 筛选器-字符型 end -->
+
+<!-- 筛选器-数值型 star -->
+<div class="dialog-defin" id="numFilter" style="display:none;">
+  <div class="select-show">
+     <h3>数值型筛选器</h3>
+     <p class="numinput"><select class="form-control" id="numselsect">
+          <option id="=" value="1">等于</option>
+          <option id="!=" value="1">不等于</option>
+          <option id=">" value="1">大于</option>
+          <option id="<" value="1">小于</option>
+          <option id=">=" value="1">大于等于</option>
+          <option id="<=" value="1">小于等于</option>
+          <option id="between" value="2" selected="">区间</option>
+          <option id="not between" value="2">不在区间</option>
+        </select>
+         <span class="numinput1">
+           <input id="value" type="text" class="form-control" placeholder="输入数值" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+        </span>
+        <span class="numinput2">
+           <input id="startValue" type="text" class="form-control" placeholder="输入数值" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+           <em>~</em>
+           <input id="endValue" type="text" class="form-control" placeholder="输入数值" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+        </span>
+      </p>
+  </div>
+</div>
+<!-- 筛选器-数值型 end -->
+
+<script type="text/javascript" src="../resource/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="../resource/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="../resource/js/earlyWarning.js"></script>
+<script type="text/javascript" src="../resource/js/modal.js"></script>
+<script type="text/javascript" src="../resource/js/drop.js"></script>
+<script>
+//统计对象属性选择
+var choiceList = document.getElementById("choiceList");
+var choiceLi = choiceList.getElementsByTagName("li");
+
+/* //指标对象接收器
+var objelem = document.getElementById("objelem");
+var objelemLi =  objelem.getElementsByTagName("li"); */
+
+//可选统计维度选择
+var valUl = document.getElementById("vallist");
+var valSpan = valUl.getElementsByTagName("span");
+
+//可选统计维度接收器
+var objdimen = document.getElementById("objdimen");
+
+//统计对象属相接收器
+var objattr = document.getElementById("objattr");
+var objattrLi = objattr.getElementsByTagName("li");
+   
+//筛选器接收器
+var Filter = document.getElementById("Filter");
+
+// 统计对象id
+var metadataId = null;
+// 统计对象类id
+var oblClassId = null;
+// 统计对象代码
+var oblCode = null;
+
+// 统计维度id
+var dimensionId = new Array();
+// 统计维度类id
+var dimClassId = new Array();
+// 统计维度名称
+var dimName = new Array();
+// 统计维度代码
+var dimCode = new Array();
+// 统计维度父级代码
+var dimParentCode = new Array();
+
+// 筛选器id
+var filId = new Array();
+// 筛选器类id
+var filClassId = new Array();
+// 筛选器名称
+var filName = new Array();
+// 筛选器代码
+var filCode = new Array();
+// 统计维度父级代码
+var filParentCode = new Array();
+// 筛选器值
+var filValue = new Array();
+
+// 统计对象属性id
+var ruleId = new Array();
+// 统计对象属性类id
+var ruleClassId = new Array();
+// 统计对象属性名称
+var ruleName = new Array();
+// 统计对象属性代码
+var ruleCode = new Array();
+// 统计对象属性父级代码
+var ruleParentCode = new Array();
+
+// 计算组件id
+var calculateId = null;
+// 计算组件类id
+var calClassId = null;
+// 计算组件名称
+var calName = null;
+// 计算组件代码
+var calCode = null;
+
+// 当前最后点击过的id
+var filterId = null;
+
+// 指标目录
+var catalogId = null;
+
+// 存储筛选器的值
+var values = new Object();
+
+//选择统计对象
+$(function(){
+
+catalogId = GetQueryString("catalogId");
+
+$(document).on("click",".Choice-btn",function(){
+
+		var params = {"flag":"queryIndexObject"};
+		initLeftMenu(params);
+	
+		var main = $("#select-show");
+		layer.open({
+			title:'选择统计对象',
+			closeBtn: 2, 
+			type:1,
+			area:['400px','400px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			
+			  metadataId = $('input:radio[name="metadataVO"]:checked').val();
+			  if(metadataId == null || metadataId == ""){
+			  	  alert("请选择一个统计对象");
+			  	  return;
+			  }
+			  searchFlag = false;
+			  var params = {"metadataId":metadataId,"flag":"initMenu"};
+			  ajaxSend("/pms-web/ajax/ajaxQueryIndexAction",params,initMenu);
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $("#nav-left").empty();
+			  $("#search").val("");
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	});
+	
+	//数据格式设置
+	$(document).on("click","#node-2",function(){
+	//$("#node-2").on("click",function(){
+		//console.log("111");
+		var main = $("#patternshow");
+		layer.open({
+			title:'数据格式设置',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','270px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	});
+	
+	//设置属性信息
+	$(document).on("click","#node-3",function(){
+	//$("#node-2").on("click",function(){
+		//console.log("111");
+		var main = $("#attrshow");
+		layer.open({
+			title:'设置属性信息',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','280px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	});
+	
+	//设置维度信息
+	$(document).on("click","#dfine-1",function(){
+		var main = $("#defineshow");
+		layer.open({
+			title:'设置维度信息',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','280px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	//筛选器-日期型	
+	$(document).on("click",".timelistshow span em",function(event){
+	    event.stopPropagation();
+	    var classId = $(this).parent().attr("classid");
+	    var metadataId = $(this).parent().attr("id").replace(/[^0-9]/ig,"");
+	    filterId = $(this).parent().attr("id");
+	    
+	    $('input[name="date"]').each(function() {
+			$(this).prop("checked",false);
+		});
+	    
+	    var params = {"flag":"initDictionary", "classId":classId, "metadataId":metadataId};
+		ajaxSend("/pms-web/ajax/ajaxQueryIndexFilterAction",params,dateFilter);	
+		
+		
+		var main = $("#timeFilter");
+		layer.open({
+			title:'筛选器-日期型',
+			closeBtn: 2, 
+			type:1,
+			area:['450px','350px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			
+			  var flag = null;
+			  $('input[name="date"]:checked').each(function() {
+			  	  flag = $(this).val();
+			  });
+			  
+			  if(getDateFilter(flag) == 1)
+			  	  return;
+			
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	// 日期型筛选器初始化
+	function dateFilter(data){	
+		var dictionaryList = data.dictionaryList;
+		var siteDiv = $("#siteDiv").children("ul");
+		siteDiv.empty();
+		$("#startTime").val("");
+		$("#endTime").val("");
+		if(dictionaryList !=null && dictionaryList.length>0){		    
+			$("#siteBtn1").prop("checked",true);
+			var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+			}
+			dictionaryList.forEach(function(e,i){
+				var li;
+				if(array != null){
+					if(array[1] == e.value){
+						li = $("<li class='current' value="+e.value+">"+e.name+"</li>");
+					}else{
+						li = $("<li value="+e.value+">"+e.name+"</li>");
+					}
+				}else{
+					li = $("<li value="+e.value+">"+e.name+"</li>");
+				}
+				siteDiv.append(li);
+			});
+			$("#siteDiv").show();
+			$("#siteDiv1").hide();
+		}else{
+			var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+				if(array.length == 3){
+					$("#startTime").val(array[1]);
+					$("#endTime").val(array[2]);
+				}
+			}
+			$("#siteBtn2").prop("checked",true);
+			$("#siteDiv1").show();
+			$("#siteDiv").hide();			
+		}
+	
+	}
+	
+	// 获取日期筛选器选中的值
+	function getDateFilter(flag){
+	
+		if(flag == "dictionary"){
+			if(time == null || time == "" && time != 0){
+				alert("请选择一个时间段");
+				return 1;
+			}
+			
+			values[filterId] = "当前系统时间" + "," + time;
+			$("#date-"+filterId).text(timeName);
+			time = "";
+			
+			$("#startTime").val("");
+			$("#endTime").val("");
+			
+		}else {
+		
+			if($("#startTime").val() == ""){
+				alert("开始日期不能为空");
+				return 1;
+			}
+			
+			if($("#endTime").val() == ""){
+				alert("结束日期不能为空");
+				return 1;
+			}
+
+			if($("#startTime").val() > $("#endTime").val()){
+				alert("开始日期不能大于结束日期");
+				return 1;
+			}
+		
+			values[filterId] = "between"+","+$("#startTime").val()+","+$("#endTime").val();
+			$("#date-"+filterId).text( $("#startTime").val()+"~"+$("#endTime").val());
+			
+		}
+		$("#date-"+filterId).slideDown();
+	}
+	
+	//筛选器-字符型
+	$(document).on("click",".chartlistshow span em",function(event){
+	    event.stopPropagation();
+	    
+	    var classId = $(this).parent().attr("classid");
+	    var metadataId = $(this).parent().attr("id").replace(/[^0-9]/ig,"");
+	    filterId = $(this).parent().attr("id");
+	    
+	    $('input[name="chara"]').each(function() {
+			$(this).prop("checked",false);
+		});
+	    
+	    var params = {"flag":"initDictionary", "classId":classId, "metadataId":metadataId};
+		ajaxSend("/pms-web/ajax/ajaxQueryIndexFilterAction",params,characterFilter);
+	    
+		var main = $("#charaFilter");
+		layer.open({
+			title:'筛选器-字符型',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','420px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			
+			  var flag = null;
+			  $('input[name="chara"]:checked').each(function() {
+			  	  flag = $(this).val();
+			  });
+			  
+			  if(getCharacterFilter(flag) == 1)
+			  	  return;
+			
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	// 字符型筛选器初始化
+	function characterFilter(data){	
+	
+		$("#charaValue").val("");
+	
+		var dictionaryList = data.dictionaryList;
+		var searchChartlist = $("#searchChartlist");
+		searchChartlist.empty();
+		if(dictionaryList !=null && dictionaryList.length>0){
+			dictionaryList.forEach(function(e,i){
+				var value = values[filterId];
+				var array;
+				if(value != null && value != ""){
+					array = value.split(",");
+				}
+				var dicFlag = false;
+				if(array != null){
+					//alert(array);
+					for(var i=1;i<array.length;i++){
+						if(array[i] == e.value){
+							dicFlag = true;
+						}
+					}
+				}
+				var li;
+				if(dicFlag){
+					li = $("<li><i class='glyphicon glyphicon-ok'></i><span id="+e.value+" name='pro-value' value='1'>"+e.name+"</span></li>");
+					li.children('span').siblings('i').show();
+				}else{
+					li = $("<li><i class='glyphicon glyphicon-ok'></i><span id="+e.value+" name='pro-value' value='0'>"+e.name+"</span></li>");
+					li.siblings('i').hide();
+				}
+				
+				searchChartlist.append(li);
+			});
+			$("#siteBtn3").prop("checked",true);
+			$("#siteDiv3").show();
+			$("#siteDiv4").hide();
+		}else{
+			
+			var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+				if(array[0] != "in"){
+					$("#charaValue").val(array[1]);
+				}
+			}
+		
+			$("#siteBtn4").prop("checked",true);
+			$("#siteDiv4").show();
+			$("#siteDiv3").hide();
+		}
+	
+	}
+	
+	// 获取字符筛选器选中的值
+	function getCharacterFilter(flag){
+		
+		proValue = "";
+		if(flag == "dictionary"){
+			$('span[name="pro-value"').each(function(){
+				if($(this).attr("value") == "1"){
+					proValue += $(this).attr("id") + ",";
+				}
+			});
+			proValue = proValue.substring(0, proValue.length - 1);
+			
+			if(proValue == ""){
+				alert("请选择一个条件");
+				return 1;
+			}
+			
+			values[filterId] = "in" + "," + proValue;
+			$("#chara-"+filterId).text(proValue);
+			$("#charaValue").val("");
+		}else {
+		
+			if($("#charaValue").val() == ""){
+				alert("请输入一个条件");
+				return 1;
+			}
+		
+			var select = $("#charaselsect").find("option:selected");
+			values[filterId] = $("#charaselsect").val()+","+$("#charaValue").val();
+			$("#chara-"+filterId).text(select.text()+" "+$("#charaValue").val());
+		}
+		
+		$("#chara-"+filterId).slideDown();
+		//child.slideUp();
+		
+	}
+	
+	//筛选器-数值型
+	$(document).on("click",".vallistshow span em",function(event){
+	    event.stopPropagation();
+		var main = $("#numFilter");
+		
+		$("#startValue").val("");
+		$("#endValue").val("");
+		$("#value").val("");
+		
+		filterId = $(this).parent().attr("id");
+		
+		var value = values[filterId];
+		var array;
+		if(value != null && value != ""){
+			array = value.split(",");
+			if(array.length == 2){
+				$("#value").val(array[1]);
+			}else if(array.length == 3){
+				$("#startValue").val(array[1]);
+				$("#endValue").val(array[2]);
+			}
+		}
+		
+		layer.open({
+			title:'筛选器-数值型',
+			closeBtn: 2, 
+			type:1,
+			area:['450px','200px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			
+				getNumFilter();
+			
+			    layer.close(index); //如果设定了yes回调，需进行手工关闭
+			    $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	// 获取数值筛选器选中的值
+	function getNumFilter(){
+		
+		proValue = "";
+		if($("#numselsect").val() == "1"){
+			if($("#value").val() == ""){
+				alert("数值不能为空");
+				return;
+			}
+			
+			var select = $("#numselsect").find("option:selected");
+			values[filterId] = select.attr("id")+","+$("#value").val();
+			$("#num-"+filterId).text($("#value").val());
+		}else{
+			if($("#startValue").val() == ""){
+				alert("开始数值不能为空");
+				return;
+			}
+			if($("#endValue").val() == ""){
+				alert("结束数值不能为空");
+				return;
+			}
+			
+			var select = $("#numselsect").find("option:selected");
+			values[filterId] = select.attr("id")+","+$("#numselsect").val()+","+$("#startValue").val()+","+$("#endValue").val();
+			$("#num-"+filterId).text(select.text()+" "+$("#startValue").val()+"~"+$("#endValue").val());
+		}
+		$("#num-"+filterId).slideDown();
+	}
+	
+	$(document).on("click",".timelistshow span b",function(event){
+		values[$(this).parent().attr("id")] = null;
+		$("#startTime").val("");
+		$("#endTime").val("");
+	});
+	$(document).on("click",".chartlistshow span b",function(event){
+		values[$(this).parent().attr("id")] = null;
+		$("#charaValue").val("");
+	});
+	$(document).on("click",".vallistshow span b",function(event){
+		values[$(this).parent().attr("id")] = null;
+		$("#startValue").val("");
+		$("#endValue").val("");
+		$("#value").val("");
+	});
+	
+});
+
+	// 初始化菜单
+	function initLeftMenu(params){
+		ajaxSend("/pms-web/ajax/ajaxQueryIndexObjectAction",params,calFun);
+	}
+
+	function calFun(data){	    
+		var parentId = data.parentId;
+		var curent;		
+		if(parentId == null){
+			curent = $("#nav-left");
+		}else if(parentId != null){
+			curent = $('#object-select-'+parentId);
+		} 
+		var ul = $("<ul class='unstyled'></ul>");
+		var baseArray = data.baseArray;
+		
+		if(baseArray != null){
+		baseArray.forEach(function(list,i){
+			if(list != null && list.length > 0){
+				list.forEach(function(e,i){
+					var li = $("<li id=object-select-" + e.id + " code="+e.code+" classId=" + e.classId + "><p><i class='fa fa-chevron-right'></i> " + e.name + "</p></li>");
+					li.attr("newNode", "true");
+					ul.append(li).appendTo(curent);
+			});
+			}
+		});
+		}
+		
+		var tableList = data.tableList;
+		if(tableList != null){
+			tableList.forEach(function(e,i){
+					var li =$("<li>&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='metadataVO' value='"+e.id+"'> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+					li.attr("newNode", "true");
+					ul.append(li).appendTo(curent);
+					
+			});
+		}
+	}
+	
+	// 检索菜单
+	function searchMenu(data){
+		var curent = $("#nav-left");
+		var ul = $("<ul class='unstyled'></ul>");
+		var baseList = data.baseList;
+		var tableArray = data.tableArray;
+		baseList.forEach(function(e,i){
+			var li = $("<li id=object-select-" + e.id + " code="+e.code+" classId=" + e.classId + "><p><i class='fa fa-chevron-down'></i> " + e.name + "</p></li>");
+			li.attr("newNode", "true");
+			ul.append(li).appendTo(curent);
+			var curent2 = $('#object-select-'+e.id);
+			var ul2 = $("<ul class='unstyled'></ul>");
+			tableArray[i].forEach(function(e,i){
+				var li2 = $("<li>&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='metadataVO' value='"+e.id+"'> <i class='fa fa-file-text-o'></i>"+e.name+"</li>");
+				li2.attr("newNode", "true");
+				ul2.append(li2).appendTo(curent2);
+			});
+			
+		});
+		//curent.children("ul").show();
+	}
+	
+	// 点击目录加载下级菜单
+	$(document).on('click', 'li[newNode="true"] > p', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var classId = li.attr("classid");
+		var parentId = li.attr("id").replace(/[^0-9]/ig,"");
+		p.children("i").addClass("fa-chevron-down").removeClass("fa-chevron-right");
+			if(li.children('ul').hasClass('unstyled')){
+				p.children("i").addClass("fa-chevron-right").removeClass("fa-chevron-down");	
+				li.children('ul').remove();	
+			}else{
+				p.children("i").addClass("fa-chevron-down").removeClass("fa-chevron-right");
+				var param = {"classId" : classId,"parentId":parentId,"flag":"queryIndexObject"};
+				initLeftMenu(param);
+			//alert("111");
+			}
+	});
+	
+	// 输入关键字进行检索
+	var searchFlag = null;
+	function search(id){
+	
+		searchFlag = true;
+		
+		var search = $("#" + id).val();
+		/* if(id == "search" && search == ""){
+			alert("关键字不能为空");
+			return;
+		} */
+		if(id == "search"){
+			$("#nav-left").empty();
+			var params = {"flag":"search", "searchName":search};
+			ajaxSend("/pms-web/ajax/ajaxQueryIndexObjectAction",params,searchMenu);
+		}else {
+			if(metadataId == null || metadataId == ""){
+				alert("请选择一个统计对象");
+				return;
+			}
+			var params = {"flag":id, "metadataId":metadataId, "name":search};
+			ajaxSend("/pms-web/ajax/ajaxQueryIndexAction",params,initMenu);
+		}
+	}
+	
+	// 加载菜单
+	function initMenu(data){
+		
+		if(searchFlag == false){
+			// 清空筛选器
+			$("#Filter").empty();
+			// 清空统计维度
+			$("#objdimen").empty();
+			// 清空统计对象属性
+			$("#objattr").empty();
+		}
+		
+		var object = data.object;
+		if(object != null){
+			
+			var curent = $("#object");
+			curent.empty();
+			var li = $("<li id=object-"+object.id+" code="+object.code+" classid="+object.classId+"><i class='fa fa-align-left'></i> "+object.name+"</li>");
+			curent.append(li);
+			oblClassId = object.classId;
+			oblCode = object.code;
+		}
+		
+		var proList = data.proList;
+		if(proList != null){
+			initPro(proList);
+		}
+		
+		var tableList = data.tableList;
+		if(tableList != null){
+			var tableArray = data.tableArray;
+			initRelation(tableList, tableArray, data.flag);
+		}
+	}
+	
+	// 刷新属性菜单
+	function initPro(list){
+		var pro = $("#choiceList");
+		pro.empty();
+		if(list != null){
+			list.forEach(function(e,i){
+				var li = $("<li draggable='true' value="+e.propertyType+" code="+e.code+" parentCode="+oblCode+" id=pro-"+e.id+" classid="+e.classId+" type='1'><i class='fa fa-paste'></i> "+e.name+"</li>");
+				pro.append(li);
+			});
+		}	
+		statElem();	
+		//statCreate();
+		optCreate();
+		attrCreate();
+	}
+	
+	// 刷新维度菜单
+	function initRelation(tableList,tableArray,flag){
+		var relation = $("#vallist");
+		relation.empty();
+		if(tableList != null){
+			tableList.forEach(function(e,i){
+				var li = $("<li></li>");
+				if(flag == "initMenu"){
+					var h5 = $("<h5 id=relation-"+e.id+" code="+e.code+" classid="+e.classId+"><i class='fa fa-chevron-right'></i> "+e.name+"</h5>");
+				}else if(flag == "relation_search"){
+					var h5 = $("<h5 id=relation-"+e.id+" code="+e.code+" classid="+e.classId+"><i class='fa fa-chevron-down'></i> "+e.name+"</h5>");
+				}
+				li.append(h5);
+				var ul = $("<ul></ul>");
+				li.append(ul);
+				if(tableArray[i] != null){
+					tableArray[i].forEach(function(vo,j){
+						if(flag == "initMenu" || flag == "relation_search"){
+							var li = $("<li><span draggable='true' value="+vo.propertyType+" code="+vo.code+" parentCode="+e.code+" id=relation-pro-"+vo.id+" classid="+vo.classId+"><i class='fa fa-paste'></i> "+vo.name+"</span></li>");
+							ul.append(li);
+						}
+					});
+				}
+				li.appendTo(relation);
+				if(flag == "relation_search"){
+					$(".vallist li ul").show();
+				}
+			});
+		}
+		optElem();
+		optCreate();
+		
+	}
+	
+	// 获取选中的排序方式
+	var sort = null;
+	var sortName = null;
+	$(document).on("click",".attrshow li  em",function(event){
+		sort = $(this).parent().attr("value");
+		sortName = $(this).text();
+		$("#objdimen").children("li").each(function(e,i){
+			var text = $(this).children("b").text().split("(");
+			$(this).children("b").text(text[0]+"("+sortName+")");
+			$(this).children("b").append($("<em class='icon-angle-down'></em>"));
+			$(this).children("b").append($("<i class='icon-remove-circle'></i>"));
+		});
+	});
+	
+	// 加载计算组件
+	var menujson =new Array();
+	function initAssembly(data){
+		var assembly = data.assembly;
+		var methodArray = data.tableArray;
+		if(assembly != null){
+			assembly.forEach(function(e,i){
+				var assemblyObj = {"id":e.id,"name":e.name,"parentId":"0","value":e.id,"code":e.code,"classId":e.classId};
+				var method = new Array();
+				var index = -4;
+				if(methodArray[i] != null){
+					methodArray[i].forEach(function(vo,j){
+						if(j == methodArray[i].length-1){
+							var methodObj = {"id":vo.id,"name":vo.name,"parentId":vo.parentId,"value":vo.id,
+							"classId":vo.classId,"code":vo.code,"childMenus":""};
+							method.push(methodObj);
+							var more = {"id":index,"name":"更多","parentId":e.id};
+							var mix = {"id":index+1,"name":"最小值","parentId":index,"childMenus":""};
+							var max = {"id":index+2,"name":"最大值","parentId":index,"childMenus":""};
+							var array = new Array();
+							array.push(mix);
+							array.push(max);
+							more.childMenus = array;
+							method.push(more);
+						}else {
+							var methodObj = {"id":vo.id,"name":vo.name,"parentId":vo.parentId,"value":vo.id,
+							"classId":vo.classId,"code":vo.code,"childMenus":""};
+							method.push(methodObj);
+						}
+					});
+				}
+				assemblyObj.childMenus = method;
+				menujson.push(assemblyObj);
+			});
+			var item1 = {"id":"-1","name":"数据格式设置","parentId":"0","childMenus":""};
+			var item2 = {"id":"-2","name":"设置属性信息","parentId":"0","childMenus":""};
+			menujson.push(item1);
+			menujson.push(item2);
+		}
+	}
+	// 获取计算方法
+	var method = null;
+	$(document).on("click",".attrshow01 li ul li > em",function(){	
+		method = $(this).parent().attr("value");
+		var name = $(this).text();
+		calculateId = $(this).parent().parent().parent().val();
+		calClassId = $(this).parent().parent().parent().attr("classid");
+		calName = $(this).parent().parent().parent().children("em").text();
+		calCode = $(this).parent().parent().parent().attr("code");
+	
+		$("#objattr").children("li").each(function(e,i){
+			var text = $(this).children("b").text().split("(");
+			$(this).children("b").text(text[0]+"("+name+")");
+			$(this).children("b").append($("<em class='icon-angle-down'></em>"));
+			$(this).children("b").append($("<i class='icon-remove-circle'></i>"));
+		});
+	});
+	
+	// 保存指标信息
+	function save(){	    
+	
+		dimensionId.length = 0;
+		dimClassId.length = 0;
+		dimCode.length = 0;
+		dimName.length = 0;
+		dimParentCode.length = 0;
+		
+		filId.length = 0;
+		filClassId.length = 0;
+		filCode.length = 0;
+		filName.length = 0;
+		filValue.length = 0;
+		filParentCode.length = 0;
+		
+		ruleId.length = 0;
+		ruleClassId.length = 0;
+		ruleCode.length = 0;
+		ruleName.length = 0;
+		ruleParentCode.length = 0;
+	
+		//var code = $("#indexCode").val();
+		var name = $("#indexName").val();
+		var business = $("#indexBusiness").val();
+		var describe = $("#indexDescribe").val();
+
+		var length = 0;
+		/* if(code == null || code == ""){
+			alert("指标代码不能为空");
+			return;
+		}else{
+			ajaxSend("/pms-web/ajax/ajaxQueryIndexFilterAction",{"code":code, "flag":"queryCode"},function(data){
+				if(data.list != null){
+					length = data.list.length;
+				}
+			});
+		}
+		if(length > 0){
+			alert("指标代码已存在");
+			return;
+		} */
+		if(name == null || name == ""){
+			alert("指标名称不能为空");
+			return;
+		}
+		if(business == null || business == ""){
+			alert("业务含义不能为空");
+			return;
+		}
+		if(describe == null || describe == ""){
+			alert("统计口径描述不能为空");
+			return;
+		}
+		
+		// 获取可选维度相关数据
+		$('li[name="dimension-value"').each(function(){
+			dimensionId.push($(this).attr("id").replace(/[^0-9]/ig,""));
+			dimClassId.push($(this).attr("classid"));
+			dimCode.push($(this).attr("code"));
+			dimParentCode.push($(this).attr("parentCode"));
+			dimName.push($(this).children("b").text());
+		});
+		// 获取筛选器相关数据
+		var flag = false;
+		var fName = null;
+		$('span[name="filter-value"').each(function(){
+			filId.push($(this).attr("id").replace(/[^0-9]/ig,""));
+			filClassId.push($(this).attr("classid"));
+			filCode.push($(this).attr("code"));
+			filParentCode.push($(this).attr("parentCode"));
+			filName.push($(this).text());
+			if(values[$(this).attr("id")]==null || values[$(this).attr("id")]=="" && values[$(this).attr("id")]!=0){
+				flag = true;
+				fName = $(this).text();
+				return;
+			}
+			filValue.push(values[$(this).attr("id")]);
+		});
+		if(flag == true){
+			alert(fName + "不能为空");
+			return;
+		}
+		// 获取统计对象属性相关数据
+		$('li[name="rule-value"').each(function(){
+			ruleId.push($(this).attr("id").replace(/[^0-9]/ig,""));
+			ruleClassId.push($(this).attr("classid"));
+			ruleCode.push($(this).attr("code"));
+			ruleParentCode.push($(this).attr("parentCode"));
+			ruleName.push($(this).children("b").text());
+		});
+		if(ruleId.length == 0){
+			alert("统计对象属性不能为空");
+			return;
+		}
+		
+		if(calculateId == "" || calculateId == null){
+			alert("计算组件不能为空");
+			return;
+		}
+		
+		var params = {"vo.code":randomString(32),"vo.name":name, "vo.catalogId":catalogId,
+		"vo.createDate":getNowFormatDate(), "objectId":metadataId,"oblClassId":oblClassId,"oblCode":oblCode,
+		"dimensionId":dimensionId,"dimClassId":dimClassId,"dimCode":dimCode,"dimName":dimName,"dimParentCode":dimParentCode,
+		"filterId":filId,"filClassId":filClassId,"filCode":filCode,"filName":filName,"filValue":filValue,"filParentCode":filParentCode,
+		"ruleId":ruleId,"ruleClassId":ruleClassId,"ruleCode":ruleCode,"ruleName":ruleName,"ruleParentCode":ruleParentCode,
+		"business":business, "calculateId":calculateId,"calName":calName, "calCode":calCode,
+		"calClassId":calClassId,"describe":describe,"method":method};
+		
+		//$("#save").attr("disabled","disabled");
+        
+		ajaxSend("/pms-web/ajax/ajaxAddIndexAction",params,function(){		    
+		   // MaskUtil.mask();	
+		   // MaskUtil.unmask();	    
+			alert("成功保存指标！");
+			$("#save").removeAttr("disabled");
+			window.open("/pms-web/index/index-index.html?identify=index&classType=2&index=3","_top");
+			
+		});
+		
+		
+		
+	}
+	
+	// 取消
+	function cancel(){
+		
+		metadataId = "";
+		
+		// 清空统计对象
+		$("#object").empty();
+		// 清空属性检索框
+		$("#pro_search").empty();
+		// 清空统计对象属性
+		$("#choiceList").empty();
+		// 清空统计维度
+		$("#objdimen").empty();
+		// 清空统计对象属性
+		$("#objattr").empty();
+		// 清空可选维度检索框
+		$("#relation_search").empty();
+		// 清空可选维度
+		$("#vallist").empty();
+		// 清空筛选器
+		$("#Filter").empty();
+		// 情况筛选器保存的值
+		values = new Object();
+		// 清空指标代码
+		$("#indexCode").val("");
+		// 清空指标名字
+		$("#indexName").val("");
+		// 清空业务含义
+		$("#indexBusiness").val("");
+		// 清空统计口径描述
+		$("#indexDescribe").val("");
+	}
+	
+	// 返回
+	function back(){
+		
+		/* $('span[name="filter-value"').each(function(){
+		
+			if((values[$(this).attr("id")]==null || values[$(this).attr("id")]=="") && values[$(this).attr("id")]!=0){
+				alert($(this).text());
+			}
+		
+		}); */
+		
+		window.open("/pms-web/index/index-index.html?identify=index&classType=2&index=3","_top");
+	}
+	
+	function statElem(){
+	   //选择统计对象属性
+		for(var i=0; i<choiceLi.length;i++){
+			choiceLi[i].ondragstart = function(ev){
+				this.style.background ="#fff";
+				ev.dataTransfer.setData("name",this.innerText);
+				ev.dataTransfer.setData("title",this.innerText);
+				ev.dataTransfer.setData("val",this.value);	
+				ev.dataTransfer.setData("type",this.type);
+				ev.dataTransfer.setData("id",this.getAttribute("id"));
+				ev.dataTransfer.setData("classid",this.getAttribute("classid"));
+				ev.dataTransfer.setData("code",this.getAttribute("code"));
+				ev.dataTransfer.setData("parentCode",this.getAttribute("parentCode"));
+			};
+			choiceLi[i].ondragend = function(ev){
+				this.style.background ="#f3f5f6";
+			};
+		}
+	
+	}
+	
+	/* //统计对象释放生成函数
+	function statCreate(){
+		//指标对象释放生成事件
+		objelem.ondragover = function(ev){
+			ev.preventDefault();
+		}
+		objelem.ondrop = function(ev){
+			ev.preventDefault();
+			var sTitle = ev.dataTransfer.getData("name");
+			var sType = ev.dataTransfer.getData("type");				
+			var sVal = ev.dataTransfer.getData("val");
+			//alert(sVal);
+			
+			if(objelemLi.length == 0){
+				if(sType =='1'){
+					var oLi = document.createElement("li");	
+					var oB = document.createElement("b");
+						oB.innerHTML = sTitle;
+					var oI = document.createElement("i");
+						oI.className = "icon-remove-circle";
+						oB.appendChild(oI);
+						oLi.appendChild(oB);
+						objelem.appendChild(oLi);
+				}
+				
+			}else{
+			  alert("只能拖入一个字段！");
+			}
+		};
+	}	 */
+	
+	//可选统计维度
+	function optElem(){	
+		for(var i=0; i<valSpan.length;i++){
+			valSpan[i].ondragstart = function(ev){
+				this.style.background ="#fff";
+				ev.dataTransfer.setData("name",this.innerText);
+				ev.dataTransfer.setData("val",this.getAttribute("value"));
+				ev.dataTransfer.setData("id",this.getAttribute("id"));
+				ev.dataTransfer.setData("classid",this.getAttribute("classid"));
+				ev.dataTransfer.setData("code",this.getAttribute("code"));
+				ev.dataTransfer.setData("parentCode",this.getAttribute("parentCode"));
+			};
+			valSpan[i].ondragend = function(ev){
+				//this.style.background ="#f3f5f6";
+			};
+		}
+	}
+	
+	//统计维度释放事件	
+	function optCreate(){	
+		objdimen.ondragover = function(ev){
+			ev.preventDefault();
+		}
+		objdimen.ondrop = function(ev){
+			ev.preventDefault();		
+			var sTitle = ev.dataTransfer.getData("name");
+			var id = ev.dataTransfer.getData("id");
+			var classId = ev.dataTransfer.getData("classId");
+			var code = ev.dataTransfer.getData("code");
+			var parentCode = ev.dataTransfer.getData("parentCode");
+			var pro = false;
+			$('li[name="dimension-value"]').each(function(){
+			
+				if($(this).attr("id").replace(/[^0-9]/ig,"") == id.replace(/[^0-9]/ig,"")){
+					pro = true;
+					return;
+				}
+		
+			});
+		
+			if(pro == true){
+				alert("该属性已存在");
+				return;
+			}
+			
+			if(sortName != null && sortName != "" && sortName != "null")
+				sTitle += "("+sortName+")";
+			var oLi = document.createElement("li");
+				oLi.setAttribute("id", id);
+				oLi.setAttribute("name", "dimension-value");
+				oLi.setAttribute("classId", classId);
+				oLi.setAttribute("code", code);
+				oLi.setAttribute("parentCode", parentCode);
+			var oB = document.createElement("b");
+				oB.innerHTML = sTitle;				
+			var oEm = document.createElement("em");
+				oEm.className = "icon-angle-down";
+				oB.appendChild(oEm);
+			var oI = document.createElement("i");
+			    oI.className = "icon-remove-circle";
+				oB.appendChild(oI);
+				oLi.appendChild(oB);
+			var oUl = document.createElement("ul");	
+				oUl.className = "attrshow";
+				oUl.innerHTML = creamDfine();			
+				oLi.appendChild(oUl);			
+				objdimen.appendChild(oLi);
+		}
+	}
+	
+	
+	//统计对象属性释放事件
+	function attrCreate(){	
+		objattr.ondragover = function(ev){
+			ev.preventDefault();
+		}
+		objattr.ondrop = function(ev){
+			ev.preventDefault();
+			var params = {"flag":"calculateIndexRule"};
+			ajaxSend("/pms-web/ajax/ajaxQueryIndexAction",params,initAssembly);
+			var sTitle = ev.dataTransfer.getData("name");
+			var sType = ev.dataTransfer.getData("type");
+			var id = ev.dataTransfer.getData("id");
+			var classId = ev.dataTransfer.getData("classId");
+			var code = ev.dataTransfer.getData("code");
+			var parentCode = ev.dataTransfer.getData("parentCode");
+			if(objattrLi.length == 0){
+				if(sType == '1'){
+					var oLi = document.createElement("li");
+					    oLi.className = "attrli";
+					    oLi.setAttribute("id", id);
+						oLi.setAttribute("classid", classId);
+						oLi.setAttribute("name", "rule-value");
+						oLi.setAttribute("code", code);
+						oLi.setAttribute("parentCode", parentCode);
+					var oB = document.createElement("b");
+						oB.innerHTML = sTitle;				
+					var oEm = document.createElement("em");
+						oEm.className = "icon-angle-down";
+						oB.appendChild(oEm);
+					var oI = document.createElement("i");
+						oI.className = "icon-remove-circle";
+						oB.appendChild(oI);	
+						oLi.appendChild(oB);
+					var oUl = document.createElement("ul");	
+					    oUl.className = "attrshow01";
+						oUl.innerHTML = creamElm();
+						oLi.appendChild(oUl);
+						objattr.appendChild(oLi);
+				}
+			}else{
+			  alert("只能拖入一个字段！");
+			}	
+			
+		}
+	}
+	 
+    //筛选器   
+	Filter.ondragover = function(ev){
+		//要想触发drop事件，就必须在dragover当中阻止默认事件
+		ev.preventDefault();
+	}
+	Filter.ondrop = function(ev){
+		ev.preventDefault();
+		var val = ev.dataTransfer.getData("val");
+		var id = ev.dataTransfer.getData("id");
+		var classid = ev.dataTransfer.getData("classid");
+		var code = ev.dataTransfer.getData("code");
+		var parentCode = ev.dataTransfer.getData("parentCode");
+		var pro = false;
+		$('span[name="filter-value"]').each(function(){
+		
+			if($(this).attr("id").replace(/[^0-9]/ig,"") == id.replace(/[^0-9]/ig,"")){
+				pro = true;
+				return;
+			}
+		
+		});
+		
+		if(pro == true){
+			alert("该属性已存在");
+			return;
+		}
+		
+		if(val == "1"){
+			//document.getElementsByClassName("Choice-btn").onclick();
+			var sTitle = ev.dataTransfer.getData("name");
+			var oLi = document.createElement('li');
+				 oLi.className = "timelistshow";
+			var oSpan = document.createElement('span');
+				oSpan.innerText = sTitle;
+				oSpan.setAttribute("id", id);
+				oSpan.setAttribute("classid", classid);
+				oSpan.setAttribute("name", "filter-value");
+				oSpan.setAttribute("code", code);
+				oSpan.setAttribute("parentCode", parentCode);
+			var oEm = document.createElement('em');
+				 oEm.className = "icon-cog";
+				oSpan.appendChild( oEm )
+			/*var oI = document.createElement('i');
+				oI.className = "icon-angle-down";
+				oSpan.appendChild( oI )*/
+			var oB = document.createElement('b');
+				oB.className = "icon-remove";
+				oSpan.appendChild( oB )		
+				oLi.appendChild( oSpan )
+			var oDiv = document.createElement("div");
+			    oDiv.setAttribute("id", "date-"+id);
+				oLi.appendChild( oDiv )
+				Filter.appendChild( oLi )
+		}else if(val == "2"){
+			var sTitle = ev.dataTransfer.getData("name");
+			var oLi = document.createElement('li');
+				 oLi.className = "chartlistshow";
+			var oSpan = document.createElement('span');
+				oSpan.innerText = sTitle;
+				oSpan.setAttribute("id", id);
+				oSpan.setAttribute("classid", classid);
+				oSpan.setAttribute("name", "filter-value");
+				oSpan.setAttribute("code", code);
+				oSpan.setAttribute("parentCode", parentCode);
+			var oEm = document.createElement('em');
+				 oEm.className = "icon-cog";
+				oSpan.appendChild( oEm )
+			/*var oI = document.createElement('i');
+				oI.className = "icon-angle-down";
+				oSpan.appendChild( oI )*/
+			var oB = document.createElement('b');
+				oB.className = "icon-remove";
+				oSpan.appendChild( oB )	
+				oLi.appendChild( oSpan )
+			var oDiv = document.createElement("div");
+			    oDiv.setAttribute("id", "chara-"+id);
+				oLi.appendChild( oDiv )	
+				Filter.appendChild( oLi )
+		}else if(val == "3"){
+			var sTitle = ev.dataTransfer.getData("name");
+			var oLi = document.createElement('li');
+				 oLi.className = "vallistshow";
+			var oSpan = document.createElement('span');
+				oSpan.innerText = sTitle;
+				oSpan.setAttribute("id", id);
+				oSpan.setAttribute("classid", classid);
+				oSpan.setAttribute("name", "filter-value");
+				oSpan.setAttribute("code", code);
+				oSpan.setAttribute("parentCode", parentCode);
+			var oEm = document.createElement('em');
+				 oEm.className = "icon-cog";
+				oSpan.appendChild( oEm )
+			/*var oI = document.createElement('i');
+				oI.className = "icon-angle-down";
+				oSpan.appendChild( oI )*/
+			var oB = document.createElement('b');
+				oB.className = "icon-remove";
+				oSpan.appendChild( oB )		
+				oLi.appendChild( oSpan )
+			var oDiv = document.createElement("div");
+			    oDiv.setAttribute("id", "num-"+id);
+				oLi.appendChild( oDiv )	
+				Filter.appendChild( oLi )
+		}
+	}
+	
+	//字符型筛选器
+	/*$(document).on("click",".downinput",function(event){
+         event.stopPropagation();
+         var sibling = $(this).siblings('ul');
+         if(sibling.is(":hidden")){  
+            $(".downlist").hide();             
+            sibling.show(); 
+         }else{
+             sibling.hide(); 
+         }
+     });*/
+     var proValue = "";
+     var arr = [];
+      $(document).on("click",".downlist li > span",function(event){
+            event.stopPropagation();
+            var Val = $(this).attr("value");
+            var text = $(this).html();  
+            var btn = $(this).closest('.downlist').siblings('.downinput');            
+            if(Val == "0"){
+               // $(".downlist li > span").attr("value","0");
+               // $(".downlist li > i").hide();
+                $(this).attr("value","1");
+                $(this).siblings('i').show(); 
+                arr.push(text);  
+                btn.text(arr); 
+               // btn.text(text);                     
+            }else if(Val == "1"){
+                $(this).attr("value","0");
+                $(this).siblings('i').hide(); 
+                arr.splice($.inArray(text,arr),1);  
+                btn.text(arr);
+               // btn.text("请选择");
+            }
+          
+        });
+        
+	    var time = null;
+	    var timeName = "";
+	    $(document).on("click",".wordbook li",function(){
+	       $(".wordbook li").removeClass("current");
+	       $(this).addClass("current");
+	       time = $(this).val();
+	       timeName = $(this).text();
+	    });
+	    
+	    $(document).on("click","#searchBtnchart",function(event){
+	       event.stopPropagation();
+	      var val = $("#searchInputchart").val();
+	      var searchChartlist = $("#searchChartlist").children("li");	      
+	      
+	      if(val == ""){
+	         //alert("请输入要查询的内容!");
+	        // $(".downlist").show();
+	         $(".downlist li").removeClass('activeLi01').removeClass('activeLi')
+	      }else{
+	         $.each(searchChartlist,function(index,i){
+	            var text = $(this).text();
+	            if(text.indexOf(val) != -1){
+	              // $(".downlist").show();
+	               $(this).addClass('activeLi01').removeClass('activeLi');
+	            }else{
+	               $(this).addClass('activeLi').removeClass('activeLi01');
+	            }
+	         })
+	      }
+	    })
+	    
+	    //wordbook
+	    $(document).on("click","#searchBtnchart01",function(event){
+	       event.stopPropagation();
+	      var val = $("#searchInputchart01").val();
+	      var searchChartlist = $(".wordbook").children("li");	      
+	      
+	      if(val == ""){
+	         //alert("请输入要查询的内容!");
+	        // $(".wordbook").show();
+	         $(".wordbook li").removeClass('activeLi01').removeClass('activeLi')
+	      }else{
+	         $.each(searchChartlist,function(index,i){
+	            var text = $(this).text();
+	            if(text.indexOf(val) != -1){
+	               //$(".downlist").show();
+	               $(this).addClass('activeLi01').removeClass('activeLi');
+	            }else{
+	               $(this).addClass('activeLi').removeClass('activeLi01');
+	            }
+	         })
+	      }
+	    })
+	    
+	    
+	   /* $(document).click(function(){
+            $(".downlist").hide(); 
+        });*/
+	
+	
+		//筛选器-字符型切换
+		$("#siteBtnground1 input[type='radio']").click(function(){		
+			if($("#siteBtn3").is(":checked")){
+				$("#site-r-li li").remove();
+				$("#site-l-list li >span").attr("value","0");
+				$("#siteDiv3").slideDown();
+				$("#siteDiv4").slideUp();
+			}else{
+				$("#siteDiv3").slideUp();
+				$("#siteDiv4").slideDown();			
+			}
+			if($("#siteBtn4").is(":checked")){
+				$("#text1").val("");
+				$("#siteDiv4").slideDown();
+				$("#siteDiv3").slideUp();
+			}else{
+				$("#siteDiv4").slideUp();
+				$("#siteDiv3").slideDown();
+			}		
+		})
+	
+/**
+获取当前的系统时间
+*/
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate;
+}
+
+function randomString(len) {
+    len = len || 32;
+	var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+	var maxPos = $chars.length;
+	var pwd = '';
+	for (var i = 0; i < len; i++) {
+		pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+	}
+	return pwd;
+}
+	
+</script>

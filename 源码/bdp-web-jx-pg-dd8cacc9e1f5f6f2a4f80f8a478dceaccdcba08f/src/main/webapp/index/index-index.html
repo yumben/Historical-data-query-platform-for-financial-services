@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>指标</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>	
+	
+	<!-- wrap star -->	
+	<div class="wrap">
+
+      <!-- asider start -->
+	  <div class="aside-nav asider queryasider">
+       <!-- <h3 class="menu-title">菜单列表</h3>-->
+        <div class="navmenu" id="nav-left">
+           <p class="metadataleftbtn">
+               <span id="addMeta" class="add-data" title="增加"><i class="fa fa-plus-square-o"></i></span>
+               <span id="delMeta" class="delet-data" title="删除"><i class="fa fa-trash-o"></i></span>
+               <span id="editMeta" class="edit-data" title="修改"><i class="fa fa-pencil"></i></span>
+               <span onclick="initMenu()" class="fresh-data" title="刷新"><i class="fa fa-refresh"></i></span>
+	           <!-- <button type="button" class="btn btn-primary" id="addMeta">增加</button>
+	           <button type="button" class="btn btn-danger" id="delMeta">删除</button>
+	           <button type="button" class="btn btn-info" id="editMeta">修改</button>
+	           <button type="button" onclick="initMenu()" class="btn btn-default">刷新</button> -->
+           </p>           
+        </div>
+      </div>
+      <!-- asider end -->
+        <!-- right-num star -->	
+        <div class="right-num">
+           <iframe class="mainFramedata" id="mainFramedata" name="mainFramedata" width="100%" height="100%" src="index-management.html" frameborder="0"></iframe>
+        
+        </div>	
+        <!-- right-num end -->    
+	</div>	
+    <!-- wrap end -->	
+    
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+</body>
+</html>
+
+
+<script type="text/javascript" src="../resource/js/modal.js"></script>
+<script type="text/javascript">
+	var catalogId = 0;
+	var catalogSize = 0;
+	var metaParentId = 0;
+	var flagClassId = null;
+	var parentcatelog = null;
+	var indexMetadata = null; //指标的元数据id
+	var metadataVO = null; //当前元数据对象
+	var metadataList = null;
+	var metadataId = 0;
+	var classId = null;
+	var lastClassId = null;
+	var menuCode = GetQueryString("menuCode");
+	$(document).on('click', 'li[newNode="true"] > h5', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var id = li.attr("id");
+		metadataId = li.attr("metadataId");
+		classId = li.attr("classId");
+		lastClassId = null;
+		if(li.attr("classId") != undefined)
+			lastClassId = li.attr("classId");
+		var type = li.attr("type");
+		
+		if(metadataList != null){
+			metadataList.forEach(function(e,i){
+				if(e.metadataId == metadataId){
+					metadataVO = e;
+				}
+			});
+		}
+		
+		if(type != null && type=="catalog"){
+			catalogId = id;
+			metaParentId = 0;
+			changeManagement();
+		}else{
+			if(typeof(metadataId) != 'undefined'){
+				metaParentId = metadataId;
+			}else{
+				parentcatelog = classId;
+			}
+			var tempLi = li;
+			while(tempLi.parent('ul').parent('li')){
+				tempLi = tempLi.parent('ul').parent('li');
+				type = tempLi.attr("type");
+				if(type != null && type=="catalog"){
+					catalogId = tempLi.attr("id");
+					break;
+				}
+			}
+		}
+		if(metadataId != null){
+			id = null;
+			if(metadataVO.parentMetadata == 0){
+				indexMetadata = metadataVO.metadataId;
+			}
+			$("#mainFramedata").attr("src","/bdp-web/index/index-infor.html?metadataId="
+				+metadataId+"&indexMetadata="+indexMetadata);
+		}
+		if(classId != null){
+			id = null;
+			var parentLi = li.parent('ul').parent('li');
+			metadataId = parentLi.attr("metadataId");
+		}
+			   
+		if(li.children('ul').hasClass('unstyled')){
+		    p.children("i").addClass("glyphicon-plus").removeClass("glyphicon-minus");
+			//隐藏
+			//li.children('ul').css('display','block');
+			//清空ul
+			li.children('ul').remove();					
+		}else{
+		    	p.children("i").addClass("glyphicon-minus").removeClass("glyphicon-plus");
+		    	//alert(id+":"+metadataId+":"+classId);
+				var params={"parentId":id,"metadataId":metadataId,"classId":classId};
+				initLeftMenu(params);
+			/* } */
+		}
+				
+	});
+	function calFun1(data){
+		var curent;
+		var parentId = "metadataId-"+data.metadataId;
+		curent = $('#'+parentId);	
+		var ul = $("<ul class='unstyled'></ul>");
+		var metadataList = data.metadataList;
+		if(metadataList != null){
+			metadataList.forEach(function(e,i){
+				var tempId = "metadataId-"+e.id;
+				var li = $("<li id=" + tempId + " metadataId="+e.id+"><h5><i class='glyphicon glyphicon-plus'></i> " + e.name + "</h5></li>");
+				li.attr("newNode", "true");
+				ul.append(li).appendTo(curent);
+			});
+		}
+
+	}
+
+	var classType = null;
+	$(document).ready(function($) {
+		classType = GetQueryString("classType");
+		classType = 2;
+		/* if(type != null){
+			//从标签工厂-->指标或业务模型菜单进来的，把二级菜单屏蔽
+			$("#menu2").css('display','none');
+			classType = type;
+		} */
+		initLeftMenu(null);
+		changeManagement();
+	});
+
+	function initLeftMenu(params){
+		if(params == null){
+			params={};
+		}
+		
+		//alert(classType);
+		params.classType=classType;
+		//ajaxSend("/bdp-web/ajax/ajaxQueryMetadataMenuAction",params,calFun);
+		ajaxSend(metadataControl,{"param" : JSON.stringify(params),"menuUrl":"metadata/ajaxQueryMetadataMenuAction"},calFun);
+	}
+	
+	function calFun(data){
+		var parentId = data.parentId;
+		classId = data.classId;
+		var metadataId = data.metadataId;
+		var curent;
+		if((parentId == null || parentId == undefined ) && metadataId == null && classId == null ){
+			curent = $("#nav-left");
+		}else if(parentId != null && parentId != undefined  && parentId != ""){
+			curent = $('#'+parentId);
+		}else if(classId !=undefined && classId != null && classId != "") {
+			var tempId = "classId-"+metadataId+"-"+classId;
+			curent = $('#'+tempId);
+		}else if(metadataId != undefined && metadataId != null && metadataId != "") {
+			var tempId = "metadataId-"+metadataId;
+			curent = $('#'+tempId);
+		}
+		var count = 20;
+		var tempCount = 0;
+		var tempUl = curent.parent('ul');
+		while(tempUl.hasClass('unstyled')){
+			tempUl = tempUl.parent('li').parent('ul');
+			tempCount++;
+		}
+		if(tempCount > 2){
+			count = count - (tempCount-2)*2;
+			if(count < 2){
+				count = 2;
+			}
+		}
+		
+		
+		var ul = $("<ul class='unstyled'></ul>");
+		
+		var catalogList = data.catalogList;
+		if(catalogList != null){
+			if(catalogId == ""){
+				catalogSize = catalogList.length;
+			}
+			catalogList.forEach(function(e,i){
+				var newName = e.catalogName;
+				/*if(getLength(e.name) > count){
+ 					newName = cutstr(e.name,count);
+ 				}*/
+				if(idIndex == e.catalogId){
+					if(lastIndex == e.catalogId){
+						var li = $("<li id=" + e.catalogId + " title='"+e.catalogName+"' type='catalog'><h5 class='current'><i class='glyphicon glyphicon-minus'></i> " + newName + "</h5></li>");
+					}else{
+						var li = $("<li id=" + e.catalogId + " title='"+e.catalogName+"' type='catalog'><h5><i class='glyphicon glyphicon-minus'></i> " + newName + "</h5></li>");
+					}
+				}else {
+					var li = $("<li id=" + e.catalogId + " title='"+e.catalogName+"' type='catalog'><h5><i class='glyphicon glyphicon-plus'></i> " + newName + "</h5></li>");
+				}
+				li.attr("newNode", "true");
+				ul.append(li).appendTo(curent);
+			});
+		}
+		
+	} 
+	
+	function changeManagement(){
+		$("#mainFramedata").attr("src","/bdp-web/index/index-management.html?classType="
+				+classType+"&"+"catalogId="+catalogId+"&menuCode="+menuCode);
+	}
+	
+</script>
+
+    
+<script>
+function initMenu(){
+	$("#nav-left").children("ul").remove();
+	params = {"catalogId":catalogId, "metadataId":metadataId};
+	//ajaxSend("/bdp-web/ajax/ajaxInitMenuAction",params,initSuccess);
+	ajaxSend(metadataControl,{"param" : JSON.stringify(params),"menuUrl":"metadata/ajaxInitMenuAction"},initSuccess);
+}
+
+var catalogIdArray = null;
+var metadataIdArray = null;
+var classIdArray = null;
+var idIndex = null;
+var classIndex = null;
+var lastIndex = null;
+function initSuccess(data){
+	lastIndex = null;
+	idIndex = null;
+	classIndex = null;
+	catalogIdArray = data.catalogIdStr.split("/");
+	metadataIdArray = data.metadataIdStr.split("/");
+	classIdArray = data.classIdStr.split("/");
+	// 刷新目录
+	if(catalogIdArray.length == 1){
+		idIndex = catalogIdArray[0];
+		if(metadataIdArray[0] == ""){
+			lastIndex = catalogIdArray[0];
+		}
+		initLeftMenu(null);
+		if(metadataIdArray.length > 0)
+			idIndex = metadataIdArray[0];
+		var params={"parentId":catalogIdArray[0],"metadataId":null,"classId":null};
+		initLeftMenu(params);
+	}else{
+		for(var i=0;i<catalogIdArray.length;i++){
+			idIndex = catalogIdArray[i];
+			if(i == 0){
+				initLeftMenu(null);
+			}else if(i == catalogIdArray.length-1){
+				if(metadataIdArray[0] == ""){
+					lastIndex = catalogIdArray[i];
+				}
+				var params={"parentId":catalogIdArray[i-1],"metadataId":null,"classId":null};
+				initLeftMenu(params);
+				if(metadataIdArray[0] != ""){
+					idIndex = metadataIdArray[0];
+					if(metadataIdArray.length == 1){
+						lastIndex = metadataIdArray[0];
+					}
+				}
+				params.parentId = catalogIdArray[i];
+				initLeftMenu(params);
+			
+			}else{
+				var params={"parentId":catalogIdArray[i-1],"metadataId":null,"classId":null};
+				initLeftMenu(params);
+			}
+		}
+	}
+	
+	classId = null;
+	if(metadataIdArray[0] == ""){
+		return;
+	}
+	// 刷新元数据
+	for(var i=0;i<metadataIdArray.length;i++){
+		if(i == metadataIdArray.length - 1){
+			idIndex = metadataIdArray[i];
+			classIndex = lastClassId;
+			lastIndex = metadataIdArray[i];
+		}else{
+			idIndex = metadataIdArray[i+1];
+			classIndex = classIdArray[i+1];
+			if(i+1 == metadataIdArray.length - 1){
+				lastIndex = metadataIdArray[i+1];
+			}
+		}
+		
+		var params={"parentId": null,"metadataId":metadataIdArray[i],"classId":null};
+		initLeftMenu(params);
+		if(classId != null && classId != ""){
+			var params={"parentId": null,"metadataId":metadataIdArray[i],"classId":classId};
+			initLeftMenu(params);
+		}
+	}
+	
+}
+
+$("#delMeta").on("click",function(){
+	
+	if(catalogId != 0 && metaParentId != 0){
+		layer.confirm('您确定要删除当前的指标？', {
+  			btn: ['确定','取消'] //按钮
+		}, function(){
+			params = {"metadataVO.id":metaParentId,"flag":"metadata"};
+			ajaxSend("/bdp-web/ajax/ajaxDeleteMetadataMenuAction",params,delSuccess);
+			initMenu();
+			layer.msg(null, null);
+		}, function(){
+  			layer.msg('已取消当前操作', {btn: ['好的']});
+		});
+	}else if(catalogId != 0 && metaParentId == 0){
+		layer.confirm('您确定要删除当前的目录？', {
+  			btn: ['确定','取消']
+		}, function(){
+			params = {"id":catalogId,"flag":"catalog"};
+			ajaxSend(metadataControl,{"param" : JSON.stringify(params),"menuUrl":"metadataCatalog/delMetadataCatalogById"},delSuccess);
+			initMenu();
+			layer.msg(null, null);
+		}, function(){
+  			layer.msg('已取消当前操作', {
+    		btn: ['好的']
+  		});
+		});
+	}else {
+		alert("请先选择一个对象！");
+	}
+	
+});
+
+var size = null;
+function delSuccess(data){
+	if(data.code == 0){
+		alert("删除成功");
+	}else {
+		alert("请先删除其子级目录和指标");
+	}
+}
+
+var flag = null;
+//增加
+$("#addMeta").on("click",function(){
+	//var main = $("#addcon");
+	flag = "add";
+	if(metadataId != null && metadataId != ""){
+		alert("子级指标请在右边页面进行添加！");
+		return;
+	}
+	top.layer.open({
+		title:'增加指标目录',
+		closeBtn:2,
+		type:2,
+		area:['750px','450px'],
+		shadeClass:true,
+		content:"index-add.html?catalogId="+catalogId+
+		"&metaParentId="+metaParentId+"&flag="+flag+"&classType="+classType,
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+		},
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		var doc = $(layero).find("iframe")[0].contentWindow.document;
+    		var parent = $(layero).find("iframe")[0].contentWindow;
+    		var radio = $(doc).find('input:radio:checked').val();
+    		
+    		if(addOrUpdate(parent,doc,radio) == 1)
+    			return;
+
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  	}
+	});
+});
+
+function success(data){
+	if(flag == "add"){
+		alert("添加成功");
+	}else{
+		alert("修改成功");
+	}
+}
+
+//修改
+$("#editMeta").on("click",function(){
+	
+	if(catalogId == 0) {
+		alert("请选择一个目录！");
+		return;
+	}
+	
+	flag = "update";
+	top.layer.open({
+		title:'修改指标目录',
+		closeBtn: 2, 
+		type:2,
+		area:['750px','450px'],
+		shadeClass:true,
+		content:"index-edit.html?catalogId="+catalogId+
+		"&metaParentId="+metaParentId+"&flag="+flag+"&classType="+classType,
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+		},
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		var doc = $(layero).find("iframe")[0].contentWindow.document;
+    		var radio = $(doc).find('input:radio:checked').val();
+    		//var parent = $(layero).find("iframe")[0].contentWindow;
+    		if(addOrUpdate(parent,doc,radio) == 1)
+    			return;
+    			
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	}
+	});
+});
+
+function addOrUpdate(parent, doc, radio){
+	if(radio == "catalogue"){
+    	var code = $(doc).find("#code").val().trim();
+    	var name = $(doc).find("#name").val().trim();
+    	var parentId = $(doc).find("#parentId").val();
+    	var type = $(doc).find("#type").val();
+    	
+    	if(code == ""){
+    		alert("分类目录代码不能为空！");
+        	return 1;
+    	}
+    	if(name == ""){
+    		alert("分类目录名称不能为空！");
+        	return 1;
+    	}
+    	var createDate = getNowFormatDate();
+    	var params;
+    	if(flag == "add"){
+    		params={"catalogCode":code,"catalogType":classType,
+    		"catalogName":name,"parentCatalog":catalogId,"createDate":createDate};
+    		params={"vo":params};
+    		//ajaxSend("/bdp-web/ajax/ajaxAddMetadataMenuAction",params,success);
+    		ajaxSend(metadataControl,{"param" : JSON.stringify(params),"menuUrl":"metadataCatalog/saveMetadataCatalog"},success);
+    	}else{
+    		params={"catalogId":catalogId,"catalogCode":code,"catalogType":type,
+    		"catalogName":name,"parentCatalog":parentId,"editDate":createDate};
+    		params={"vo":params};
+    		//ajaxSend("/bdp-web/ajax/ajaxUpdateMetadataMenuAction",params,success);
+    		ajaxSend(metadataControl,{"param" : JSON.stringify(params),"menuUrl":"metadataCatalog/saveMetadataCatalog"},success);
+    	}
+    	initMenu();
+    }else if(radio == "metadata"){
+
+		if(catalogId == null){
+    		alert("目录不能为空！");
+        	return 1;
+    	}    	
+    	var code = $(doc).find("#metadataCode").val().trim();
+    	var name = $(doc).find("#metadataName").val().trim();
+    	var classId = $(doc).find("#classId").val();
+    	var metadataParentId = $(doc).find("#metadataParentId").val();
+    	var propertyArr = new Array();
+    	var propertyParams={};
+    	//var date = $(doc).find("#metadataCreatDate").val().trim();
+    	if(code == ""){
+    		alert("元数据代码不能为空！");
+        	return 1;
+    	}
+    	if(name == ""){
+    		alert("元数据名称不能为空！");
+        	return 1;
+    	}
+    	if(classId == ""){
+    		alert("元数据类型不能为空！");
+        	return 1;
+    	}
+    	var createDate = getNowFormatDate();
+    	var params;
+    	if(flag == "add"){
+    		var propertyId = new Array();
+    		var propertyId2 = new Array();
+			var propertyValue = new Array();
+    		propertyId = parent.propertyId;
+    		propertyId2 = parent.propertyId2;
+    		for(var i=0;i<propertyId2.length;i++){
+    			propertyValue.push($(doc).find("#pro-"+propertyId2[i]).val());
+    					
+    		}for(var i=0;i<propertyId.length;i++){
+    			propertyValue.push($(doc).find("#pro-"+propertyId[i]).val());
+    			propertyArr.push($(doc).find("#pro-"+propertyId[i]).attr("code")+"="+ $(doc).find("#pro-"+propertyId[i]).val());
+    			var propertyCode = $(doc).find("#pro-"+propertyId[i]).attr("code");
+				propertyParams[propertyCode] = $(doc).find("#pro-"+propertyId[i]).val();
+				
+    		}
+    		var param = {
+			"code" : code,
+			"name" : name,
+			"parentMetadata":metadataParentId,
+			"classId":classId,
+			"type":classType,
+			"catalogId":catalogId,
+			"createDate":createDate,
+			"propertyValue" : propertyValue,
+			"property" : [propertyParams],
+			"propertyArr" : propertyArr,
+			"propertyId" : propertyId,
+			"childrens":[]
+		}
+		var params = {"metadataJson":param};
+		//ajaxSend("/pms-web/ajax/ajaxUpdateMetadataMenuAction", param, updateSuccess);
+		ajaxSend(metadataControl, {"param" : JSON.stringify(params),"menuUrl":"metadata/saveMetadata"}, success);
+	
+    		/* params={"metadataVO.code":code,
+    		"metadataVO.name":name,"metadataVO.parentId":metadataParentId,
+    		"metadataVO.classId":classId,"flag":"metadata",
+    		"metadataVO.type":classType,
+    		"metadataVO.catalogId":catalogId,"metadataVO.createDate":createDate,
+    		"classPropertyId":propertyId,"propertyValue":propertyValue,"propertyArr":propertyArr};
+    		ajaxSend("/bdp-web/ajax/ajaxAddMetadataMenuAction",params,success);
+    	 */
+    	 }else{
+    		params={"metadataVO.id":metaParentId,"metadataVO.code":code,"metadataVO.name":name,
+    		"metadataVO.classId":classId,"flag":"metadata","metadataVO.parentId":metadataParentId,
+    		"metadataVO.catalogId":catalogId,"metadataVO.editDate":createDate};
+    		ajaxSend("/bdp-web/ajax/ajaxUpdateMetadataMenuAction",params,success);
+    	}
+    	initMenu();
+    }
+}
+
+/**
+获取当前的系统时间
+*/
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate;
+}
+
+function getTimestamp(date){
+	date = date.substring(0,19);    
+	date = date.replace(/-/g,'/'); 
+	var timestamp = new Date(date).getTime();
+	return timestamp;
+}
+</script>
+<script>
+window.onload=function(){
+  var iframe=parent.document.getElementById("mainFramedata");
+  //取得框架元素
+  iframe.height=document.body.scrollHeight||document.documentElement.scrollHeight;
+  //取得框架内容的高度并改变
+}
+</script>
+

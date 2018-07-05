@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>新增标签</title>
+</head>
+<body>
+	<div id="all">
+		<div class="data_form current">
+			<div class="hidden">
+				<span>ID：</span><input class="form-control " id='dataFieldId' />
+			</div>
+			<div>
+				<span>属性名称：</span><input class="form-control" id='dataFieldName' />
+			</div>
+			<div>
+				<span>属性中文名称：</span><input class="form-control" id="dataFieldNameCN" />
+			</div>
+			<div>
+				<span>目标表：</span><select class="form-control" id='dataTableId'>
+				</select>
+			</div>
+			<div>
+				<span>数据类型：</span><select class="form-control" id='dataType'>
+					<option value="int">int</option>
+					<option value="String">String</option>
+				</select>
+			</div>
+			<div>
+				<span>来源数据库：</span><select class="form-control" id='sourceDataBase'>
+				</select>
+			</div>
+			<div>
+				<span>来源表：</span><input class="form-control" id="sourceTable" />
+			</div>
+			<div>
+				<span>计算规则：</span><input class="form-control" id='dataRule' />
+			</div>
+			<div>
+				<span>备注：</span><input class="form-control" id='desc' />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

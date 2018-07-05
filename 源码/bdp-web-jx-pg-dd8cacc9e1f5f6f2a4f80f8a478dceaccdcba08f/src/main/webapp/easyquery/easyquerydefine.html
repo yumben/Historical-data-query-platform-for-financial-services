@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>灵活查询定义</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+	<!--#include virtual="/bdp-web/workbench/header.shtml"-->
+	<!-- 中间内容 -->
+	<div class="section-wrap">
+		<div class="section-main">
+			<!-- 左边菜单 star-->
+			<div class="leftContent">
+				<div class="selectbox">
+					<div class="selec-table">
+						<h3>
+							工作表<!-- <i class="fa fa-tasks" id="selectBtn"></i> -->
+						</h3>
+						<!-- <p id="tableName">选择表</p> -->
+						<div class="tableSearch">
+							<p>
+								<i id="select-search-btntable">
+									<img src="../resource/img/query-ico.png">
+								</i>
+								<input type="text" name="tableSearchInput" id="tableSearchInput">
+							</p>							
+						</div>
+						<div class="leftshowbox" id="tableMenu">
+						</div>
+					</div>
+				</div>
+				<div class="selectbox">
+					<h3>字段</h3>
+					<div class="select-search">
+						<p>
+							<i id="select-search-btn"><img
+								src="../resource/img/query-ico.png"></i><input type="text"
+								name="select-search" id="select-search-text">
+						</p>
+					</div>
+					<div class="select-list">
+						<ul id="selectList">
+							<!-- <li draggable="true" value="1"><i class="fa fa-calendar-o"></i><span>贷款明细查询表</span></li> -->
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 左边菜单 end-->
+			<!-- 中间内容 star-->
+			<div class="centerContent">
+				<div class="rule-title">
+					<span>查询定义</span>
+					<p class="btnquery">
+						<button type="button" class="btn btn-default" id="btnsave">
+							<img src="../resource/img/query-ico5.png"> 保存
+						</button>						
+						<button type="button" class="btn btn-default" id="btnback">
+							<img src="../resource/img/query-ico7.png"> 返回
+						</button>
+					</p>
+				</div>
+				<div class="rule">
+					<div class="rule-con">
+						<span>业务对象</span>
+						<div class="rule-con-list">
+							<ul id="treeObj"></ul>
+						</div>
+						<em><i class="fa fa-angle-double-up"></i><b>收缩</b></em> <b
+							class="clearAttr" id='treeBtn'><i class="fa fa-trash-o"></i> 清空</b>
+					</div>
+					<div class="rule-con">
+						<span>维度<i></i></span>
+						<div class="rule-con-list">
+							<ul id="dimen"></ul>
+						</div>
+						<em><i class="fa fa-angle-double-up"></i><b>收缩</b></em> <b
+							class="clearAttr"><i class="fa fa-trash-o"></i> 清空</b>
+					</div>
+					<div class="rule-con rule-con-attrout">
+						<span>输出属性<i></i></span>
+						<div class="rule-con-list">
+							<ul id="outAttr"></ul>
+						</div>						
+						<em><i class="fa fa-angle-double-up"></i><b>收缩</b></em> 
+						<b class="clearAttr"><i class="fa fa-trash-o"></i> 清空</b>
+						<b class="computField" style="right:100px"><i class="fa fa-plus"></i> 增加计算字段</b>
+					</div>
+					<div class="rule-con">
+						<span>高级选项</span>
+						<div class="rule-con-list">
+							<div class="special">
+								<label><input type="checkbox" name="first_limit">是否启用排名</label>
+								<!-- <label><input type="checkbox" name="is_summary">是否汇总</label> -->
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="rule-content">
+					<div class="rule-screen" id="ruleScreen">
+						<h3>
+							筛选器<b class="clearAttr"><i class="fa fa-trash-o"></i> 清空</b>
+						</h3>
+					</div>
+					<div class="rule-detail" style="overflow: auto;">
+						<div class="rule-detailList" id="ruleDetailList"></div>
+					</div>
+				</div>
+
+			</div>
+			<!-- 中间内容 end-->
+		</div>
+	</div>
+	<!-- 保存模板弹窗star -->
+	<div class="showbox" id="saveEasy" style="display:none">
+		<div class="show-form">
+			<table class="item-table">
+				<tbody>
+					<tr style="display:none">
+						<th>metadata_id：</th>
+						<td><input type="text" id="metadata_id" name="metadata_id"
+							class="form-control"></td>
+					</tr>
+					 <tr style="display:none">
+						<th>查询代码：</th>
+						<td><input type="text" id="query_code"
+							onkeyup="checkInput(this)" name="query_code" class="form-control"><em
+							class="tip"><i>*</i> 只能输入中文、数字、字母以及下划线</em></td>
+					</tr>
+					<tr>
+						<th>查询名称：</th>
+						<td><input type="text" id="query_name"
+							onkeyup="checkInput(this)" class="form-control"><em
+							class="tip"><i>*</i> 只能输入中文、数字、字母以及下划线</em></td>
+					</tr>					
+					<tr>
+						<th>查询类型：</th>
+						<td><select id="query_type" class="form-control">
+						</select></td>
+					</tr>
+					<tr>
+						<th>查询描述：</th>
+						<td><textarea id="query_des" name="query_des"
+							class="form-control"></textarea></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 保存模板弹窗end -->
+	<!-- 全选star -->
+	<div class="showbox" id="selectAllFiled" style="display:none">
+		<div class="selectAllCon">			
+			<!-- <div class="easy-select-filed" id="filedTime">
+				<span><label><input type="checkbox" value="0">
+						<i class="fa fa-file-text"></i> 日期</label></span>
+				<div></div>
+			</div>
+			<div class="easy-select-filed" id="filedNum">
+				<span><label><input type="checkbox" value="0">
+						<i class="fa fa-file-text"></i> 数值</label></span>
+				<div></div>
+			</div>
+			<div class="easy-select-filed" id="filedText">
+				<span><label><input type="checkbox" value="0">
+						<i class="fa fa-file-text"></i> 文本</label></span>
+				<div></div>
+			</div> -->
+		</div>
+	</div>
+	<!-- 多选end -->
+	<!-- 设置别名star -->
+	<div class="showbox" id="setAliasz" style="display:none">
+		<div class="show-form">
+			<table class="item-table">
+				<tbody>
+					<tr>
+						<th>别名：</th>
+						<td><input type="text" id="setAliaszInput"
+							class="form-control"><em class="tip"><i>*</i>
+								只能以字母、中文或者下划线开头</em></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 设置别名end -->
+	<!-- 设置字段格式star -->
+	<div class="showbox" id="fieldformat" style="display:none">
+		<div class="show-form">
+			<table class="item-table">
+				<tbody>
+					<tr>
+						<td><input type="text" name="field_decimal_point" class="form-control pointInput">位小数</td>
+					</tr>
+					<tr>
+						<td><label><input type="checkbox" name="field_unit_limit">设置单位</label></td>
+					</tr>
+					<tr>
+						<td><label><input type="checkbox" name="show_form">千分位</label></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 设置字段格式end -->
+	<!-- 筛选器设置star -->
+	<div class="showbox" id="screenformat" style="display:none">
+		<div class="show-form" style="padding-top:0;">
+			<table class="item-table screenformat">
+				<tbody id="screenData">
+					<tr>
+						<th></th>
+						<td><select><option value="in">包含</option></select><input type="text"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- 筛选器设置end -->
+	<!-- 计算字段star -->
+	<div class="showbox" id="compField" style="display:none">
+		<div class="compbox">
+			<div class="comp_text"><span>别名：</span>
+				<input class="form-control" id="aliasTitle">
+			</div>
+			<div class="comp_text"><span>计算公式：</span>
+				<textarea class="form-control" id="textFormula"></textarea>
+			</div>
+			<div class="comp_text"><span>选择计算字段：</span>
+				<div class="comp_list"><input class="form-control search_comp"><ul id="comp_iterm"></ul></div>
+			</div>
+			<div class="comp_text"><span>字段类型：</span>
+				<div class="setFildeType" id="setFildeType">
+				<label><input type="radio" name="field_type" value='decimal'>金额</label>
+				<label><input type="radio" name="field_type" value='number'>数值</label>
+				</div>
+			</div>
+			<div class="comp_text"><span>设置字段格式：</span>
+				<div class="setFildeformat" id="setFildeformat"><input type="text" name="field_decimal_point" class="form-control pointInput"> 位小数<br>
+					<label><input type="checkbox" name="field_unit_limit">设置单位</label><br>
+					<label><input type="checkbox" name="show_form">千分位</label>
+				</div>
+			</div>
+		</div>		
+	</div>
+	<!-- 计算字段end -->
+	
+	<!-- 遮罩 -->
+	<div id="load">
+		<span class="checkshow"><img src="../resource/img/load-mon.gif"><em>请稍后，数据处理中....</em></span>
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var params = {};
+			ajaxSend("/bdp-web/metadata/selectEasyQueryType", params, function(data) {
+				//console.log(data.metadataList.children);
+				var select = $("#query_type");
+				$.each(data.metadataList.children, function(j, e) {
+					var options = $("<option value='" + e.metadataId + "'>" + e.metadataName + "</option>");
+					select.append(options);
+				});
+	
+			});
+		});
+	</script>
+	<script type="text/javascript" src="../resource/js/attrModel.js"></script>
+	<script type="text/javascript" src="../resource/js/easy/drapPublic.js"></script>
+	<script type="text/javascript" src="../resource/js/check.js"></script>
+	<script type="text/javascript" src="../resource/js/easy/easyquerydefine.js"></script>
+	<script type="text/javascript" src="../resource/js/drag-arrange.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetamodelRelationMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.MetamodelRelation">
+		<id column="relation_id" property="relationId" />
+		<result column="relation_code" property="relationCode" />
+		<result column="relation_name" property="relationName" />
+		<result column="class_id" property="classId" />
+		<result column="classed_id" property="classedId" />
+		<result column="relation_type_id" property="relationTypeId" />
+		<result column="describes" property="describes" />
+		<result column="create_date" property="createDate" />
+		<result column="create_name" property="createName" />
+		<result column="edit_date" property="editDate" />
+		<result column="edit_name" property="editName" />
+	</resultMap>
+<select id="queryModelClassRelation" resultType="cn.com.infohold.entity.MetamodelRelation"
+		parameterType="Map">
+		SELECT
+		b.relation_id AS relationId,
+		b.relation_code AS relationCode,
+		b.relation_name AS relationName,
+		b.class_id AS classId,
+		b.classed_id AS classedId,
+		b.relation_type_id AS relationTypeId,
+		b.describes AS describes,
+		b.create_date AS createDate,
+		b.create_name AS createName,
+		b.edit_date AS editDate,
+		b.edit_name AS editName,
+		a.class_code AS classCode,
+		a.class_name AS className,
+		c.relation_type_name AS relationTypeName
+		FROM
+		metamodel_class a,
+		metamodel_relation b,
+		metamodel_relation_type c
+		<where>
+			a.class_id = b.class_id
+			AND b.relation_type_id = c.relation_type_id
+			AND b.class_id = #{map.classId}
+			<if
+				test="map.relationType != null and map.relationType != '' and map.relationType != 0">
+				AND c.relation_type_id = #{map.relationType}
+			</if>
+			<if test="map.relationName != null and map.relationName != ''">
+				AND b.relation_name like
+				CONCAT(CONCAT('%',#{map.relationName}),'%')
+			</if>
+			order by b.relation_id desc
+		</where>
+	</select>
+	
+	<select id="queryByIdRelationInfo" resultType="cn.com.infohold.entity.MetamodelRelation">
+	SELECT a.class_code AS classCode,
+	a.class_name AS className,
+	b.relation_id AS relationId,
+	b.relation_code AS relationCode,
+	b.relation_name AS relationName,
+	b.class_id AS classId,
+	b.classed_id AS classedId,
+	b.describes,
+	b.create_name AS createName,
+	b.create_date AS createDate,
+	b.edit_date AS editDate,
+	b.edit_name AS editName
+FROM metamodel_class a,
+  metamodel_relation b
+WHERE a.class_id = b.class_id
+    AND b.relation_id = #{relationId}
+	
+	</select>
+
+</mapper>

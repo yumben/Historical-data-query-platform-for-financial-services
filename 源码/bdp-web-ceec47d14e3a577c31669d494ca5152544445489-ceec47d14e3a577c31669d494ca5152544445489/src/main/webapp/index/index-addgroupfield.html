@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<title>元数据管理</title>
+</head>
+<script type="text/javascript">
+
+	//业务对象表id
+	var  metaPraentId=null;
+    //分组字段
+	function initLeftMenu(params){		
+		ajaxSend("/pms-web/ajax/ajaxQueryStepStatistics",params,calFun);
+	}
+    function  calFun(data){    
+       var metaList=data.metaList;
+       var numVariable=0;
+        var  allcode=null;
+       metaList.forEach(function(e,i){
+           var  temp=e.propertyType.charAt(e.propertyType.length - 1);
+		     if(temp=="2"){//跳过字符型的
+		       return  true ;
+		       }
+             if(numVariable=="0"){//首位
+                var button=$("#downlist");
+                var em=$("<em proType="+e.propertyType+" code="+allcode+" id="+e.id+">" +e.name+"</em>");
+                button.append(em);
+                numVariable++;
+             }
+         
+          var  ul=$("#groupFiled");
+          var li = $("<li draggable='true' value='1'  id="+e.id+" parent="+e.parentId+" code="+allcode+" proType="+e.propertyType+"  >"+e.name+"</li>");
+          ul.append(li);
+       });
+    }
+    
+ //初始化
+$(document).ready(function(){ 
+//加载日期
+initDate();
+
+  //获取对象表id
+  metadataId = GetQueryString("metadataId");
+
+  var params={"metaPraentId":metadataId,"flag":"allPro"};
+  
+  initLeftMenu(params);
+  
+　　var proType=$("#downlist").children("em").attr("proType");
+    var  temp=proType.charAt(proType.length - 1);
+    if(temp=="1"){
+        $("#dateType2").show();
+        $("#charType").hide();
+        $("#numType").hide();
+        $("#dateFiled").show();
+        $("#numFiled").hide();
+        $("#charFiled").hide();
+    }else if(temp=="2"){
+        $("#charType").show();
+        $("#dateType2").hide();
+        $("#numType").hide();
+         $("#charFiled").show();
+         $("#dateFiled").hide();
+         $("#numFiled").hide();
+    }else if(temp=="3"){
+        $("#numType").show();
+        $("#dateType2").hide();
+        $("#charType").hide();
+        $("#numFiled").show();
+        $("#dateFiled").hide();
+        $("#charFiled").hide();
+    }
+}); 
+
+//切换分组字段
+$(document).on('click', '#groupFiled >li ', function() {
+
+     var proType=$(this).attr("proType");
+     var  temp=proType.charAt(proType.length - 1);
+     
+     var dateText= $("#dateGroupMode_button").children("em").text();
+     var numText= $("#numGroupMode_button").children("em").text();
+     var charText= $("#charGroupMode_button").children("em").text();
+     
+     if(temp=="1"){//日期
+	     if(dateText=="常规"){
+	        $("#dateType2").show();
+	        $("#dateType").hide();
+	        $("#charType").hide();
+	        $("#numType").hide();
+	        $("#dateFiled").show();
+	        $("#numFiled").hide();
+	        $("#charFiled").hide();
+	        $("#numType").hide();
+            $("#numType2").hide();
+	     }else if(dateText=="年内分组"){
+	        $("#dateType2").show();
+	        $("#dateType").hide();
+	        $("#charType").hide();
+	        $("#numType").hide();
+	        $("#dateFiled").show();
+	        $("#numFiled").hide();
+	        $("#charFiled").hide();
+	        $("#numType").hide();
+            $("#numType2").hide();
+	     }else if(dateText=="月内分组"){
+	        $("#dateType2").show();
+	        $("#dateType").hide();
+	        $("#charType").hide();
+	        $("#numType").hide();
+	        $("#dateFiled").show();
+	        $("#numFiled").hide();
+	        $("#charFiled").hide();
+	        $("#numType").hide();
+            $("#numType2").hide();
+	     }else if(dateText=="周内分组"){
+	        $("#dateType2").show();
+	        $("#dateType").hide();
+	        $("#charType").hide();
+	        $("#numType").hide();
+	        $("#dateFiled").show();
+	        $("#numFiled").hide();
+	        $("#charFiled").hide();
+	        $("#numType").hide();
+            $("#numType2").hide();
+	     }else if(dateText=="固定步长"){
+	        $("#dateType2").show();
+	        $("#dateType").hide();
+	        $("#charType").hide();
+	        $("#numType").hide();
+	        $("#dateFiled").show();
+	        $("#numFiled").hide();
+	        $("#charFiled").hide();
+	        $("#numType").hide();
+            $("#numType2").hide();
+	     }else if(dateText=="表达式"){
+	        $("#dateType2").show();
+	        $("#dateType").hide();
+	        $("#charType").hide();
+	        $("#numType").hide();
+	        $("#dateFiled").show();
+	        $("#numFiled").hide();
+	        $("#charFiled").hide();
+	        $("#numType").hide();
+            $("#numType2").hide();
+	     }
+        
+     }else if(temp=="2"){//字符
+        $("#charType").show();
+        $("#dateType").hide();
+        $("#dateType2").hide();
+        $("#numType").hide();
+        $("#charFiled").show();
+         $("#dateFiled").hide();
+         $("#numFiled").hide();
+     }else if(temp=="3"){//数字
+	     if(numText=="固定步长"){
+	        $("#numType").show();
+	        $("#numType2").hide();
+	        $("#dateType").hide();
+	        $("#dateType2").hide();
+	        $("#charType").hide();
+	        $("#numFiled").show();
+	        $("#dateFiled").hide();
+	        $("#charFiled").hide();
+	     }else if(numText=="自定义步长"){
+	        $("#numType2").show();
+	        $("#numType").hide();
+	        $("#dateType").hide();
+	        $("#dateType2").hide();
+	        $("#charType").hide();
+	        $("#numFiled").show();
+	        $("#dateFiled").hide();
+	        $("#charFiled").hide();
+	     }
+        
+     }
+});
+
+ //切换分组方式
+$(document).on('click', '#dateGroupMode >li ', function() {
+   var temp= $(this).val();
+   if(temp=="1"){//常规
+      $("#dateType2").show();
+      $("#dateType").hide();
+   }else if(temp=="2"){//年内分组
+      $("#dateType").show();
+      $("#dateType2").hide();
+   }else if(temp=="3"){//月内分组
+   
+   }else if(temp=="4"){//周内分组
+   
+   }else if(temp=="5"){//固定步长
+   
+   }
+}); 
+
+$(document).on('click', '#numGroupMode >li ', function() {
+   var temp= $(this).val();
+   if(temp=="1"){//固定步长
+        $("#numType").show();
+        $("#numType2").hide();
+   }else if(temp=="2"){//自定义步长
+       $("#numType2").show();
+       $("#numType").hide();
+   }
+});
+
+//日期初始化
+function   initDate(){
+   //日期初始化
+	$('.datepicker').datetimepicker({ 
+	　　minView: "month", //选择日期后，不会再跳转去选择时分秒 
+	　　format: "yyyy-mm-dd", //选择日期后，文本框显示的日期格式 
+	　　language: 'zh-CN', //汉化 
+	　　autoclose:true //选择日期后自动关闭 
+	});
+}
+
+</script>
+
+<body style="min-width:auto; height:auto; background:#fff;">
+<script type="text/javascript">
+
+//增加分组数值自定义步长
+$(document).on('click', '.addNumType2 ' , function(){
+	  $("#filed_time_num > div .delico").remove();	  
+      var div='<div><input type="text" placeholder="分组名称" name="text_group_name"><input type="text"  placeholder="起始" name="text_group_star">'
+      +'<select name="select_symbol_star"><option value="<" selected="selected"> &lt; </option> <option value="<=" > &lt;= </option> </select>'
+      +'至<select name="select_symbol_end"> <option value="<" selected="selected"> &lt; </option> <option value="<=" > &lt;= </option> </select>'
+      +'<input type="text"  placeholder="结束" name="text_group_end"><i class="fa fa-plus addNumType2"></i></div>'
+       $("#filed_time_num").append(div);       
+       if($("#filed_time_num > div").length > 1){
+			var delico = "<i class='fa fa-trash-o delico'></i>"
+			$("#filed_time_num > div").append(delico);
+		}       
+});
+$(document).on("click", "#filed_time_num > div .delico" , function(){
+	$(this).parent("div").remove();	
+	if($("#filed_time_num > div").length == 1){	    	
+		$("#filed_time_num > div .delico").remove();
+	}	
+});
+
+//增加分组日期常规
+$(document).on('click', '#addDateGroup ', function() {
+		$("#filed_time_dateType2 > div .delico").remove();
+       //加载日期
+		initDate();
+       var div='<div><input type="text" placeholder="分组名称" name="data_normal_name">'
+      +'<input type="text" class="datepicker" placeholder="起始日期" name="data_normal_star">'
+       +'至<input type="text"  placeholder="截至日期" class="datepicker" name="data_normal_end"><i class="fa fa-plus" id="addDateGroup"></i> </div>';
+        $("#filed_time_dateType2").append(div);
+        if($("#filed_time_dateType2 > div").length > 1){
+			var delico = "<i class='fa fa-trash-o delico'></i>"
+			$("#filed_time_dateType2 > div").append(delico);
+		}
+});
+$(document).on("click", "#filed_time_dateType2 > div .delico" , function(){
+	$(this).parent("div").remove();	
+	if($("#filed_time_dateType2 > div").length == 1){	    	
+		$("#filed_time_dateType2 > div .delico").remove();
+	}	
+});
+
+
+//增加分组年内分组
+$(document).on('click', '.addDateGroup2 ', function() {
+	   $("#filed_time_dateType > div .delico").remove();
+       var  div ='<div><input type="text" value="分组1" name="data_group_yearName"><select name="data_group_yearStar">'
+       +'<option value="1">1月</option>'
+       +'<option value="2">2月</option>'
+	   +'<option value="3">3月</option>'
+	   +'<option value="4">4月</option>'
+	   +'<option value="5">5月</option>'
+	   +'<option value="6">6月</option>'
+	   +'<option value="7">7月</option>'
+	   +'<option value="8">8月</option>'
+	   +'<option value="9">9月</option>'
+	   +'<option value="10">10月</option>'
+	   +'<option value="11">11月</option>'
+	   +'<option value="12">12月</option></select><select name="data_group_yearEnd">'
+	   +'<option value="1">1</option>'
+	   +'<option value="2">1</option>'
+	   +'<option value="3">1</option>'
+	   +'<option value="4">1</option>'
+	   +'<option value="5">1</option>'
+	   +'<option value="6">1</option>'
+	   +'<option value="7">1</option>'
+	   +'<option value="8">1</option>'
+	   +'<option value="9">1</option>'
+	   +'<option value="10">1</option>'
+	   +'<option value="11">1</option>'
+	   +'<option value="12">1</option>'
+	   +'<option value="13">1</option>'
+	   +'<option value="14">1</option>'
+	   +'<option value="15">1</option>'
+	   +'<option value="16">1</option>'
+	   +'<option value="17">1</option>'
+	   +'<option value="18">1</option>'
+	   +'<option value="19">1</option>'
+	   +'<option value="20">1</option>'
+	   +'<option value="21">1</option>'
+	   +'<option value="22">1</option>'
+	   +'<option value="23">1</option>'
+	   +'<option value="24">1</option>'
+	   +'<option value="25">1</option>'
+	   +'<option value="26">1</option>'
+	   +'<option value="27">1</option>'
+	   +'<option value="28">1</option>'
+	   +'<option value="29">1</option>'
+	   +'<option value="30">1</option></select>至<select name="data_group_yearStarTwo">'
+	   +'<option value="1">1月</option>'
+       +'<option value="2">2月</option>'
+	   +'<option value="3">3月</option>'
+	   +'<option value="4">4月</option>'
+	   +'<option value="5">5月</option>'
+	   +'<option value="6">6月</option>'
+	   +'<option value="7">7月</option>'
+	   +'<option value="8">8月</option>'
+	   +'<option value="9">9月</option>'
+	   +'<option value="10">10月</option>'
+	   +'<option value="11">11月</option>'
+	   +'<option value="12">12月</option></select><select name="data_group_yearEndTwo">'
+	   	   +'<option value="1">1</option>'
+	   +'<option value="2">1</option>'
+	   +'<option value="3">1</option>'
+	   +'<option value="4">1</option>'
+	   +'<option value="5">1</option>'
+	   +'<option value="6">1</option>'
+	   +'<option value="7">1</option>'
+	   +'<option value="8">1</option>'
+	   +'<option value="9">1</option>'
+	   +'<option value="10">1</option>'
+	   +'<option value="11">1</option>'
+	   +'<option value="12">1</option>'
+	   +'<option value="13">1</option>'
+	   +'<option value="14">1</option>'
+	   +'<option value="15">1</option>'
+	   +'<option value="16">1</option>'
+	   +'<option value="17">1</option>'
+	   +'<option value="18">1</option>'
+	   +'<option value="19">1</option>'
+	   +'<option value="20">1</option>'
+	   +'<option value="21">1</option>'
+	   +'<option value="22">1</option>'
+	   +'<option value="23">1</option>'
+	   +'<option value="24">1</option>'
+	   +'<option value="25">1</option>'
+	   +'<option value="26">1</option>'
+	   +'<option value="27">1</option>'
+	   +'<option value="28">1</option>'
+	   +'<option value="29">1</option>'
+	   +'<option value="30">1</option></select><i class="fa fa-plus addDateGroup2"></i></div>'	   
+	   $("#filed_time_dateType").append(div);
+	   if($("#filed_time_dateType > div").length > 1){
+			var delico = "<i class='fa fa-trash-o delico'></i>"
+			$("#filed_time_dateType > div").append(delico);
+		}
+});
+$(document).on("click", "#filed_time_dateType > div .delico" , function(){
+	$(this).parent("div").remove();	
+	if($("#filed_time_dateType > div").length == 1){	    	
+		$("#filed_time_dateType > div .delico").remove();
+	}	
+});
+
+</script>
+</body>
+</html>
+<div class="showbox" id="showbox">
+	<div class="show-form">
+		<div class="filed-title"><span>字段名称：</span><input type="text" class="field-name" id="filedName"></div>
+		<div class="filed-title">
+			<div class="filed-item">
+				<span>分组字段：</span>
+				<div class="filed-down">
+					<button type="button" class="field-name field-input" id="downlist"><!-- <em id="1">日期</em> --><i class="fa fa-angle-down"></i></button>
+					<ul class="filed-list" id="groupFiled">						
+					</ul>
+				</div>
+			</div>
+			<!-- 日期  -->
+			<div class="filed-item" id="dateFiled" style="display:none">
+				<span>分组方式：</span>
+				<div class="filed-down">
+					<button type="button" class="field-name field-input" id="dateGroupMode_button"><em value="1">常规</em><i class="fa fa-angle-down"></i></button>
+					<ul class="filed-list" id="dateGroupMode">
+						<li value="1">常规</li>
+						<li value="2">年内分组</li>
+						<li value="3">月内分组</li>
+						<li value="4">周内分组</li>
+						<li value="5">固定步长</li>
+						<!-- <li value="6">表达式</li> -->
+					</ul>
+				</div>				
+			</div>
+			<!-- 数字  -->
+			<div class="filed-item" id="numFiled" style="display:none">
+				<span>分组方式：</span>
+				<div class="filed-down">
+					<button type="button" class="field-name field-input" id="numGroupMode_button"><em value="1">固定步长</em><i class="fa fa-angle-down"></i></button>
+					<ul class="filed-list" id="numGroupMode">
+						<li value="1">固定步长</li>
+						<li value="2">自定义步长</li>
+						<!-- <li>表达式</li> -->
+					</ul>
+				</div>				
+			</div>
+		
+		</div>
+		<div class="filed-content" id="filed_content_data">
+			<!-- 日期 start  -->
+			<div class="filed-time" id="dateType" style="display:none">
+				<div class="filed-time-item scroll-x-filed" id="filed_time_dateType">
+					<div><input type="text" value="分组1" name="data_group_yearName"><select name="data_group_yearStar">
+							<option value="1">1月</option>
+							<option value="2">2月</option>
+							<option value="3">3月</option>
+							<option value="4">4月</option>
+							<option value="5">5月</option>
+							<option value="6">6月</option>
+							<option value="7">7月</option>
+							<option value="8">8月</option>
+							<option value="9">9月</option>
+							<option value="10">10月</option>
+							<option value="11">11月</option>
+							<option value="12">12月</option>
+						</select><select name="data_group_yearEnd">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+						</select>至<select name="data_group_yearStarTwo">
+							<option value="1">1月</option>
+							<option value="2">2月</option>
+							<option value="3">3月</option>
+							<option value="4">4月</option>
+							<option value="5">5月</option>
+							<option value="6">6月</option>
+							<option value="7">7月</option>
+							<option value="8">8月</option>
+							<option value="9">9月</option>
+							<option value="10">10月</option>
+							<option value="11">11月</option>
+							<option value="12">12月</option>
+						</select><select name="data_group_yearEndTwo">
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+						</select><i class="fa fa-plus addDateGroup2"></i></div>
+				</div>
+				<div class="filed-time-item">
+					<input type="text" value="未分组" id="NoCoverageArea">未覆盖的范围
+				</div>
+			</div>
+			
+			<div class="filed-time" id="dateType2" style="display:none">
+				<div class="filed-time-item scroll-x-filed" id="filed_time_dateType2">
+					<div><input type="text" placeholder="分组名称"  name="data_normal_name"><input type="text"  class="datepicker" id="startTime" name="data_normal_star" placeholder="起始日期">至<input type="text" class="datepicker" id="endTime" name="data_normal_end" placeholder="截至日期"><i class="fa fa-plus" id="addDateGroup"></i>
+					</div>
+				</div>
+				<div class="filed-time-item" id="NoCoverageArea">
+					<input type="text">未覆盖的范围
+				</div>
+			</div>
+			<!-- 日期 end  -->			
+			<!-- 数字 start  -->
+			<div class="filed-num" id="numType" style="display:none">
+				<div class="filed-num-step">
+					<div class="filed-title"><span>起始于：</span><input type="text" class="field-name" id="star_numType"></div>
+					<div class="filed-title"><span>终止于 ：</span><input type="text" class="field-name" id="end_numType"></div>
+					<div class="filed-title"><span>分组步长 ：</span><input type="text" class="field-name" id="step_numType"></div>
+				</div>
+			</div>			
+			<div class="filed-time" id="numType2" style="display:none">
+				<div class="filed-time-item scroll-x-filed" id="filed_time_num">
+					<div><input type="text" placeholder="分组名称" name="text_group_name"><input type="text"  placeholder="起始"  name="text_group_star"><select name="select_symbol_star">
+							<option value="<" selected="selected"> &lt; </option>
+							<option value="<=" > &lt;= </option>
+						</select>至<select name="select_symbol_end">
+							<option value="<" selected="selected"> &lt; </option>
+							<option value="<=" > &lt;= </option>
+						</select><input type="text"  placeholder="结束" name="text_group_end"><i class="fa fa-plus addNumType2" ></i></div>
+				</div>
+				<div class="filed-time-item">
+					<input type="text"  id="NoCoverageArea">未覆盖的范围
+				</div>
+			</div>			
+			<!-- 数字 end  -->			
+		</div>
+	</div>
+</div>
+

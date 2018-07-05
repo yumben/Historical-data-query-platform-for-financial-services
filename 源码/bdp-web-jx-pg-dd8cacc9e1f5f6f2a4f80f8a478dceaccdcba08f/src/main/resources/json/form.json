@@ -1,0 +1,12 @@
+[
+	{
+		"number":"20170509",
+		"fullName":"张三",	
+		"age":"56",
+		"sex":"0",
+		"nationa":"2",
+		"interest":["1","2"],
+		"datatime":"2017-05-16",
+		"intron":"我有一个小猫"
+	}
+]

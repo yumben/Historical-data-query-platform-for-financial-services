@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>调度监控</title>
+
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->	
+	<div class="wrap">
+		<div class="contentbox">
+		    <div class="title-query">
+              <em>调度监控</em>              
+            </div>
+			<div class="search-form-model">
+				<div class="item"><span>任务编号：</span><input id="tasksCode" class="form-control" placeholder="任务编号"/></div>
+				<div class="item"><span>任务名称：</span><input id="tasksName" class="form-control" placeholder="任务名称"/></div>
+				<div class="item"><button id="btn-search" class="btn btn-primary"><img src="../resource/images/search.png">查询</button></div>
+				<div class="item"><span class="addbtn" id="btnadd" title="新增"><i class="fa fa-plus"></i></span></div>
+			</div>
+			<div class="table-form">
+				<table id="table" data-id-field="tasks_code"
+					class="table table-striped">
+					<thead>
+						<tr>
+							<th data-field="runOrder">执行步骤</th>
+							<th data-field="tasks_code">任务编号</th>
+							<th data-field="tasks_name">任务名称</th>
+							<th data-field="tasks_type">任务类型</th>
+							<th data-field="tasks_desc">描述</th>
+							<th data-field="tasks_code" data-formatter="operateFormatter">操作</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- wrap end -->	
+	<div class="loading" >
+		<img src="/pms-web/resource/images/loading.gif" alt="" />
+	</div>
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+
+<script type="text/javascript">
+	var _json4Table = new $.json4Table({
+		action : "/pms-web/ajax/ajaxQueryTasks",
+		formatter : operateFormatter
+	});
+	$(document).ready(function() {
+		$("#btnadd").click(function() {
+			qiao.bs.dialog({
+				url : 'add_tasks.html',
+				title : '任务新增',
+				qubtn : '取消',
+				btn : true,
+				okbtn : '保存'
+			}, function(){
+				var tasks_code = $("#tasks_code").val();
+				var tasks_name = $("#tasks_name").val();
+				var tasks_type = $("#tasks_type").val();
+				var tasks_desc = $("#tasks_desc").val();
+				var shell_path = $("#shell_path").val();
+				var shell_master = $("#shell_master").val();
+				var username = $("#username").val();
+				var password = $("#password").val();
+				var para = $("#para").val();
+				var runOrder = $("#runOrder").val();
+				var params = {
+					"operate" : "add",
+					"vo.tasks_code" : tasks_code,
+					"vo.tasks_name" : tasks_name,
+					"vo.tasks_type" : tasks_type,
+					"vo.tasks_desc" : tasks_desc,
+					"vo.shell_path" : shell_path,
+					"vo.shell_master" : shell_master,
+					"vo.username" : username,
+					"vo.password" : password,
+					"vo.para" : para,
+					"vo.runOrder" : runOrder
+				};
+				ajaxSend("/pms-web/ajax/ajaxSubmitTasks", params, callfunction);
+				return true; 
+			});
+		});
+		$("#btn-search").click(function(){
+			var tasksCode=$("#tasksCode").val();
+			var tasksName=$("#tasksName").val();
+			var params = {
+				"TasksCode" : tasksCode,
+				"TasksName" : tasksName
+			};
+			_json4Table.drewTable(params);
+		});
+		var params = {};
+		_json4Table.drewTable(params);
+	});
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ,
+				'</a>  ',
+				'<a class="play" href="javascript:play(\'' + id
+						+ '\')" title="启动">',
+				'<i class="glyphicon glyphicon-play">启动</i>', '</a>' ]
+				.join('');
+	}
+	function edit(id) {
+		qiao.bs.dialog({
+			url : 'add_tasks.html',
+			title : '任务编辑',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback:function(){
+				var params = {
+					"vo.tasks_code" : id
+				};
+				ajaxSend("/pms-web/ajax/ajaxGetTasks", params, initVO);
+			}
+		}, function(){
+			var tasks_code = $("#tasks_code").val();
+			var tasks_name = $("#tasks_name").val();
+			var tasks_type = $("#tasks_type").val();
+			var tasks_desc = $("#tasks_desc").val();
+			var shell_path = $("#shell_path").val();
+			var shell_master = $("#shell_master").val();
+			var username = $("#username").val();
+			var password = $("#password").val();
+			var para = $("#para").val();
+			var runOrder = $("#runOrder").val();
+			var params = {
+				"operate" : "edit",
+				"vo.tasks_code" : tasks_code,
+				"vo.tasks_name" : tasks_name,
+				"vo.tasks_type" : tasks_type,
+				"vo.tasks_desc" : tasks_desc,
+				"vo.shell_path" : shell_path,
+				"vo.shell_master" : shell_master,
+				"vo.username" : username,
+				"vo.password" : password,
+				"vo.para" : para,
+				"vo.runOrder" : runOrder
+			};
+			ajaxSend("/pms-web/ajax/ajaxSubmitTasks", params, callfunction);
+			return true;
+		});
+	}
+	function initVO(data){
+	if (data.errorCode != null || data.errorMessage != null) {
+			alert("加载失败！");
+		} else {
+			$("#tasks_code").val(data.vo.tasks_code);
+			$("#tasks_code").attr({"disabled":"disabled"});
+			$("#tasks_name").val(data.vo.tasks_name);
+			$("#tasks_type").val(data.vo.tasks_type);
+			$("#tasks_desc").val(data.vo.tasks_desc);
+			$("#shell_path").val(data.vo.shell_path);
+			$("#shell_master").val(data.vo.shell_master);
+			$("#username").val(data.vo.username);
+			$("#password").val(data.vo.password);
+			$("#para").val(data.vo.para);
+			$("#runOrder").val(data.vo.runOrder);
+		}
+	}
+	function remove(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除该任务？"
+		}, function() {
+			var params = {
+				"operate" : "del",
+				"vo.tasks_code" : id
+			};
+			ajaxSend("/pms-web/ajax/ajaxSubmitTasks", params, callfunction);
+		}, function() {
+		});
+	}
+	
+	function play(id) {
+		var params = {
+			"operate" : "run",
+			"vo.tasks_code" : id
+		};
+		$(".loading").show();
+		ajaxSend("/pms-web/ajax/ajaxSubmitTasks", params, function(data){
+			$(".loading").hide();
+		});
+	}
+	
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		var params = {};
+		_json4Table.drewTable(params);
+	}
+  
+</script>
+</body>
+</html>

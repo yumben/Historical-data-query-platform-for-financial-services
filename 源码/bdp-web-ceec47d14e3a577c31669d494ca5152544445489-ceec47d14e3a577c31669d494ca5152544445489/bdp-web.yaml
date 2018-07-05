@@ -1,0 +1,58 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: bdp-web
+  name: bdp-web
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bdp-web
+  template:
+    metadata:
+      labels:
+        app: bdp-web
+    spec:
+      containers:
+      - name: bdp-web
+        image: 192.168.31.72:5000/bdp-web:version	
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 3100
+          protocol: TCP
+        volumeMounts: 
+            - name: timezone-pv 
+              mountPath: /etc/timezone
+            - name: localtime-pv 
+              mountPath: /etc/localtime
+      volumes:
+        - name: timezone-pv
+          hostPath:
+           path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: localtime-pv
+          hostPath:
+           path: /etc/localtime
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: bdp-web
+  name: bdp-web
+  namespace: test
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30307
+    name: web
+  - port: 3100
+    targetPort: 3100
+    nodePort: 3100
+    name: jmx
+  selector:
+    app: bdp-web

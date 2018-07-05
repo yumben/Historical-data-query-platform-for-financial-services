@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>数据源配置</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->	
+	<div class="wrap">
+		<div class="content">
+		       <div class="title-query">
+	              <em>数据源配置</em>                  
+               </div>
+			<div class="search-form-model">
+				<div class="item">
+					<span>配置名称：</span><input id="querydataSourceName"
+						class="form-control" placeholder="请输入配置名称">
+				</div>
+				<div class="item">
+					<button id="btn-search" class="btn btn-primary">
+						<img src="../resource/images/search.png">查&nbsp;&nbsp;询
+					</button>
+				</div>
+				<div class="item">
+					<button id="btnadd" class="btn btn-success">+ 新&nbsp;&nbsp;增</button>
+				</div>
+				<div class="item">
+					<button id="btnBatch" class="btn btn-success">批量导入</button>
+				</div>	
+			</div>
+			<div class="table-form">
+				<table id="table" data-id-field="dataSourceId"
+					class="table table-striped">
+					<thead>
+						<tr>
+							<!-- <th data-field="dataSourceId">唯一键</th> -->
+							<th data-field="dataSourceName">数据库名</th>
+							<th data-field="dataSourceNameCN">数据库中文名</th>
+							<th data-field="post">服务器</th>
+							<th data-field="host">端口</th>
+							<th data-field="userName">用户名</th>
+							<th data-field="password">密码</th>
+							<th data-field="dataType">数据源类型</th>
+							<th data-field="desc">描述</th>
+							<th data-field="operateFormatter" data-formatter="operateFormatter">操&nbsp;&nbsp;作</th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+
+<script type="text/javascript">
+	var _json4Table = new $.json4Table({//ok
+		action : "/pms-web/ajax/ajaxQueryDataSource",
+		formatter : operateFormatter
+	});
+
+	$(document).ready(
+			function() {
+				var params = {};
+				_json4Table.drewTable(params);
+				$("#btnadd").click(
+						function() {//Ok
+							qiao.bs.dialog({
+								url : 'add_DataSource.html',
+								title : '新增数据源配置',
+								qubtn : '取消',
+								btn : true,
+								okbtn : '保存'
+							}, function() {
+								var dataSourceId = $("#adddataSourceId").val();
+								var dataSourceName = $("#adddataSourceName").val();
+								var dataSourceNameCN = $("#adddataSourceNameCN").val();
+								var host = $("#addhost").val();
+								var post = $("#addpost").val();
+								var userName = $("#adduserName	").val();
+								var password = $("#addpassword").val();
+								var dataType = $("#adddataType	").val();
+								var desc = $("#adddesc").val();
+								var params = {
+									"operate" : "add",
+									"vo.dataSourceId" : dataSourceId,
+									"vo.dataSourceName" : dataSourceName,
+									"vo.dataSourceNameCN" : dataSourceNameCN,
+									"vo.host" : host,
+									"vo.post" : post,
+									"vo.userName" : userName,
+									"vo.password" : password,
+									"vo.dataType" : dataType,
+									"vo.desc" : desc
+								};
+								ajaxSend("/pms-web/ajax/ajaxSubmitDataSource",
+										params, callfunction);
+								return true;
+							});
+						});
+				$("#btnBatch").click(function() {
+					window.location.href = "import_dataSource.html?identify=110";
+				});
+				$("#btn-search").click(function() {
+					var dataSourceName = $("#querydataSourceName").val();
+					var params = {
+						"dataSourceName" : dataSourceName
+					};
+					_json4Table.drewTable(params);
+				});
+			});
+
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>',
+				'</a>  ' ].join('');
+	}
+
+	function edit(id) {
+		qiao.bs.dialog({
+			url : 'add_DataSource.html',
+			title : '编辑数据源配置',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback : function() {
+				var params = {
+					"vo.dataSourceId" : id
+				};
+				ajaxSend("/pms-web/ajax/ajaxGetDataSource", params, initVO);
+			}
+
+		},
+				function() {
+					var dataSourceId = $("#adddataSourceId").val();
+					var dataSourceName = $("#datadataSourceName").val();
+					var dataSourceNameCN = $("#dataSourceNameCN").val();
+					var host = $("#addhost").val();
+					var post = $("#addpost").val();
+					var userName = $("#adduserName").val();
+					var password = $("#addpassword").val();
+					var dataType = $("#adddataType	").val();
+					var desc = $("#adddesc").val();
+					var params = {
+						"operate" : "edit",
+						"vo.dataSourceId" : dataSourceId,
+						"vo.dataSourceName" : dataSourceName,
+						"vo.dataSourceNameCN" : dataSourceNameCN,
+						"vo.host" : host,
+						"vo.post" : post,
+						"vo.userName" : userName,
+						"vo.password" : password,
+						"vo.dataType" : dataType,
+						"vo.desc" : desc
+					};
+					ajaxSend("/pms-web/ajax/ajaxSubmitDataSource", params,
+							callfunction);
+					return true;
+				});
+	}
+	function initVO(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("加载失败！");
+		} else {
+			$("#adddataSourceId").val(data.vo.dataSourceId);
+			$("#adddataSourceId").attr({
+				"disabled" : "disabled"
+			});
+			$("#adddataSourceName").val(data.vo.dataSourceName);
+			$("#adddataSourceNameCN").val(data.vo.dataSourceName);
+			$("#addhost").val(data.vo.host);
+			$("#addpost").val(data.vo.post);
+			$("#adduserName	").val(data.vo.userName);
+			$("#addpassword").val(data.vo.password);
+			$("#adddataType	").val(data.vo.dataType);
+			$("#adddesc").val(data.vo.desc);
+		}
+	}
+
+	function remove(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除该配置？"
+		},
+				function() {
+					var params = {
+						"operate" : "del",
+						"vo.dataSourceId" : id
+					};
+					ajaxSend("/pms-web/ajax/ajaxSubmitDataSource", params,
+							callfunction);
+				}, function() {
+				});
+	}
+
+	function play(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除该任务？"
+		},
+				function() {
+					var params = {
+						"operate" : "run",
+						"vo.dataSourceId" : id
+					};
+					ajaxSend("/pms-web/ajax/ajaxSubmitDataSource", params,
+							callfunction);
+				}, function() {
+				});
+
+	}
+
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		var params = {};
+		_json4Table.drewTable(params);
+	}
+
+	function showLoad(tipInfo) {
+		var eTip = document.createElement('div');
+		eTip.setAttribute('id', 'tipDiv');
+		eTip.style.position = 'absolute';
+		eTip.style.display = 'none';
+		eTip.style.border = 'solid 0px #D1D1D1';
+		eTip.style.backgroundColor = '#4B981D';
+		eTip.style.padding = '5px 15px';
+		eTip.style.top = '200px';
+		eTip.style.right = '700px';
+		eTip.style.width = '100%';
+		eTip.innerHTML = '<img src=\'/pms-web/resource/images/loading.jpg\' style=\'\' />';
+		try {
+			document.body.appendChild(eTip);
+		} catch (e) {
+		}
+		//$("#tipDiv").css("float", "right");  
+		//$("#tipDiv").css("z-index", "99");  
+		$('#tipDiv').fadeIn();
+	}
+
+	function closeLoad() {
+		$('#tipDiv').fadeOut();
+	}
+</script>
+
+	
+</body>
+</html>

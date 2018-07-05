@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>批量导入数据表</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<div class="prog">
+		<div class="w1170">
+			<ul>
+				<li class="lan">1.选择批量文件<span>></span>
+				</li>
+				<li>2.完成</li>
+			</ul>
+		</div>
+	</div>
+	<div id="all">
+		<div id="main" class="w1170 clearfix">
+			<div class="content">
+				<div class="data_form current">
+
+					<div>
+						<form action="/pms-web/ImportDataTableAction" method="post" enctype="multipart/form-data" id="form1">
+							<input type="file" name="file" id="file" size="50"/>
+							<br/>				
+							<button id="up"  class="btn btn-success">上传	</button>						
+						</form>
+						<br/>
+						<button id="btnDowm" class="btn btn-success">模板下载</button>&nbsp;&nbsp;&nbsp;&nbsp;	
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#btnDowm").click(function() {
+			window.location.href = "/pms-web/download/dataTable.rar";
+		});
+		 var options = {
+		 success: function (data) {
+        	window.location.href = "DataTableConfig.html";
+        	}
+    	};
+ 
+        // ajaxForm
+        $("#up").click(function (){
+        	$("#form1").ajaxSubmit(options);
+        });
+	});
+	
+	</script>
+</body>
+</html>

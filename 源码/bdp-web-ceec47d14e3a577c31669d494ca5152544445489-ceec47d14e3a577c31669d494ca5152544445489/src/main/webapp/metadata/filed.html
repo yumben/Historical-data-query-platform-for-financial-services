@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+<title>元数据管理</title>
+</head>
+<body style="min-width:auto; height:auto; background:#fff;">
+
+<script type="text/javascript">
+	$(document).ready(function($) {
+		var parentId = GetQueryString("parentId");
+		var classId = GetQueryString("classId");
+		var param = {"metadataId" : parentId};
+		var params = {"classId" : classId,"parentId":parentId,"flag":"metamodelClassPropertyVO"};
+		//ajaxSend("/pms-web/ajax/ajaxAddMetadataMenuAction",param,success);
+		ajaxSendService(metadataControl,param,"metadata/getMetadataJsonById",success);
+		
+		//ajaxSend("/pms-web/ajax/ajaxQueryMetamodelPropertyAction",params,showProperty);
+		ajaxSendService(metadataControl,params,"metadata/ajaxQueryMetamodelPropertyAction", showProperty);
+		
+		
+	});
+	
+	function success(data){
+	    var data = string4jsonObject(data)
+	    var list = data.list;
+		$("#parentId").attr("value",list.metadataName);
+	}
+	
+	var propertyId = new Array();
+	function showProperty(data) {
+		var mList = data.mList;
+		var table = $("#property");
+		var dbFlag = data.dbFlag;
+		var dictionaryVOList = data.dictionaryVOList;
+		table.empty();
+		propertyId.length = 0;
+		$.each(mList, function(i, metamodelClassPropertyVO) {
+			if(metamodelClassPropertyVO.isshow=="否"){//是否显示
+			}else{
+			propertyId.push(metamodelClassPropertyVO.propertyId);
+			var tr = $("<div class='basic'></div>");
+			tr.appendTo(table);
+			var th = $("<span>" + metamodelClassPropertyVO.propertyName + ":</span>");
+			th.appendTo(tr);
+			//var td = $("<td>" + "</td>");
+			//td.appendTo(tr);
+
+
+			//alert("dbFlag="+dbFlag+"####metamodelClassPropertyVO.editcontrolName="+metamodelClassPropertyVO.editcontrolName);
+			if (dbFlag != null && dbFlag == "db") { //数据库
+				if (metamodelClassPropertyVO.editcontrolName == "下拉框") {
+					var select;
+					var options;
+					select = $("<select class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' =iscannull='" + metamodelClassPropertyVO.iscannull + "' id='" + metamodelClassPropertyVO.propertyId + "' isshow=" + metamodelClassPropertyVO.isshow + "  name='" + metamodelClassPropertyVO.propertyName + "' >" + "</select>");
+					$.each(dictionaryVOList, function(j, e) {
+						options = $("<option value='" + e.value + "'>" + e.valuedescribe + "</option>");
+						select.append(options);
+					});
+					select.appendTo(tr);
+					showRetMsg(metamodelClassPropertyVO.propertyId, metadataPropertyVOList);
+				} else {
+					if ("是" == metamodelClassPropertyVO.ispassword) {
+						var input = $("<input type='password' iscannull='" + metamodelClassPropertyVO.iscannull + "' code='" + metamodelClassPropertyVO.propertyCode + "' name=" + metamodelClassPropertyVO.propertyName + " iscannull=" + metamodelClassPropertyVO.iscannull + " isshow=" + metamodelClassPropertyVO.isshow + " maxlength='" + metamodelClassPropertyVO.lengths + "' "
+							+ " class='form-control'  id='" + metamodelClassPropertyVO.propertyId + "' value='" + "'>" + "</input>");
+
+					} else {
+						var input = $("<input type='text' iscannull='" + metamodelClassPropertyVO.iscannull + "' code='" + metamodelClassPropertyVO.propertyCode + "' name=" + metamodelClassPropertyVO.propertyName + " iscannull=" + metamodelClassPropertyVO.iscannull + " isshow=" + metamodelClassPropertyVO.isshow + " maxlength='" + metamodelClassPropertyVO.lengths + "' "
+							+ " class='form-control'  id='" + metamodelClassPropertyVO.propertyId + "' value='" + "'>" + "</input>");
+
+					}
+					input.appendTo(tr);
+				}
+        	}else if(data.dbFlag !=null && data.dbFlag == "filed"){
+				if (metamodelClassPropertyVO.editcontrolName == "下拉框") {
+					var select;
+					var options;
+
+					select = $("<select  class='form-control' filedType='filedType' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' id='" + metamodelClassPropertyVO.propertyId + "' isshow=" + metamodelClassPropertyVO.isshow + "  name='" + metamodelClassPropertyVO.propertyName + "' >" + "</select>");
+					$.each(dictionaryVOList, function(j, e) {
+						options = $("<option value='" + e.value + "#" + e.type + "'>" + e.valuedescribe + "</option>");
+						select.append(options);
+					});
+					select.appendTo(tr);
+
+				} else if (metamodelClassPropertyVO.propertyName == "字段长度") {
+					var input = $("<input  type='text' "
+						+ "class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' isshow=" + metamodelClassPropertyVO.isshow + " id='" + metamodelClassPropertyVO.propertyId + "'>" + "</input>");
+					input.appendTo(tr);
+				} else if (metamodelClassPropertyVO.propertyName == "字段备注") {
+					var input = $("<input type='text' "
+						+ "class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' isshow=" + metamodelClassPropertyVO.isshow + " id='" + metamodelClassPropertyVO.propertyId + "'>" + "</input>");
+					input.appendTo(tr);
+				}else if (metamodelClassPropertyVO.propertyName == "字段名") {
+					var input = $("<input type='text' "
+						+ "class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' isshow=" + metamodelClassPropertyVO.isshow + " id='" + metamodelClassPropertyVO.propertyId + "'>" + "</input>");
+					input.appendTo(tr);
+				} else {
+
+					var select;
+					var options;
+					select = $("<select  class='form-control' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' id='" + metamodelClassPropertyVO.propertyId + "' isshow=" + metamodelClassPropertyVO.isshow + "  name='" + metamodelClassPropertyVO.propertyName + "' >" + "</select>");
+					options = $("<option value=''>请选择</option><option value='Y'>是</option><option value='N'>否</option>");
+					select.append(options);
+
+					select.appendTo(tr);
+
+				}
+
+
+			} else { //其他
+				var input = $("<input type='text' code='" + metamodelClassPropertyVO.propertyCode + "' iscannull='" + metamodelClassPropertyVO.iscannull + "' name=" + metamodelClassPropertyVO.propertyName + " iscannull=" + metamodelClassPropertyVO.iscannull + " isshow=" + metamodelClassPropertyVO.isshow + " maxlength='" + metamodelClassPropertyVO.lengths + "' "
+					+ " class='form-control'  id='" + metamodelClassPropertyVO.propertyId + "' value='" + "'>" + "</input>");
+				input.appendTo(tr);
+			}
+
+		}
+		});
+
+		
+	}
+</script>
+
+</body>
+</html>
+<!--字段弹出-->
+<div class="dialog" id="metaListcon">     
+	 <h3 class="title-basic ml mt"><em>基本信息</em></h3>
+	 <div class="metadata-dialog-basic ml mt"> 
+	 	<div class="basic">
+	 		<span>元数据代码:</span>
+	 		<input type="text" class="form-control" id="code">
+	 	</div>
+	 	<div class="basic">
+	 		<span>元数据名称:</span>
+	 		<input type="text" class="form-control" id="name">
+	 	</div>
+	 	<div class="basic">
+	 		<span>上下文路径:</span>
+	 		<input type="text" class="form-control" readonly id="parentId">
+	 	</div>	   
+   </div>
+   <h3 class="title-basic ml mt"><em>属性信息</em></h3>
+   <div class="metadata-dialog-basic ml mt" id="property">
+   		   </div>
+   
+</div>

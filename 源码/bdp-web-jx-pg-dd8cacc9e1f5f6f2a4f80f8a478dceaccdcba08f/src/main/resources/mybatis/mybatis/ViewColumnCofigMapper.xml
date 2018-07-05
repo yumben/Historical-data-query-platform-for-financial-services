@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.dao.ViewColumnCofigMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.ViewColumnCofig">
+		<id column="column_id" property="columnId" />
+		<result column="order_index" property="orderIndex" />
+		<result column="column_code" property="columnCode" />
+		<result column="column_name" property="columnName" />
+		<result column="column_type" property="columnType" />
+		<result column="column_data_type" property="columnDataType" />
+		<result column="table_id" property="tableId" />
+		<result column="is_pk" property="isPk" />
+		<result column="is_insert" property="isInsert" />
+		<result column="is_edit" property="isEdit" />
+		<result column="is_search" property="isSearch" />
+		<result column="is_view" property="isView" />
+		<result column="links" property="links" />
+		<result column="column_desc" property="columnDesc" />
+		<result column="column_data_value" property="columnDataValue" />
+		<result column="view_group" property="viewGroup" />
+	</resultMap>
+
+</mapper>

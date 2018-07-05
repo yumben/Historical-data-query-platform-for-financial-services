@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>index</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"--> 
+	<!-- 中间内容 -->
+	<div class="wrap frameboxConfig">
+		<div class="configDetal"><button class="btn btn-primary" id="btnConfig">选择配置表</button></div>
+		<div class="tableConfig topConfig">
+			<h3>表格信息配置</h3>
+			<div class="tableConDetail" id="tableConfig">
+				<div class="attrConfig" style="display:none">
+					<span>表id：</span>
+					<input class="form-control" type="text" name="table_id" disabled="disabled">
+				</div>
+				<div class="attrConfig">
+					<span>元数据编码：</span>
+					<input class="form-control" type="text" name="metadata_code" disabled="disabled">
+				</div>				
+				<div class="attrConfig">
+					<span>表名：</span>
+					<input class="form-control" type="text" name="table_code" disabled="disabled">
+				</div>	
+				<div class="attrConfig">
+					<span>表中文名：</span>
+					<input class="form-control" type="text" name="table_name">
+				</div>
+				<div class="attrConfig" style="display:none">
+					<span>元数据：</span>
+					<input class="form-control" type="text" name="metadata_id" disabled="disabled">
+				</div>
+				<div class="attrConfig">
+					<span>展示文字：</span>
+					<input class="form-control" type="text" name="view_title">
+				</div>
+				<div class="attrConfig">
+					<span>展示类型：</span>
+					<select class="form-control" name="view_type"><option value="table">表格</option><option value="form">表单</option></select>
+				</div>				
+				<div class="attrConfig">
+					<span>主键：</span>
+					<input class="form-control" type="text" name="pk_field">
+				</div>
+				<br/>
+				<div class="attrConfig">
+					<label><input type="checkbox" value="0" name="is_insert">是否有增加操作</label>
+				</div> 
+				<div class="attrConfig">
+					<label><input type="checkbox" value="0" name="is_edit">是否有修改操作</label>
+				</div> 
+				<div class="attrConfig">
+					<label><input type="checkbox" value="0" name="is_search">是否有查询操作</label>
+				</div>
+				<div class="attrConfig">
+					<label><input type="checkbox" value="0" name="is_delete">是否有删除操作</label>
+				</div>
+			</div>
+		</div>
+		<div class="tableConfig">
+			<h3>属性信息配置</h3>
+			<div class="tableConDetail" id="attrbox">
+			</div>
+		</div>
+	</div>		
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"--> 
+</body>
+</html>
+<link rel="stylesheet" type="text/css" href="../resource/page/css/fram.css">
+<script type="text/javascript" src="../resource/page/js/frameComment.js"></script>
+<script type="text/javascript" src="../resource/page/js/FrameConfig.js"></script>
+

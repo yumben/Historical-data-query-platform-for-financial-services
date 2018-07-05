@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.infohold.mapper.MetadataDictTypeMapper">
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="cn.com.infohold.entity.ServiceUrl">
+		<id column="url_id" property="urlId" />
+		<result column="url_code" property="urlCode" />
+		<result column="url_name" property="urlName" />
+		<result column="url_value" property="urlValue" />
+	</resultMap>
+
+	<select id="selectMetadataDictTypeByIds" resultType="java.util.HashMap">
+		select * from metadata_dict_type where id in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+
+	<select id="selectParameterListByIds" resultType="java.util.HashMap">
+		SELECT para_type , para_value as value,para_name as label,'' as parent
+		FROM parameter_list where para_type in
+		<foreach collection="ids" item="id" index="index" open="("
+			close=")" separator=",">
+			#{id}
+		</foreach>
+		order by para_type,para_value
+	</select>
+	<select id="selectMetadataDictType" resultType="java.util.HashMap">
+		select * from
+		metadata_dict_type where dicti_type=#{dicti_type}
+	</select>
+
+	<select id="selectParameterList" resultType="java.util.HashMap">
+		SELECT
+		para_type,para_value as value,para_name as label,'' as parent FROM
+		parameter_list order by para_type,para_value
+	</select>
+</mapper>

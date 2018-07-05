@@ -1,0 +1,51 @@
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  labels:
+    app: bdp-easyquery-service
+  name: bdp-easyquery-service
+  namespace: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bdp-easyquery-service
+  template:
+    metadata:
+      labels:
+        app: bdp-easyquery-service
+    spec:
+      containers:
+      - name: bdp-easyquery-service
+        image: 192.168.31.72:5000/bdp-easyquery-service:version	
+        ports:
+        - containerPort: 9898
+          protocol: TCP
+        volumeMounts: 
+            - name: timezone-pv 
+              mountPath: /etc/timezone
+            - name: localtime-pv 
+              mountPath: /etc/localtime
+      volumes:
+        - name: timezone-pv
+          hostPath:
+           path: /usr/share/zoneinfo/Asia/Shanghai
+        - name: localtime-pv
+          hostPath:
+           path: /etc/localtime
+---
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    app: bdp-easyquery-service
+  name: bdp-easyquery-service
+  namespace: test
+spec:
+  type: NodePort
+  ports:
+  - port: 9898
+    targetPort: 9898
+    nodePort: 30305
+  selector:
+    app: bdp-easyquery-service

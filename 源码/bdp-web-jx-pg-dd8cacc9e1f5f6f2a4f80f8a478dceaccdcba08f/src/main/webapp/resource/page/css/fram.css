@@ -1,0 +1,88 @@
+html{width:100%;padding:0;margin:0;height:100%;}
+body{font-family:'微软雅黑';color:#606060;font-size:12px;width:100%;height:100%;padding:0;margin:0;min-width:1170px;background:#f6f7f8;}
+h1,h2,h3,h4,h5,h6{margin:0;}
+img{border:none 0;}
+object{outline:none;}
+ul{padding:0;margin:0;}
+li{list-style:none;}
+i,em{ font-style: normal; }
+input::-ms-clear{display:none;width:0;height:0;}
+input[type="radio"],input[type="checkbox"]{box-shadow:none;border-style:none;}
+button,.btn{font-family:"Microsoft YaHei";padding:4px 21px;}
+.clearfix{overflow:hidden;}
+.fl{float:left;}
+.fr{float:right;}
+a{text-decoration:none;}
+a:hover,a:focus{text-decoration:none;outline:none;}
+:focus,button{outline: 0;}
+
+button, .btn{padding:0px 12px;}
+.form-control{ width: 180px; height: 30px; line-height: 30px; display: inline-block; padding-top: 0; padding-bottom: 0}
+label{font-weight: normal; display: inline-block; padding-right: 5px; position: relative;padding-left: 10px;top: 4px;}
+label input{ position: relative; top: 2px;right: 5px; }
+
+.framebox,.frameboxConfig,.frameForm{ background: #fff; border: 1px solid #e7e7e7;padding:12px;}
+.text-form h3,.table-form h3{ font-size: 14px; padding: 10px 0 8px; margin-bottom: 10px; border-bottom: 1px solid #e7e7e7; font-weight: bold; }
+.text-form > div,.text-search > div,.dialog > div{ display: inline-block; padding-right: 15px;  padding-bottom: 15px; vertical-align: top;}
+.text-form > div span,.text-search > div span,.dialog > div span{ vertical-align: top;line-height: 30px; }
+.text-form > div .btn,.text-search > div .btn{ margin-right: 8px; }
+.text-search > div.btnground .btn{margin-right: 0px;}
+.text-search > div.btnground{padding-right: 8px;}
+.table th{ background: #e7e7e7; text-align: center; }
+.table td a{ padding-left:10px; cursor: pointer; }
+.table td a:hover{ color: #f00; }
+.text-search{ margin-bottom: 10px; }
+.text-form > div.btnGround{ display: block; text-align: center; }
+/*弹窗*/
+.showbox{ padding: 20px; padding-bottom: 0 }
+.showbox > div{ padding-right: 0; padding-bottom: 10px; display: inline-block; }
+.showbox span{display:inline-block;min-width:80px;text-align:right}
+
+.table-form td p.noList,.noList{ font-size:14px; padding:10px 0; text-align:center}
+/*分页*/
+.page{ padding-top:15px;}
+.page span,.page em{ display:inline-block;padding-right:5px;}
+.page span{border-radius: 4px; color: #999;border: 1px solid #e6e7ed; padding:5px 12px;margin-right: 5px; }
+
+/*配置界面*/
+.frameboxConfig{position: relative;}
+.configDetal{position:absolute;left:120px;top:13px;}
+.tableConfig{padding-bottom:15px;}
+.tableConfig h3{font-size: 14px; padding: 10px 0 8px; margin-bottom: 10px; border-bottom: 1px solid #e7e7e7; font-weight: bold;}
+.tableConDetail{line-height: 30px;}
+.attrConfig{display:inline-block;padding-bottom:5px;margin-right:20px;}
+.attrConfig span{display:inline-block;min-width:80px;text-align:right;padding-left:5px;padding-right:5px;}
+.attrConfig label{top:2px;left:20px;}
+.attrbox{border:1px solid #ccc; padding:15px 10px 0 100px; border-radius:5px; margin-bottom:10px; position:relative;padding-bottom:10px;}
+.btngroundForm{ text-align:center;padding:15px 10px 20px;}
+.btngroundForm button{margin-right:8px;}
+.sort{position:absolute;left:15px; top:18px;}
+.sortinput{width:50px;}
+.topConfig .attrConfig{margin-left:45px;}
+.tableNav{line-height:24px;}
+.tableNav li h5{padding:5px 0;cursor:pointer;}
+.tableNav li ul{padding-left:15px;display:none;}
+.tableNav li input{margin-right:3px;position: relative;top: 2px;}
+.attrConfigFk{margin-right:10px;}
+.attrConfigFk span{min-width:40px;}
+.attrConfigFk .form-control{width:120px;}
+
+/*表单界面*/
+.formList h3{ margin-bottom:20px;text-align:left;}
+.formList > div.formBtnList{ text-align:center;padding-top:20px; display:block}
+.formList > div > span{min-width:150px;display:inline-block;text-align:right;padding-right:5px;}
+input.datepicker[readonly]{background:url("../../img/calendar-blue-32.png") no-repeat 6px 4px #fff;padding-left:32px;}
+.formList > div.subCon{ display:block; border-radius:0 0 4px 4px; border:1px solid #e7e7e7;padding:15px 15px 0;margin-bottom:15px;}
+.formList .item{display: inline-block; padding-right: 15px;  padding-bottom: 15px; vertical-align: top;width:330px;}
+.formList .item span{min-width: 130px;display: inline-block;text-align:right;padding-right:3px;}
+.subTitle{position:relative;}
+.subTitle span{ display:inline-block;padding:8px 15px; border:1px solid #e7e7e7;border-bottom:0;border-radius:4px 4px 0 0; background:#e9e9e9}
+.subTitle i{position:absolute;right:3px; top:13px;cursor:pointer;}
+
+.tableScroll{overflow-y:hidden;overflow-x:auto}
+.tableScroll .table-bordered > thead > tr > th,
+.tableScroll .table-bordered > tbody > tr > th,
+.tableScroll .table-bordered > tfoot > tr > th,
+.tableScroll .table-bordered > thead > tr > td,
+.tableScroll .table-bordered > tbody > tr > td,
+.tableScroll .table-bordered > tfoot > tr > td{border:0;}

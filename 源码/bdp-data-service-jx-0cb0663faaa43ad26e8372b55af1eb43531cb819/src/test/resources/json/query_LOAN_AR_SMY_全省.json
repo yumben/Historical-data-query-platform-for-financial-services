@@ -1,0 +1,34 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "loan_ar_smy_20171026_2",
+    "if_count": false,
+    "limit": 999999,
+    "fields": [
+        {
+            "name": "ou_ip_id"
+        }, 
+        {
+            "function": "count_distinct",
+            "alias": "count1",
+            "name": "cst_id"
+        },
+        {
+            "function": "count",
+            "alias": "count2",
+            "name": "ou_ip_id"
+        },
+        {
+            "function": "sum",
+            "alias": "sum1",
+            "name": "ln_issu_amt"
+        },
+        {
+            "function": "sum",
+            "alias": "sum2",
+            "name": "ln_bal"
+        }
+    ] ,
+    "groups":[ {"field":"ou_ip_id"}  ]
+}

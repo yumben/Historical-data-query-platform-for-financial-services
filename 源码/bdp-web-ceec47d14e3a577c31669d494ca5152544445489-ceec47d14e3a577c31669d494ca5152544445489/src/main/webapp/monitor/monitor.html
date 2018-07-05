@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="../resource/style/GooFlow2.css">
+<script type="text/javascript" src="../resource/js/monitor/GooFunc.js"></script>
+<script type="text/javascript" src="../resource/js/monitor/GooFlow.js"></script>
+<script type="text/javascript"
+	src="../resource/js/monitor/GooFlow_color.js"></script>
+<title>监控调度系统</title>
+<!--[if lt IE 9]>
+<?import namespace="v" implementation="#default#VML" ?>
+<![endif]-->
+<script type="text/javascript" src="../resource/js/monitor/monitor.js"></script>
+
+</head>
+<body>
+<!-- <div class="subtitle"><span>监控器</span></div> -->
+<div class="state">
+    <button type="button" class="btn btn-default fr" id="btnback"><img src="../resource/img/query-ico7.png"> 返回</button>
+	<em>执行状态：</em>
+	<span><i></i>待执行</span>
+	<span class="Wait"><i></i>等待</span>
+	<span class="Execute"><i></i>执行</span>
+	<span class="Success"><i></i>成功</span>
+	<span class="Fail"><i></i>失败</span>
+</div>
+ <input type="hidden" id="pid"/>
+<div class="detail-infor">
+    <div id="demo"></div>
+</div> 
+<script type="text/javascript">
+	$(function(){
+		$("#btnback").click(function() {
+			window.location.href = "/bdp-web/monitor/monitorTableList.html?menuCode=187";
+	    });
+	})
+</script>
+</body>
+</html>

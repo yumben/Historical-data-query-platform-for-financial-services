@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!-- <link rel="stylesheet" type="text/css" href="../resource/style/font-awesome.min.css">
+ <link rel="stylesheet" type="text/css" href="../resource/style/font-awesome3.css"> 
+<link rel="stylesheet" type="text/css" href="../resource/style/mainModel.css">  -->
+
+
+<title>指标定义</title>
+</head>
+
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<!-- wrap star --> 
+  <div class="wrap">
+      <!-- asider start -->
+      <div class="asider">
+           <div class="chart-l-box pb1 borderb mb1 height01">
+              <h3><span class="Choice-btn"><i class="fa fa-plus-square-o"></i></span>选择统计对象</h3>
+              <ul class="query-entry" id="object">                        
+              </ul>
+           </div>
+           <div class="chart-l-box height02">
+              <h3><i class="fa fa-plus addFilebtn fr"></i><span class="filesShow"><a id="filedShowconent">添加计算字段</a><a id="groupShowconent">添加分组字段</a></span>选择统计对象属性</h3>
+               <div class="search-query">
+                 <input  id="pro_search" type="text" class="form-control search-input" placeholder="输入关键字" onclick="setSearchFlag('pro');"><span onclick="search('pro_search');"><img src="../resource/img/query-ico.png"></span>
+              </div>              
+              <ul class="query-entry scroll-y01" id="choiceList">                
+              </ul>
+           </div>
+      </div>
+      <!-- asider end -->
+
+      <!-- content start -->
+      <div class="section">
+          <div class="content">
+               <div class="title-query">
+                  <p class="btnquery">
+                    <button  type="button" id="save" onclick="save();" class="btn btn-default"><img src="../resource/img/query-ico5.png"> 保存</button>
+                    <button type="button" onclick="cancel();" class="btn btn-default"><img src="../resource/img/query-ico5.png"> 重置</button>
+                    <button type="button" onclick="back();" class="btn btn-default"><img src="../resource/img/query-ico5.png"> 返回</button>
+                  </p>
+                  <em>指标定义</em>                  
+               </div>
+               <div id="choiceR">                     
+                     <div class="defin-r-lsit01 postZindex">
+                        <span>统计维度：</span>
+                        <div>
+                           <ul id="objdimen">
+                           </ul>
+                        </div>
+                     </div> 
+                     <div class="defin-r-lsit01 postZindex01">
+                        <span>统计对象属性：</span>
+                        <div>
+                            <ul id="objattr">
+                           </ul>
+                        </div>
+                     </div> 
+                 </div>
+
+                 <div class="chart-con-detail">                   
+                      <div class="chart-defin">
+                          <h3>可选统计维度</h3>
+                          <div class="search-query"><input id="relation_search" type="text" class="form-control search-input" placeholder="输入关键字" onclick="setSearchFlag('relation');"><span id="relation" onclick="search('relation_search');"><img src="../resource/img/query-ico.png"></span></div>  
+                          <ul class="vallist" id="vallist">                            
+                          </ul>
+                      </div>
+                      <div class="chart-defin posLeft">
+                          <h3>筛选器</h3>                         
+                          <ul class="chart-filter" id="Filter">
+                          </ul>
+                      </div>
+                      <div class="defin-r-con-r">
+                          <h3>指标信息</h3> 
+                          <table width="100%">
+                             <tr>
+                                <th>指标名称：</th>
+                                <td><input id="indexName" type="text" class="form-control"></td>
+                             </tr>
+                             <tr>
+                                <th>指标分类：</th>
+                                <td>
+                                	<div class="typeselectlist" id="type"><p style="margin-bottom:0;border:1px solid #d1d1d1; height:28px;padding-left:12px;    line-height: 28px; background:#fff;border-radius: 4px;" id="indexType"></p><!-- <input id="indexType" type="text" value="请选择" class="form-control" readonly> --></div>
+                                </td>
+                                <!-- <td><select id="indexType" class="form-control"><option>金融指标--零售指标--渠道类指标</option></select></td> -->
+                             </tr>
+                             <tr>
+                                <th>指标更新频率：</th>
+                                <td><select id="indexFrequency" class="form-control"><option id="selectOne" value="">请选择</option><option id="frequency_month" value="month">月</option><option id="frequency_day" value="day">天</option><option id="frequency_hour" value="hour">时</option></select></td>
+                             </tr>
+                              <tr class="startup-timelist">
+                                <th>指标启动时间：</th>
+                                <td>
+                                   <input id="" type="text" name="no-time" class="form-control" readonly>
+                                   <input type="text" name="moth-time" class="timeform form-control datetimepicker-month" readonly>
+                                   <input type="text" name="day-time" class="timeform form-control datetimepicker-day" readonly>
+                                   <input type="text" name="time-time" class="timeform form-control datetimepicker-mine" readonly>
+                                   <!-- <input type="text" name="bran-time" class="timeform form-control datebran"> -->
+                                </td>
+                             </tr>
+                             <tr>
+                                <th>业务含义：</th>
+                                <td><textarea id="indexBusiness" rows="3" class="form-control"></textarea></td>
+                             </tr>
+                             <tr>
+                                <th>统计口径描述：</th>
+                                <td><textarea id="indexDescribe" rows="3" class="form-control"></textarea></td>
+                             </tr>
+                          </table>
+                      </div>
+                   </div>       
+
+
+          </div>
+      </div>
+      <!-- content end -->
+       
+	</div>	
+  <!-- wrap end --> 	
+    
+	<!-- 引入的低部文件不可删 -->
+  <!--#include virtual="../workbench/footer.shtml"-->
+
+  <div id="load"><span><img src="../resource/img/loading-2.gif"></span></div>
+
+</body>
+</html>
+
+<!--拖动js-->
+
+
+<!--弹框-->
+<!-- 选择统计对象 star -->
+<div class="dialog-defin" id="select-show" style="display:none;">
+  <div class="select-show">
+     <!--<h3>选择统计对象</h3>-->
+     <p><input id="search" type="text" placeholder="输入对象关键字进行检索" class="form-control" onclick="setSearchFlag('object');"><button type="button" onclick="search('search');" class="btn btn-primary">检索</button></p>
+     <ul id="nav-left" class="navmenu showul">
+     	
+     </ul>  
+  </div>
+</div>
+<!-- 选择统计对象end -->
+
+<!-- 数据格式设置 star -->
+<div class="dialog-defin" id="patternshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">
+       <caption><input type="radio"> 格式设置</caption>
+       <tr>
+         <th>保存小数位数:</th>
+         <td><input type="text" class="form-control"></td>
+       </tr>
+       <tr>
+         <th>保存数值单位:</th>
+         <td><select class="form-control"><option>无</option><option>万</option><option>千</option></select></td>
+       </tr>
+     </table>
+  </div>
+</div>
+<!-- 数据格式设置end -->
+
+<!-- 设置属性信息 star -->
+<div class="dialog-defin" id="attrshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">       
+       <tr>
+         <th>设置属性别名:</th>
+         <td><input type="text" class="form-control"></td>
+       </tr>
+       <tr>
+         <th>属性描述:</th>
+         <td><textarea rows="3" class="form-control"></textarea></td>
+       </tr>
+     </table>
+  </div>
+</div>
+<!-- 设置属性信息end -->
+
+<!-- 设置维度信息 star -->
+<div class="dialog-defin" id="defineshow" style="display:none;">
+  <div class="select-show">
+     <table class="dialogcon">       
+       <tr>
+         <th>设置维度别名:</th>
+         <td><input type="text" class="form-control"></td>
+       </tr>
+       <tr>
+         <th>描述:</th>
+         <td><textarea rows="3" class="form-control"></textarea></td>
+       </tr>
+     </table>
+  </div>
+</div>
+<!-- 设置维度信息 end -->
+
+<!-- 筛选器-日期型 star -->
+<div class="dialog-defin" id="timeFilter" style="display:none;">
+	<div class="dialog" id="addcon">
+	  <p class="showMeta" id="siteBtnground">
+		  <!-- <span>请选择筛选类型:</span> -->
+		  <label class="radio-inline"><input type="radio" name="date" id="siteBtn1" value="dictionary">精确筛选</label>
+		  <label class="radio-inline"><input type="radio" name="date" id="siteBtn2" value="custom">条件筛选</label>
+	  </p>
+	   <div class="sitebox1" id="siteDiv">
+	     <p class="searchForm"><input type="text" class="form-control" value="" id="searchInputchart01" onclick="setSearchFlag('date');"><button type="button" class="btn btn-primary" id="searchBtnchart01">检索</button></p>
+	     <ul class="wordbook">
+	        <li>最近7天</li>
+	        <li>最近30天</li>
+	        <li>最近半年</li>
+	        <li>最近一年</li>
+	        <li>最近7天</li>
+	        <li>最近30天</li>
+	        <li>最近半年</li>
+	        <li>最近一年</li>
+	     </ul>	   
+	   </div>
+	   
+	   <div class="sitebox1" id="siteDiv1"> 
+	         <div class="select-show plr0">
+			     <table class="dialogcon">       
+			       <tr>
+			         <th>开始时间:</th>
+			         <td><input type="text" id="startTime" class="form-control datepicker01" placeholder=""><!-- <span class="checkspan"><input type="checkbox" class="checkbox-inline"> 不限</span> --></td>
+			       </tr>
+			       <tr>
+			         <th>结束时间:</th>
+			         <td><input type="text" id="endTime" class="form-control datepicker01" placeholder=""><!-- <span class="checkspan"><input type="checkbox" class="checkbox-inline"> 不限</span> --></td>
+			       </tr>
+			     </table>
+			  </div>	 
+	   </div>
+	   
+	</div>
+  
+</div>
+<!-- 筛选器-日期型 end -->
+
+<!-- 筛选器-字符型 star -->
+<div class="dialog-defin" id="charaFilter" style="display:none;">
+
+<div class="dialog" id="addcon">
+	  <p class="showMeta" id="siteBtnground1">
+		  <!-- <span>请选择筛选类型:</span> -->
+		  <label class="radio-inline"><input type="radio" name="chara" id="siteBtn3" value="dictionary">精确筛选</label>
+		  <label class="radio-inline"><input type="radio" name="chara" id="siteBtn4" value="custom">条件筛选</label>
+	  </p>
+	   <div class="sitebox1" id="siteDiv3">
+	      <div class="select-show">
+		     <!-- <h3>客户开户区域筛选器</h3> -->
+		     <p class="searchForm01"><input type="text" class="form-control" value="" id="searchInputchart" onclick="setSearchFlag('character');"><button type="button" class="btn btn-primary" id="searchBtnchart">检索</button></p>
+		     <ul class="downlist chartul" id="searchChartlist">
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性1</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性2</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性3</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性4</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性5</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性6</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性7</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性8</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性9</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性10</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性11</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性12</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性13</span></li>
+                  <li><i class="glyphicon glyphicon-ok"></i><span value="0">属性14</span></li>
+              </ul>
+		     <!-- <div>
+		        <div class="item">                        
+		            <div class="downbox">
+		               <button type="button" class="form-control downinput" type="text" id="downinput">请选择</button><em class="glyphicon glyphicon-triangle-bottom"></em>
+		               
+		           </div>                        
+		       </div>
+		     </div> -->
+		  </div>
+
+	   </div>
+	   
+	   <div class="sitebox1" id="siteDiv4"> 
+	       <!-- <p class="searchForm"><input type="text" class="form-control" value="" id="searchInputchart"></p> -->
+	       <div class="select-show">
+		     <h3>字符型筛选器</h3>
+		     <p class="numinput"><select class="form-control" id="charaselsect">
+		          <option id="chara-equal" value="=">等于</option>
+		          <option id="chara-notequal" value="!=">不等于</option>
+		          <option id="chara-contain" value="like">包含</option>
+		          <option id="chara-notcontain" value="not like">不包含</option>
+		          <option id="chara-startcontain" value="start">开头包含</option>
+		          <option id="chara-endcontain" value="end">结尾包含</option>
+		        </select>
+		         <span class="numinput1">
+		           <input type="text" id="charaValue" class="form-control" placeholder="请输入条件" style="width:200px;">
+		        </span>
+		        <!-- <span class="numinput2">
+		           <input type="text" class="form-control" placeholder="输入数值">
+		           <em>~</em>
+		           <input type="text" class="form-control" placeholder="输入数值">
+		        </span> -->
+		      </p>
+		  </div>
+	   </div>
+	   
+	</div>
+
+</div>
+<!-- 筛选器-字符型 end -->
+
+<!-- 筛选器-数值型 star -->
+<div class="dialog-defin" id="numFilter" style="display:none;">
+  <div class="select-show">
+     <h3>数值型筛选器</h3>
+     <p class="numinput"><select class="form-control" id="numselsect">
+          <option id="equal" code="=" value="1">等于</option>
+          <option id="notequal" code="!=" value="1">不等于</option>
+          <option id="greater" code=">" value="1">大于</option>
+          <option id="less" code="<" value="1">小于</option>
+          <option id="greaterequal" code=">=" value="1">大于等于</option>
+          <option id="lessequal" code="<=" value="1">小于等于</option>
+          <option id="between" code="between" value="2" selected="">区间</option>
+          <option id="notbetween" code="not between" value="2">不在区间</option>
+        </select>
+         <span class="numinput1">
+           <input id="value" type="text" class="form-control" placeholder="输入数值" onkeyup="this.value=this.value.replace(/[^0-9][.]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+        </span>
+        <span class="numinput2">
+           <input id="startValue" type="text" class="form-control" placeholder="输入数值" onkeyup="this.value=this.value.replace(/[^0-9][.]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+           <em>~</em>
+           <input id="endValue" type="text" class="form-control" placeholder="输入数值" onkeyup="this.value=this.value.replace(/[^0-9][.]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')">
+        </span>
+      </p>
+  </div>
+</div>
+<!-- 筛选器-数值型 end -->
+
+<!-- 添加分组字段弹窗 -->
+    <div class="showbox" id="showbox" style="display:none;">
+		<div class="show-form">
+			<div class="filed-title"><span>字段名称：</span><input type="text" class="field-name" id="filedName"  onkeyup="this.value=this.value.replace(/[, ]/g,'')"></div>
+			<div class="filed-title">
+				<div class="filed-item">
+					<span>分组字段：</span>
+					<div class="filed-down">
+						<button type="button" class="field-name field-input" id="downlist"><!-- <em id="1">日期</em> --><i class="fa fa-angle-down"></i></button>
+						<ul class="filed-list" id="groupFiled">						
+						</ul>
+					</div>
+				</div>
+				<!-- 日期  -->
+				<div class="filed-item" id="dateFiled" style="display:none">
+					<span>分组方式：</span>
+					<div class="filed-down">
+						<button type="button" class="field-name field-input" id="dateGroupMode_button"><em value="1">常规</em><i class="fa fa-angle-down"></i></button>
+						<ul class="filed-list" id="dateGroupMode">
+							<li value="1">常规</li>
+							<li value="2">年内分组</li>
+							<li value="3">月内分组</li>
+							<li value="4">周内分组</li>
+							<!-- <li value="5">固定步长</li> -->
+							<!-- <li value="6">表达式</li> -->
+						</ul>
+					</div>				
+				</div>
+				<!-- 数字  -->
+				<div class="filed-item" id="numFiled" style="display:none">
+					<span>分组方式：</span>
+					<div class="filed-down">
+						<button type="button" class="field-name field-input" id="numGroupMode_button"><em value="1">固定步长</em><i class="fa fa-angle-down"></i></button>
+						<ul class="filed-list" id="numGroupMode">
+							<li value="1">固定步长</li>
+							<li value="2">自定义步长</li>
+							<!-- <li>表达式</li> -->
+						</ul>
+					</div>				
+				</div>
+			
+			</div>
+			<div class="filed-content" id="filed_content_data">
+				<!-- 日期 start  -->
+				<div class="filed-time" id="dateType" style="display:none">
+					<div class="filed-time-item scroll-x-filed" id="filed_time_dateType">
+						<div><input type="text"  name="data_group_yearName" onkeyup="this.value=this.value.replace(/[, ]/g,'')" placeholder="分组名称"><select name="data_group_yearStar">
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select><select name="data_group_yearEnd">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select>至<select name="data_group_yearStarTwo">
+								<option value="1">1月</option>
+								<option value="2">2月</option>
+								<option value="3">3月</option>
+								<option value="4">4月</option>
+								<option value="5">5月</option>
+								<option value="6">6月</option>
+								<option value="7">7月</option>
+								<option value="8">8月</option>
+								<option value="9">9月</option>
+								<option value="10">10月</option>
+								<option value="11">11月</option>
+								<option value="12">12月</option>
+							</select><select name="data_group_yearEndTwo">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select><i class="fa fa-plus addDateGroup2"></i></div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text" onkeyup="this.value=this.value.replace(/[, ]/g,'')" id="NoCoverageAreaData1"  >未覆盖的范围
+					</div>
+				</div>
+				
+				<div class="filed-time" id="dateType2" style="display:none">
+					<div class="filed-time-item scroll-x-filed" id="filed_time_dateType2">
+						<div><input type="text" onkeyup="this.value=this.value.replace(/[, ]/g,'')" placeholder="分组名称"  name="data_normal_name">
+						<input type="text"  class="datepicker" id="startTime" name="data_normal_star" readonly="readonly"  placeholder="起始日期">至
+						<input type="text" class="datepicker" id="endTime" name="data_normal_end" readonly="readonly" placeholder="截至日期"><i class="fa fa-plus addDateGroup"></i>
+						</div>
+					</div>
+					<div class="filed-time-item" >
+						<input type="text" onkeyup="this.value=this.value.replace(/[, ]/g,'')" id="NoCoverageAreaData2">未覆盖的范围
+					</div>
+				</div>
+				
+				<div class="filed-time" id="dateType3" style="display:none">
+					<div class="filed-time-item scroll-x-filed" id="filed_time_dateType3">
+						<div><input type="text" placeholder="分组名称" onkeyup="this.value=this.value.replace(/[, ]/g,'')" name="data_group_monthName" ><select name="data_group_monthStar">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select>至<select name="data_group_monthEnd">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="25">25</option>
+								<option value="26">26</option>
+								<option value="27">27</option>
+								<option value="28">28</option>
+								<option value="29">29</option>
+								<option value="30">30</option>
+								<option value="31">31</option>
+							</select><i class="fa fa-plus addDateGroup3"></i></div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text" onkeyup="this.value=this.value.replace(/[, ]/g,'')" id="NoCoverageAreaData3">未覆盖的范围
+					</div>
+				</div>
+				
+				<div class="filed-time" id="dateType4" style="display:none">
+					<div class="filed-time-item scroll-x-filed" id="filed_time_dateType4">
+						<div><input type="text" onkeyup="this.value=this.value.replace(/[, ]/g,'')" placeholder="分组名称" name="data_group_weekName" ><select  name="data_group_weekStar">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>4
+							</select>至<select name="data_group_weekEnd">
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>4
+							</select><i class="fa fa-plus addDateGroup4"></i></div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text" onkeyup="this.value=this.value.replace(/[, ]/g,'')" id="NoCoverageAreaData4">未覆盖的范围
+					</div>
+				</div>
+				
+				<!-- 日期 end  -->			
+				<!-- 数字 start  -->
+				<div class="filed-num" id="numType" style="display:none">
+					<div class="filed-num-step">
+						<div class="filed-title"><span>起始于：</span><input type="text" class="field-name" id="star_numType" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+						<div class="filed-title"><span>终止于 ：</span><input type="text" class="field-name" id="end_numType" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+						<div class="filed-title"><span>分组步长 ：</span><input type="text" class="field-name" id="step_numType" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" onafterpaste="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+					</div>
+				</div>			
+				<div class="filed-time" id="numType2" style="display:none">
+					<div class="filed-time-item scroll-x-filed" id="filed_time_num">
+						<div><input type="text" placeholder="分组名称" name="text_group_name" onkeyup="this.value=this.value.replace(/[, ]/g,'')"><input type="text"  placeholder="起始"  onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" name="text_group_star"><select name="select_symbol_star">
+								<option value=">" selected="selected"> &lt; </option>
+								<option value=">=" > &lt;= </option>
+							</select>至<select name="select_symbol_end">
+								<option value="<" selected="selected"> &lt; </option>
+								<option value="<=" > &lt;= </option>
+							</select><input type="text"  placeholder="结束" onkeyup="this.value=this.value.replace(/[^0-9]/g,'')" name="text_group_end"><i class="fa fa-plus addNumType2" ></i></div>
+					</div>
+					<div class="filed-time-item">
+						<input type="text"   id="NoCoverageArea"  onkeyup="this.value=this.value.replace(/[, ]/g,'')">未覆盖的范围
+					</div>
+				</div>			
+				<!-- 数字 end  -->			
+			</div>
+		</div>
+	</div>
+
+<!-- <script type="text/javascript" src="../resource/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="../resource/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="../resource/js/earlyWarning.js"></script>
+<script type="text/javascript" src="../resource/js/modal.js"></script> 
+<script type="text/javascript" src="../resource/js/mask.js"></script>-->
+<!-- <script type="text/javascript" src="../resource/js/earlyWarning.js"></script> -->
+<script type="text/javascript" src="../resource/js/drop.js"></script>
+<!-- 分组字段和新计算字段弹窗   -->
+<script type="text/javascript" src="../resource/js/group_field.js"></script> 
+<script type="text/javascript" src="../resource/js/calculate_field.js"></script>
+
+<script>
+//统计对象属性选择
+var choiceList = document.getElementById("choiceList");
+var choiceLi = choiceList.getElementsByTagName("li");
+
+//可选统计维度选择
+var valUl = document.getElementById("vallist");
+var valSpan = valUl.getElementsByTagName("span");
+
+//可选统计维度接收器
+var objdimen = document.getElementById("objdimen");
+
+//统计对象属相接收器
+var objattr = document.getElementById("objattr");
+var objattrLi = objattr.getElementsByTagName("li");
+   
+//筛选器接收器
+var Filter = document.getElementById("Filter");
+
+// 指标id
+var indexId = null;
+// 指标对象
+var indexVO = null;
+// 指标json对象
+var indexJsonVO = null;
+
+// 统计对象id
+var metadataId = null;
+// 统计对象类id
+var oblClassId = null;
+// 统计对象代码
+var oblCode = null;
+
+// 统计维度id
+var dimensionId = new Array();
+// 统计维度类id
+var dimClassId = new Array();
+// 统计维度名称
+var dimName = new Array();
+// 统计维度代码
+var dimCode = new Array();
+// 统计维度父级代码
+var dimParentCode = new Array();
+// 统计维度父级id
+var dimParentId = new Array();
+// 分组字段标识
+var isGroupField = new Array();
+// 统计时间id
+var statId = new Array();
+// 统计时间代码
+var statCode = new Array();
+// 统计时间类id
+var statClassId = new Array();
+// 统计时间父级类id
+var statParentClassId = new Array();
+
+
+// 筛选器id
+var filId = new Array();
+// 筛选器类id
+var filClassId = new Array();
+// 筛选器名称
+var filName = new Array();
+// 筛选器代码
+var filCode = new Array();
+// 统计维度父级代码
+var filParentCode = new Array();
+// 筛选器父级id
+var filParentId = new Array();
+// 筛选器值
+var filValue = new Array();
+// 筛选器值
+var filDescribe = new Array();
+// 筛选器字段类型
+var filMold = new Array();
+
+// 统计对象属性id
+var ruleId = new Array();
+// 统计对象属性类id
+var ruleClassId = new Array();
+// 统计对象属性名称
+var ruleName = new Array();
+// 统计对象属性代码
+var ruleCode = new Array();
+// 统计对象属性父级代码
+var ruleParentCode = new Array();
+// 统计对象属性父级id
+var ruleParentId = new Array();
+// 计算字段标识
+var isCalculateField = new Array();
+// 计算字段sql代码
+var sqlCode = new Array();
+
+// 计算组件id
+var calculateId = null;
+// 计算组件类id
+var calClassId = null;
+// 计算组件名称
+var calName = null;
+// 计算组件代码
+var calCode = null;
+// 计算方法id
+var methodId = new Array();
+// 计算方法名称
+var methodName = new Array();
+// 计算方法代码
+var methodCode = new Array();
+
+// 当前最后点击过的id
+var filterId = null;
+
+// 指标目录
+var catalogId = null;
+
+// 存储筛选器的值
+var values = new Object();
+// 存储筛选器的值的描述
+var valuesDescribe = new Object();
+
+var tableList = new Array();
+
+var dateFlag = false;
+
+var charaFlag = false;
+// 统计对象检索标识
+var objectSearch = false;
+// 统计属性检索标识
+var proSearch = false;
+// 关联关系检索标识
+var relationSearch = false;
+// 字符筛选器检索标识
+var characterSearch = false;
+// 日期筛选器检索标识
+var dateSearch = false;
+var menuCode = GetQueryString("menuCode");
+// 生成指标分类的json
+var indexTypeJson = null;
+// 指标的目录类型
+var type = null;
+// 指标分类名称
+var indexTypeName = null;
+// 指标目录名称
+var indexCatalog = null;
+// 指标分类目录
+var catalogId = null;
+// 加载计算组件
+var menujson = null;
+// 加载统计时间
+var dfinejson = new Array();
+//选择统计对象
+$(function(){
+
+type = GetQueryString("classType");
+
+initStartTime();
+
+indexId = GetQueryString("metadataId");
+catalogId = GetQueryString("catalogId");
+
+var menuCode = GetQueryString("menuCode");
+
+if(catalogId != null && catalogId != "" && catalogId != 0){
+	var params = {"catalogId":catalogId};
+	ajaxSend("/bdp-web/index/queryIndexCatalogAction",{"param" : JSON.stringify(params)},function(data){
+		indexCatalog = data.indexCatalog;
+		$("#indexType").text(indexCatalog);
+		$("#indexType").attr("catalogId", catalogId);
+	});
+}
+
+$("#indexType").click(function(event) {
+    event.stopPropagation();
+	var sibling = $(this).siblings("ul.attrshowtype");
+	if(sibling.is(":hidden")){
+		sibling.show();
+	}else{
+		sibling.hide();
+	}    
+});
+$(document).click(function(){
+  $(".attrshowtype").hide(); 
+});
+
+ajaxSend("/bdp-web/index/queryInitIndexTypeAction",{"param" : JSON.stringify({"flag":"initIndexType", "type":type})},function(data){
+	indexTypeJson = list2Json6(data.catalogList);
+	
+	var ul = $("<ul class='attrshow01 attrshowtype'></ul>");
+	ul.append(initIndexType()).appendTo($("#type"));
+
+});
+
+if(indexId != null && indexId != ""){
+var params = {"metadataId":indexId};
+
+ajaxSendload("/bdp-web/index/queryInitIndexAction",{"param" : JSON.stringify(params)},function(data){
+	
+	indexJsonVO = data.indexJsonVO;
+	
+	metadataId = data.objectVO.metadataId;
+	oblClassId =  data.objectVO.classId;
+	oblCode =  data.objectVO.metadataCode;
+	indexCatalog = data.indexType;
+	
+	var params = {"metadataId":metadataId,"flag":"initMenu"};
+	ajaxSend("/bdp-web/index/queryInitMenuAction",{"param" : JSON.stringify(params)},initIndexMenu);
+	
+	// 加载统计维度
+	tableList.push(data.objectVO);
+	var dimensionVOList = data.dimensionVOList;
+	var statisticsVOList = data.statisticsVOList;
+	if(dimensionVOList != null && dimensionVOList.length>0){
+		var objdimen = $("#objdimen");
+		dimensionVOList.forEach(function(e,i){
+			tableList.forEach(function(vo,j){
+				if(vo.metadataId == e.parentMetadata){
+					var li = $("<li class='attrli' id=pro-"+e.metadataId
+						+" classid="+e.classId+" name='dimension-value' code="+e.metadataCode+" isGroupField="+e.isGroupField+" parentCode="+vo.metadataCode+" parentId="+vo.metadataId+
+						" statId="+statisticsVOList[i].metadataId+" statCode="+statisticsVOList[i].metadataCode+" statClassId="+statisticsVOList[i].classId+">");
+					var b = null;
+					if(statisticsVOList[i].metadataName == null){
+						b = $("<b>"+e.metadataName+"</b>");
+					}else {
+						b = $("<b>"+e.metadataName+"("+statisticsVOList[i].metadataName+")"+"</b>");
+					}
+					
+					if(e.propertyType != null){
+						var split = e.propertyType.split("#");
+						if(e.isGroupField != "yes" && split[1] == "1"){
+							// 加载统计组件
+							var params = {"flag":"calculateTimeStatistics"};
+							ajaxSend("/bdp-web/index/queryTimeStatisticsAction",{"param" : JSON.stringify(params)},initTimeGroup);
+						}else {
+							dfinejson = new Array();
+						}
+					}
+					
+					b.append($("<em class='icon-angle-down'></em>"));
+					b.append($("<i class='icon-remove'></i>"));
+					li.append(b);
+					var ul = $("<ul class='attrshow'></ul>");
+					ul.append(creamDfine).appendTo(li);
+					li.appendTo(objdimen);
+					dimensionId.push(e.metadataId);
+					dimClassId.push(e.classId);
+					dimName.push(e.metadataName);
+					dimCode.push(e.metadataCode);
+					dimParentCode.push(vo.metadataCode);
+					dimParentId.push(vo.metadataId);
+				}
+			});
+		});
+	}
+	
+	var ruleVOList = data.ruleVOList;
+	var methodVOList = data.methodVOList;
+	if(ruleVOList != null && ruleVOList.length>0){
+		ruleVOList.forEach(function(vo,j){
+			calculateId = vo.metadataId;
+			calClassId = vo.classId;
+			calName = vo.metadataName;
+			calCode = vo.metadataCode;
+		});
+		methodVOList.forEach(function(vo,j){
+			method = vo.metadataId;
+			methodId.push(vo.metadataId);
+			methodName.push(vo.metadataName);
+			methodCode.push(vo.metadataCode);
+		});
+	}	
+	// 加载统计对象属性
+	var objattr = $("#objattr");
+	var metadataVO = data.metadataVO;
+	var objectNameList = data.objectNameList;
+	if(metadataVO != null){
+		metadataVO.forEach(function(vo,i){
+			menujson = new Array();
+			if(vo.isCalculateField != "yes"){
+				// 加载计算组件
+				var params = {"flag":"calculateIndexRule"};
+				ajaxSend("/bdp-web/index/queryCalculateIndexRuleAction",{"param" : JSON.stringify(params)},initAssembly);
+			}else{
+				var item1 = {"id":"-1","name":"数据格式设置","parentId":"0","childMenus":""};
+				var item2 = {"id":"-2","name":"设置属性信息","parentId":"0","childMenus":""};
+				menujson.push(item1);
+				menujson.push(item2);
+			}
+			var li = $("<li class='attrli' id=pro-"+vo.metadataId
+				+" classid="+vo.classId+" name='rule-value' code="+vo.metadataCode+" sqlCode="+vo.sqlCode+" isCalculateField="+vo.isCalculateField+" parentCode="+data.objectVO.metadataCode+" parentId="+data.objectVO.metadataId+
+				" methodCode="+methodCode[i]+" methodId="+methodId[i]+" methodName="+methodName[i]+">");
+			if(vo.propertyType != null){
+				var split = vo.propertyType.split("#");
+				li.attr("fieldMold", split[1]);
+			}
+			var b = $("<b>"+objectNameList[i]+"</b>");
+			b.append($("<em class='icon-angle-down'></em>"));
+			b.append($("<i class='icon-remove'></i>"));
+			li.append(b).appendTo(objattr);
+			ruleId.push(vo.metadataId);
+			ruleClassId.push(vo.classId);
+			ruleName.push(vo.metadataName);
+			ruleCode.push(vo.metadataCode);
+			ruleParentCode.push(data.objectVO.metadataCode);
+			var ul = $("<ul class='attrshow01 catshow'></ul>");
+			ul.append(creamElm).appendTo(li);
+		});
+	}
+
+	// 加载筛选器
+	var filterVOList = data.filterVOList;
+	var filterValue = data.filterValue;
+	var filterDescribe = data.filterDescribe;
+	if(filterVOList != null && filterVOList.length>0){
+		var Filter = $("#Filter");
+		filterVOList.forEach(function(e,i){
+			tableList.forEach(function(vo,j){
+				if(vo.metadataId == e.parentMetadata){
+					var span = $("<span class='attrli' id=pro-"+e.metadataId+" filMold="+e.propertyType
+						+" classid="+e.classId+" name='filter-value' code="+e.metadataCode+" parentId="+vo.metadataId+" parentCode="+vo.metadataCode+">"+e.metadataName+"</span>");
+					span.append($("<em class='icon-cog'></em>"));
+					span.append($("<b class='icon-remove'></b>"));
+					var div;
+					var li;
+					if(e.propertyType != null && e.propertyType != ""){
+						var array = e.propertyType.split("#");
+						span.attr("fieldmold", array[1]);
+						if(array[1] == "1"){
+							li = $("<li class='timelistshow'></li>");
+							div = $("<div id="+"date-pro-"+e.metadataId+">"+filterDescribe[i]+"</div>");
+						}else if(array[1] == "2"){
+							li = $("<li class='chartlistshow'></li>");
+							div = $("<div id="+"chara-pro-"+e.metadataId+">"+filterDescribe[i]+"</div>");
+						}else if(array[1] == "3"){
+							li = $("<li class='vallistshow'></li>");
+							div = $("<div id="+"num-pro-"+e.metadataId+">"+filterDescribe[i]+"</div>");
+						}
+						li.append(span);
+						li.append(div);
+						Filter.append(li);
+						div.slideDown();
+					}
+					values["pro-"+e.metadataId] = filterValue[i];
+					valuesDescribe["pro-"+e.metadataId] = filterDescribe[i];
+					filId.push(e.metadataId);
+					filClassId.push(e.classId);
+					filName.push(e.metadataName);
+					filCode.push(e.metadataCode);
+					filParentCode.push(vo.metadataCode);
+					filParentId.push(vo.metadataId);
+					filValue = filterValue;
+				}
+			});
+		});
+	}
+	
+	// 加载指标信息
+	indexVO = data.vo;
+	indexJsonVO = data.indexJsonVO;
+	catalogId = indexVO.catalogId;
+	$("#indexName").val(indexVO.metadataName);
+	$("#indexBusiness").val(data.business);
+	$("#indexDescribe").val(data.describe);
+	$("#indexType").attr("catalogId", indexVO.catalogId);
+	$("#indexType").text(data.indexType);
+	$(".startup-timelist td input").hide();
+	if(indexJsonVO.indexjsonFrequency == "month"){
+		$("#frequency_month").attr("selected", "true");
+		$("input[name='moth-time']").val(indexJsonVO.indexjsonStarttime);
+		$("input[name='moth-time']").show().siblings().hide();
+	}else if(indexJsonVO.indexjsonFrequency == "day"){
+		$("#frequency_day").attr("selected", "true");
+		$("input[name='day-time']").val(indexJsonVO.indexjsonStarttime);
+		$("input[name='day-time']").show().siblings().hide();
+	}else if(indexJsonVO.indexjsonFrequency == "hour"){
+		$("#frequency_hour").attr("selected", "true");
+		$("input[name='time-time']").val(indexJsonVO.indexjsonStarttime);
+		$("input[name='time-time']").show().siblings().hide();
+	}
+});
+}
+
+$(document).on("click",".Choice-btn",function(){
+
+		$("#nav-left").empty();
+		$("#search").val("");
+		$(".attrshow").hide();
+
+		var params = {"flag":"queryIndexObject"};
+		initLeftMenu(params);
+	
+		var main = $("#select-show");
+		layer.open({
+			title:'选择统计对象',
+			closeBtn: 2, 
+			type:1,
+			area:['400px','400px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			
+			  metadataId = $('input:radio[name="metadataVO"]:checked').val();
+			  if(metadataId == null || metadataId == ""){
+			  	  alert("请选择一个统计对象");
+			  	  return;
+			  }
+			  searchFlag = false;
+			  var params = {"metadataId":metadataId,"flag":"initMenu"};
+			  
+			  ajaxSend("/bdp-web/index/queryInitMenuAction",{"param" : JSON.stringify(params)},initIndexMenu);
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	});
+	
+	//数据格式设置
+	$(document).on("click","#node-2",function(){
+	//$("#node-2").on("click",function(){
+		//console.log("111");
+		var main = $("#patternshow");
+		layer.open({
+			title:'数据格式设置',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','270px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	});
+	
+	//设置属性信息
+	$(document).on("click","#node-3",function(){
+	//$("#node-2").on("click",function(){
+		//console.log("111");
+		var main = $("#attrshow");
+		layer.open({
+			title:'设置属性信息',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','280px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,
+			yes: function(index, layero){
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}
+		});
+	});
+	
+	//设置维度信息
+	$(document).on("click","#dfine-1",function(){
+		var main = $("#defineshow");
+		layer.open({
+			title:'设置维度信息',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','280px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	//筛选器-日期型	
+	$(document).on("click",".timelistshow span em",function(event){
+	    event.stopPropagation();
+	    var classId = $(this).parent().attr("classid");
+	    var metadataId = $(this).parent().attr("id").replace(/[^0-9]/ig,"");
+	    filterId = $(this).parent().attr("id");
+	    
+	    $('input[name="date"]').each(function() {
+			$(this).prop("checked",false);
+		});
+	    
+	    var params = {"flag":"initDictionary", "classId":classId, "metadataId":metadataId};
+		ajaxSend("/bdp-web/index/queryFilterDictionaryAction",{"param" : JSON.stringify(params)},dateFilter);	
+		
+		var main = $("#timeFilter");
+		layer.open({
+			title:'筛选器-日期型',
+			closeBtn: 2, 
+			type:1,
+			area:['450px','350px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			scrollbar: false,
+			yes: function(index, layero){
+			
+			  var flag = null;
+			  $('input[name="date"]:checked').each(function() {
+			  	  flag = $(this).val();
+			  });
+			  
+			  if(getDateFilter(flag) == 1)
+			  	  return;
+			
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	// 日期型筛选器初始化
+	function dateFilter(data){	
+		var dictionaryList = data.dictionaryList;
+		var siteDiv = $("#siteDiv").children("ul");
+		siteDiv.empty();
+		$("#startTime").val("");
+		$("#endTime").val("");
+		var flag = false;
+		if(dictionaryList !=null && dictionaryList.length>0){		    
+			$("#siteBtn1").prop("checked",true);
+			dateFlag = true;
+			var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+			}
+			if(array != null && value != ""){
+				if(array[0] == "当前系统时间"){
+					flag = true;
+				}
+			}else{
+				flag = true;
+			}
+			dictionaryList.forEach(function(e,i){
+				var li;
+				if(array != null){
+					if(array[1] == e.dictionaryValue){
+						li = $("<li class='current' value="+e.dictionaryValue+">"+e.dictionaryName+"</li>");
+					}else{
+						li = $("<li value="+e.dictionaryValue+">"+e.dictionaryName+"</li>");
+					}
+				}else{
+					li = $("<li value="+e.dictionaryValue+">"+e.dictionaryName+"</li>");
+				}
+				siteDiv.append(li);
+			});
+			/* $("#siteDiv").show();
+			$("#siteDiv1").hide(); */
+		}else{
+			/* var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+				if(array.length == 3){
+					$("#startTime").val(array[1]);
+					$("#endTime").val(array[2]);
+				}
+			}
+			$("#siteBtn2").prop("checked",true);
+			$("#siteDiv1").show();
+			$("#siteDiv").hide();	 */		
+		}
+	
+		if(flag){
+			$("#siteDiv").show();
+			$("#siteDiv1").hide();
+		}else{
+			$("#siteBtn2").prop("checked",true);
+			$("#siteDiv1").show();
+			$("#siteDiv").hide();
+			var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+				if(array[0] != "当前系统时间"){
+					$("#startTime").val(array[1]);
+					$("#endTime").val(array[2]);
+					$("#charaValue").val(array[1]);
+				}
+			}
+		}
+	
+	}
+	
+	// 获取日期筛选器选中的值
+	function getDateFilter(flag){
+	
+		if(flag == "dictionary"){
+		
+			if(dateFlag == false){
+				alert("该属性只能进行条件筛选");
+				return 1;
+			}
+		
+			if(time == null || time == "" && time != 0){
+				alert("请选择一个时间段");
+				return 1;
+			}
+			
+			values[filterId] = "当前系统时间" + "," + time;
+			valuesDescribe[filterId] = timeName;
+			$("#date-"+filterId).text(timeName);
+			time = "";
+			
+			$("#startTime").val("");
+			$("#endTime").val("");
+			
+		}else {
+		
+			if($("#startTime").val() == ""){
+				alert("开始日期不能为空");
+				return 1;
+			}
+			
+			if($("#endTime").val() == ""){
+				alert("结束日期不能为空");
+				return 1;
+			}
+
+			if($("#startTime").val() > $("#endTime").val()){
+				alert("开始日期不能大于结束日期");
+				return 1;
+			}
+		
+			values[filterId] = "between"+","+$("#startTime").val()+","+$("#endTime").val();
+			valuesDescribe[filterId] = $("#startTime").val()+"--"+$("#endTime").val();
+			$("#date-"+filterId).text( $("#startTime").val()+"--"+$("#endTime").val());
+			
+		}
+		$("#date-"+filterId).slideDown();
+	}
+	
+	//筛选器-字符型
+	$(document).on("click",".chartlistshow span em",function(event){
+	    event.stopPropagation();
+	    
+	    var classId = $(this).parent().attr("classid");
+	    var metadataId = $(this).parent().attr("id").replace(/[^0-9]/ig,"");
+	    filterId = $(this).parent().attr("id");
+	    
+	    $('input[name="chara"]').each(function() {
+			$(this).prop("checked",false);
+		});
+	    
+	    var params = {"flag":"initDictionary", "classId":classId, "metadataId":metadataId};
+		ajaxSend("/bdp-web/index/queryFilterDictionaryAction",{"param" : JSON.stringify(params)},characterFilter);
+	    
+		var main = $("#charaFilter");
+		layer.open({
+			title:'筛选器-字符型',
+			closeBtn: 2, 
+			type:1,
+			area:['430px','420px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			
+			  var flag = null;
+			  $('input[name="chara"]:checked').each(function() {
+			  	  flag = $(this).val();
+			  });
+			  
+			  if(getCharacterFilter(flag) == 1)
+			  	  return;
+			
+			  layer.close(index); //如果设定了yes回调，需进行手工关闭
+			  $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	// 字符型筛选器初始化
+	function characterFilter(data){	
+	
+		$("#charaValue").val("");
+		$("#searchInputchart").val("");
+		var flag = false;
+		var dictionaryList = data.dictionaryList;
+		var searchChartlist = $("#searchChartlist");
+		$("#chara-equal").prop("selected",true);
+		searchChartlist.empty();
+		if(dictionaryList !=null && dictionaryList.length>0){
+			charaFlag = true;
+			dictionaryList.forEach(function(e,i){
+				var value = values[filterId];
+				var array;
+				if(value != null && value != ""){
+					array = value.split(",");
+				}
+				var dicFlag = false;
+				if(array != null){
+					if(array[0] == "in"){
+						flag = true;
+					}
+					for(var i=1;i<array.length;i++){
+						if(array[i] == e.dictionaryValue){
+							dicFlag = true;
+						}
+					}
+				}else{
+					flag = true;
+				}
+				var li;
+				if(dicFlag){
+					li = $("<li><i class='glyphicon glyphicon-ok'></i><span id="+e.dictionaryValue+" name='pro-value' value='1'>"+e.dictionaryName+"</span></li>");
+					li.children('span').siblings('i').show();
+				}else{
+					li = $("<li><i class='glyphicon glyphicon-ok'></i><span id="+e.dictionaryValue+" name='pro-value' value='0'>"+e.dictionaryName+"</span></li>");
+					li.siblings('i').hide();
+				}
+				
+				searchChartlist.append(li);
+			});
+		}
+		
+		if(flag){
+			$("#siteBtn3").prop("checked",true);
+			$("#siteDiv3").show();
+			$("#siteDiv4").hide();
+		}else{
+			$("#siteBtn4").prop("checked",true);
+			$("#siteDiv4").show();
+			$("#siteDiv3").hide();
+			$(".numinput1").show();
+			var value = values[filterId];
+			var array;
+			if(value != null && value != ""){
+				array = value.split(",");
+				if(array[0] != "in"){
+					var id = getFilterName("chara",array[0]);
+					$("#charaselsect").find("option:selected").prop("selected",false);
+					$("#"+id).prop("selected",true);
+					$("#charaValue").val(array[1]);
+				}
+			}
+		}
+	}
+	
+	// 获取字符筛选器选中的值
+	function getCharacterFilter(flag){
+		
+		proValue = "";
+		if(flag == "dictionary"){
+		
+			if(charaFlag == false){
+				alert("该属性只能进行条件筛选");
+				return 1;
+			}
+		
+			$('span[name="pro-value"').each(function(){
+				if($(this).attr("value") == "1"){
+					proValue += $(this).attr("id") + ",";
+				}
+			});
+			proValue = proValue.substring(0, proValue.length - 1);
+			
+			if(proValue == ""){
+				alert("请选择一个条件");
+				return 1;
+			}
+			
+			values[filterId] = "in" + "," + proValue;
+			valuesDescribe[filterId] = proValue;
+			$("#chara-"+filterId).text(proValue);
+			$("#charaValue").val("");
+		}else {
+		
+			if($("#charaValue").val() == ""){
+				alert("请输入一个条件");
+				return 1;
+			}
+		
+			var select = $("#charaselsect").find("option:selected");
+			values[filterId] = $("#charaselsect").val()+","+$("#charaValue").val();
+			valuesDescribe[filterId] = select.text()+" "+$("#charaValue").val();
+			$("#chara-"+filterId).text(select.text()+" "+$("#charaValue").val());
+		}
+		
+		$("#chara-"+filterId).slideDown();
+		//child.slideUp();
+		
+	}
+	
+	//筛选器-数值型
+	$(document).on("click",".vallistshow span em",function(event){
+	    event.stopPropagation();
+		var main = $("#numFilter");
+		
+		$("#startValue").val("");
+		$("#endValue").val("");
+		$("#value").val("");
+		$("#equal").prop("selected",true);
+		filterId = $(this).parent().attr("id");
+		
+		var value = values[filterId];
+		var array;
+		if(value != null && value != ""){
+			array = value.split(",");
+			if(array.length == 2){
+				$("#value").val(array[1]);
+			}else if(array.length == 3){
+				$("#startValue").val(array[1]);
+				$("#endValue").val(array[2]);
+			}
+			$("#numselsect").find("option:selected").prop("selected",false);
+			var id = getFilterName("num", array[0]);
+			$(id).prop("selected", true);
+		}
+		
+		if($("#numselsect").val() == 1){
+			$(".numinput1").show();
+			$(".numinput2").hide();
+		}else if($("#numselsect").val() == 2){			
+			$(".numinput2").show();
+			$(".numinput1").hide();
+		}
+		
+		layer.open({
+			title:'筛选器-数值型',
+			closeBtn: 2, 
+			type:1,
+			area:['450px','200px'],
+			shadeClass:true,
+			content:main,
+			btn:['确定','取消'],
+			btnAlign:'c',
+			closeBtn:1,	
+			yes: function(index, layero){
+			
+				if(getNumFilter() == 1)
+			  	  return;
+			
+			    layer.close(index); //如果设定了yes回调，需进行手工关闭
+			    $(".attrshow").hide();
+		    },
+			btn2:function(index, layero){
+				$(".attrshow").hide();
+			},
+			cancel: function(index, layero){ 			 
+				layer.close(index);
+				$(".attrshow").hide();
+			}		
+		});
+	});
+	
+	// 获取数值筛选器选中的值
+	function getNumFilter(){
+		
+		proValue = "";
+		if($("#numselsect").val() == "1"){
+			if($("#value").val() == ""){
+				alert("数值不能为空");
+				return 1;
+			}
+			
+			var select = $("#numselsect").find("option:selected");
+			values[filterId] = select.attr("code")+","+$("#value").val();
+			valuesDescribe[filterId] = select.text()+" "+$("#value").val();
+			$("#num-"+filterId).text(select.text()+" "+$("#value").val());
+		}else{
+			if($("#startValue").val() == ""){
+				alert("开始数值不能为空");
+				return 1;
+			}
+			if($("#endValue").val() == ""){
+				alert("结束数值不能为空");
+				return 1;
+			}
+			
+			var select = $("#numselsect").find("option:selected");
+			values[filterId] = select.attr("code")+","+$("#startValue").val()+","+$("#endValue").val();
+			valuesDescribe[filterId] = select.text()+" "+$("#startValue").val()+"--"+$("#endValue").val();
+			$("#num-"+filterId).text(select.text()+" "+$("#startValue").val()+"--"+$("#endValue").val());
+		}
+		$("#num-"+filterId).slideDown();
+	}
+	
+	$(document).on("click",".timelistshow span b",function(event){
+		values[$(this).parent().attr("id")] = null;
+		valuesDescribe[$(this).parent().attr("id")] = null;
+		$("#startTime").val("");
+		$("#endTime").val("");
+	});
+	$(document).on("click",".chartlistshow span b",function(event){
+		values[$(this).parent().attr("id")] = null;
+		valuesDescribe[$(this).parent().attr("id")] = null;
+		$("#charaValue").val("");
+	});
+	$(document).on("click",".vallistshow span b",function(event){
+		values[$(this).parent().attr("id")] = null;
+		valuesDescribe[$(this).parent().attr("id")] = null;
+		$("#startValue").val("");
+		$("#endValue").val("");
+		$("#value").val("");
+	});
+	
+});
+
+	// 初始化菜单
+	function initLeftMenu(params){
+		ajaxSend("/bdp-web/index/queryIndexObjectAction",{"param" : JSON.stringify(params)},calFun);
+	}
+
+	function calFun(data){	    
+		var parentId = data.parentId;
+		var curent;		
+		if(parentId == null || parentId == ""){
+			curent = $("#nav-left");
+		}else if(parentId != null){
+			curent = $('#object-select-'+parentId);
+		} 
+		var ul = $("<ul class='unstyled'></ul>");
+		var baseArray = data.baseArray;
+		if(baseArray != null){
+		baseArray.forEach(function(list,i){
+			if(list != null && list.length > 0){
+				list.forEach(function(e,i){
+					var li = $("<li id=object-select-" + e.metadataId + " code="+e.metadataCode+" classId=" + e.classId + "><p><i class='fa fa-chevron-right'></i> " + e.metadataName + "</p></li>");
+					li.attr("newNode", "true");
+					ul.append(li).appendTo(curent);
+			});
+			}
+		});
+		}
+		
+		var tableList = data.tableList;
+		if(tableList != null){
+			tableList.forEach(function(e,i){
+					var li =$("<li>&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='metadataVO' value='"+e.metadataId+"'> <i class='fa fa-file-text-o'></i>"+e.metadataName+"</li>");
+					li.attr("newNode", "true");
+					ul.append(li).appendTo(curent);
+					
+			});
+		}
+	}
+	
+	// 检索菜单
+	function searchMenu(data){
+		var curent = $("#nav-left");
+		var ul = $("<ul class='unstyled'></ul>");
+		var baseList = data.baseList;
+		var tableArray = data.tableArray;
+		baseList.forEach(function(e,i){
+			var li = $("<li id=object-select-" + e.metadataId + " code="+e.metadataCode+" classId=" + e.classId + "><p><i class='fa fa-chevron-down'></i> " + e.metadataName + "</p></li>");
+			li.attr("newNode", "true");
+			ul.append(li).appendTo(curent);
+			var curent2 = $('#object-select-'+e.metadataId);
+			var ul2 = $("<ul class='unstyled'></ul>");
+			tableArray[i].forEach(function(e,i){
+				var li2 = $("<li>&emsp;&emsp;&emsp;<input type='radio' class='checkbox-inline' name='metadataVO' value='"+e.metadataId+"'> <i class='fa fa-file-text-o'></i>"+e.metadataName+"</li>");
+				li2.attr("newNode", "true");
+				ul2.append(li2).appendTo(curent2);
+			});
+			
+		});
+		//curent.children("ul").show();
+	}
+	
+	// 点击目录加载下级菜单
+	$(document).on('click', 'li[newNode="true"] > p', function () { 
+		var p = $(this);
+		var li = p.parent('li');
+		var classId = li.attr("classid");
+		var parentId = li.attr("id").replace(/[^0-9]/ig,"");
+		p.children("i").addClass("fa-chevron-down").removeClass("fa-chevron-right");
+			if(li.children('ul').hasClass('unstyled')){
+				p.children("i").addClass("fa-chevron-right").removeClass("fa-chevron-down");	
+				li.children('ul').remove();	
+			}else{
+				p.children("i").addClass("fa-chevron-down").removeClass("fa-chevron-right");
+				var param = {"classId" : classId,"parentId":parentId,"flag":"queryIndexObject"};
+				initLeftMenu(param);
+			//alert("111");
+			}
+	});
+	
+	// 输入关键字进行检索
+	var searchFlag = null;
+	function search(id){
+	
+		searchFlag = true;
+		
+		var search = $("#" + id).val();
+		if(id == "search"){
+			$("#nav-left").empty();
+			var params = {"flag":"search", "searchName":search};
+			ajaxSend("/bdp-web/index/searchIndexObjectAction",{"param" : JSON.stringify(params)},searchMenu);
+		}else {
+			if(metadataId == null || metadataId == ""){
+				alert("请选择一个统计对象");
+				return;
+			}
+			var params = {"flag":id, "metadataId":metadataId, "name":search};
+			if(id == "pro_search"){
+				ajaxSend("/bdp-web/index/queryProSearchAction",{"param" : JSON.stringify(params)},initIndexMenu);
+			}else {
+				ajaxSend("/bdp-web/index/queryRelationSearchAction",{"param" : JSON.stringify(params)},initIndexMenu);
+			}
+		}
+	}
+	
+	// 加载菜单
+	function initIndexMenu(data){
+		
+		if(searchFlag == false){
+			// 清空筛选器
+			$("#Filter").empty();
+			// 清空统计维度
+			$("#objdimen").empty();
+			// 清空统计对象属性
+			$("#objattr").empty();
+		}
+		
+		var object = data.object;
+		if(object != null){
+			
+			var curent = $("#object");
+			curent.empty();
+			var li = $("<li id=object-"+object.metadataId+" code="+object.metadataCode+" classid="+object.classId+"><i class='fa fa-align-left'></i> "+object.metadataName+"</li>");
+			curent.append(li);
+			oblClassId = object.classId;
+			oblCode = object.metadataCode;
+		}
+		
+		var proList = data.proList;
+		if(proList != null){
+			initPro(proList);
+		}
+		
+		tableList = data.tableList;
+		if(tableList != null){
+			var tableArray = data.tableArray;
+			initRelation(tableList, tableArray, data.flag);
+		}
+	}
+	
+	// 刷新属性菜单
+	function initPro(list){
+		var pro = $("#choiceList");
+		pro.empty();
+		if(list != null){
+			list.forEach(function(e,i){
+				var li;		
+				if(e.propertyType != "" && e.propertyType != null){	
+					var array = e.propertyType.split("#");
+					li = $("<li draggable='true' value="+array[1]+" isGroupField="+e.isGroupField+" sqlCode="+e.sqlCode+" isCalculateField="+e.isCalculateField+" code="+e.metadataCode+" parentId="+metadataId+" parentCode="+oblCode+" id=pro-"+e.metadataId+" classid="+e.classId+" type='1'>"+e.metadataName+"</li>");
+				}else{
+					li = $("<li draggable='true' value=''"+" isGroupField="+e.isGroupField+" sqlCode="+e.sqlCode+" isCalculateField="+e.isCalculateField+" code="+e.metadataCode+" parentId="+metadataId+" parentCode="+oblCode+" id=pro-"+e.metadataId+" classid="+e.classId+" type='1'>"+e.metadataName+"</li>");
+				}
+				
+				if(e.isGroupField == "yes" || e.isCalculateField == "yes"){
+					var del= $("<i class='fa fa-trash-o selectGroupField'></i>");
+					var edit = $("<i class='fa fa-pencil editGroundfiled'></i>");
+					li.append(del);
+					li.append(edit);
+				}
+				
+				pro.append(li);
+			});
+		}	
+		statElem();	
+		//statCreate();
+		optCreate();
+		attrCreate();
+	}
+	
+	// 刷新维度菜单
+	function initRelation(tableList,tableArray,flag){
+		var relation = $("#vallist");
+		relation.empty();
+		if(tableList != null){
+			tableList.forEach(function(e,i){
+				var li = $("<li></li>");
+				if(flag == "initMenu"){
+					var h5 = $("<h5 id=relation-"+e.metadataId+" code="+e.metadataCode+" classid="+e.classId+"><i class='fa fa-chevron-right'></i> "+e.metadataName+"</h5>");
+				}else if(flag == "relation_search"){
+					var h5 = $("<h5 id=relation-"+e.metadataId+" code="+e.metadataCode+" classid="+e.classId+"><i class='fa fa-chevron-down'></i> "+e.metadataName+"</h5>");
+				}
+				li.append(h5);
+				var ul = $("<ul></ul>");
+				li.append(ul);
+				if(tableArray[i] != null){
+					tableArray[i].forEach(function(vo,j){
+						if(flag == "initMenu" || flag == "relation_search"){
+							var li;
+							if(vo.propertyType != "" && vo.propertyType != null){	
+								var array = vo.propertyType.split("#");
+								li = $("<li><span draggable='true' value="+array[1]+" code="+vo.metadataCode+" parentId="+e.metadataId+" parentCode="+e.metadataCode+" id=relation-pro-"+vo.metadataId+" classid="+vo.classId+" type='1'><i class='fa fa-paste'></i> "+vo.metadataName+"</span></li>");
+							}else{
+								li = $("<li><span draggable='true' value=''"+" code="+vo.metadataCode+" parentId="+e.metadataId+" parentCode="+e.metadataCode+" id=relation-pro-"+vo.metadataId+" classid="+vo.classId+" type='1'><i class='fa fa-paste'></i> "+vo.metadataName+"</span></li>");
+							}
+							ul.append(li);
+						}
+					});
+				}
+				li.appendTo(relation);
+				if(flag == "relation_search"){
+					$(".vallist li ul").show();
+				}
+			});
+		}
+		optElem();
+		optCreate();
+		
+	}
+	
+	// 获取选中的排序方式
+	var sort = null;
+	var sortName = null;
+	var statisticsId = null;
+	var statisticsName = null;
+	$(document).on("click",".attrshow li em",function(event){
+		var sibling = $(this).siblings("ul");
+		if(sibling.length == 0){
+			var statCode = $(this).parent().attr("code");
+			var statClassId = $(this).parent().attr("classid");
+			var statParentClassId = $(this).parent().parent().parent().attr("classid");
+			if($(this).parent().parent().parent().attr("flag") == "order"){
+				$("#objdimen").children("li").each(function(e,i){
+					sort = $(this).parent().attr("value");
+					sortName = $(this).text();
+					var text = $(this).children("b").text();
+					if(text.indexOf("]") == "-1"){
+						$(this).children("b").text("["+sortName+"]" + text);
+					}else{
+						var split = text.split("]");
+						$(this).children("b").text("["+sortName+"]"+split[1]);
+					}
+					$(this).children("b").append($("<em class='icon-angle-down'></em>"));
+					$(this).children("b").append($("<i class='icon-remove'></i>"));
+					$(this).attr("sort", sort);
+				});
+			}else {
+				statisticsId = $(this).parent().attr("value");
+				statisticsName = $(this).text();
+				var dim = $(this).parent().parent().parent().parent().parent();
+				var text = dim.children("b").text();
+				if(text.indexOf("(") == "-1"){
+					dim.children("b").text(text+"("+statisticsName+")");
+				}else{
+					var split = text.split("(");
+					dim.children("b").text(split[0]+"("+statisticsName+")");
+				}
+				dim.children("b").append($("<em class='icon-angle-down'></em>"));
+				dim.children("b").append($("<i class='icon-remove'></i>"));
+				dim.attr("statid", statisticsId);
+				dim.attr("statcode", statCode);
+				dim.attr("statclassid", statClassId);
+				dim.attr("statParentClassId", statParentClassId);
+			}
+		}else{
+			//alert("111");
+		}
+		
+		
+	});
+	
+	function initAssembly(data){
+		var assembly = data.assembly;
+		var methodArray = data.tableArray;
+		if(assembly != null){
+			menujson =new Array();
+			assembly.forEach(function(e,i){
+				var assemblyObj = {"id":e.metadataId,"name":e.metadataName,"parentId":"0","value":e.metadataId,"code":e.metadataCode,"classId":e.classId};
+				var method = new Array();
+				var index = -4;
+				if(methodArray[i] != null){
+					methodArray[i].forEach(function(vo,j){
+						if(j == methodArray[i].length-1){
+							var methodObj = {"id":vo.metadataId,"name":vo.metadataName,"parentId":vo.parentMetadata,"value":vo.metadataId,
+							"classId":vo.classId,"code":vo.metadataCode,"childMenus":""};
+							method.push(methodObj);
+							var more = {"id":index,"name":"更多","parentId":e.metadataId};
+							var mix = {"id":index+1,"name":"最小值","parentId":index,"childMenus":""};
+							var max = {"id":index+2,"name":"最大值","parentId":index,"childMenus":""};
+							var array = new Array();
+							array.push(mix);
+							array.push(max);
+							more.childMenus = array;
+							method.push(more);
+						}else {
+							var methodObj = {"id":vo.metadataId,"name":vo.metadataName,"parentId":vo.parentMetadata,"value":vo.metadataId,
+							"classId":vo.classId,"code":vo.metadataCode,"childMenus":""};
+							method.push(methodObj);
+						}
+					});
+				}
+				assemblyObj.childMenus = method;
+				menujson.push(assemblyObj);
+			});
+			var item1 = {"id":"-1","name":"数据格式设置","parentId":"0","childMenus":""};
+			var item2 = {"id":"-2","name":"设置属性信息","parentId":"0","childMenus":""};
+			menujson.push(item1);
+			menujson.push(item2);
+		}
+	}
+	// 获取计算方法
+	var method = null;
+	$(document).on("click",".catshow li ul li > em",function(){	
+		
+		var li = $(this).parent().parent().parent().parent().parent();
+	
+		if(li.attr("fieldMold") != "3" && $(this).parent().attr("code") != "count"){
+			alert("该字段只能计数");
+			return;
+		}
+	
+		method = $(this).parent().attr("value");
+		var name = $(this).text();
+		
+		calculateId = $(this).parent().parent().parent().val();
+		calClassId = $(this).parent().parent().parent().attr("classid");
+		calName = $(this).parent().parent().parent().children("em").text();
+		calCode = $(this).parent().parent().parent().attr("code");
+		
+		li.attr("methodid", $(this).parent().attr("value"));
+		li.attr("methodcode", $(this).parent().attr("code"));
+		li.attr("methodclassid", $(this).parent().attr("classid"));
+		li.attr("methodname", name);
+		
+		var text = li.children("b").text().split("(");
+		li.children("b").text(text[0]+"("+name+")");
+		li.children("b").append($("<em class='icon-angle-down'></em>"));
+		li.children("b").append($("<i class='icon-remove'></i>"));
+		
+		/* $("#objattr").children("li").each(function(e,i){
+			var text = $(this).children("b").text().split("(");
+			$(this).children("b").text(text[0]+"("+name+")");
+			$(this).children("b").append($("<em class='icon-angle-down'></em>"));
+			$(this).children("b").append($("<i class='icon-remove'></i>"));
+		}); */
+	});
+	
+	// 获取指标分类
+	$(document).on("click",".attrshowtype li > em",function(){
+		$("#indexType").attr("catalogId", $(this).parent().attr("id"));
+		var params = {"flag":"indexCatalog", "catalogId":$(this).parent().attr("id")};
+		ajaxSend("/bdp-web/index/queryIndexCatalogAction",{"param" : JSON.stringify(params)},function(data){
+			$("#indexType").text(data.indexCatalog);
+		});
+		$(this).parents("ul").hide();
+	});
+	
+	// 保存指标信息
+	function save(){	 
+
+		dimensionId.length = 0;
+		dimClassId.length = 0;
+		dimCode.length = 0;
+		dimName.length = 0;
+		dimParentCode.length = 0;
+		dimParentId.length = 0;
+		isGroupField.length = 0;
+		statId.length = 0;
+		statCode.length = 0;
+		statClassId.length = 0;
+		statParentClassId.length = 0;
+		
+		filId.length = 0;
+		filClassId.length = 0;
+		filCode.length = 0;
+		filName.length = 0;
+		filValue.length = 0;
+		filDescribe.length = 0;
+		filParentCode.length = 0;
+		filParentId.length = 0;
+		filMold.length = 0;
+		
+		ruleId.length = 0;
+		ruleClassId.length = 0;
+		ruleCode.length = 0;
+		ruleName.length = 0;
+		ruleParentCode.length = 0;
+		isCalculateField.length = 0;
+		sqlCode.length = 0;
+		
+		methodId.length = 0;
+		methodName.length = 0;
+		methodCode.length = 0;
+		
+		var name = $("#indexName").val();
+		var business = $("#indexBusiness").val();
+		var describe = $("#indexDescribe").val();
+		var frequency = $("#indexFrequency").val();
+		catalogId = $("#indexType").attr("catalogId");
+		var indexTypeName = $("#indexType").text();
+		
+		var indexTime;
+		if(frequency == null || frequency == ""){
+			alert("指标更新频率不能为空");
+			return;
+		}else{
+			if(frequency == "month"){
+				indexTime = $("input[name='moth-time']").val();
+			}else if(frequency == "day"){
+				indexTime = $("input[name='day-time']").val();
+			}else if(frequency == "hour"){
+				indexTime = $("input[name='time-time']").val();
+			}
+		}
+		
+		if(indexTime == ""){
+			alert("指标启动时间不能为空");
+			return;
+		}
+
+		var length = 0;
+		if(name == null || name == ""){
+			alert("指标名称不能为空");
+			return;
+		}
+		if(business == null || business == ""){
+			alert("业务含义不能为空");
+			return;
+		}
+		if(describe == null || describe == ""){
+			alert("统计口径描述不能为空");
+			return;
+		}
+		if(catalogId == null || catalogId == ""){
+			alert("指标分类不能为空");
+			return;
+		}
+		
+		// 判断字段名称是否存在
+	    var indexNameFlag = true;
+	    var params = {"metadataId":indexId, "catalogId":catalogId, "name":name, "flag":"indexName"};
+	    ajaxSend("/bdp-web/index/checkIndexNameAction",{"param" : JSON.stringify(params)},function success(data){
+	    	var list = data.list;
+	    	if(list != null && list.length > 0){
+	    		indexNameFlag = false;
+	    	}
+	    });
+	    
+	    if(indexNameFlag == false){
+	    	alert("该指标名称已存在");
+	    	return;
+	    }
+		
+		// 获取可选维度相关数据
+		$('li[name="dimension-value"').each(function(){
+			dimensionId.push($(this).attr("id").replace(/[^0-9]/ig,""));
+			dimClassId.push($(this).attr("classid"));
+			dimCode.push($(this).attr("code"));
+			dimParentCode.push($(this).attr("parentCode"));
+			dimParentId.push($(this).attr("parentId"));
+			isGroupField.push($(this).attr("isGroupField"));
+			dimName.push($(this).children("b").text());
+			if($(this).attr("statId") == null){
+				statId.push("");
+				statCode.push("");
+				statClassId.push("");
+				statParentClassId.push("");
+			}else {
+				statId.push($(this).attr("statId"));
+				statCode.push($(this).attr("statCode"));
+				statClassId.push($(this).attr("statClassId"));
+				statParentClassId.push($(this).attr("statParentClassId"));
+			}
+		});
+		// 获取筛选器相关数据
+		var flag = false;
+		var fName = null;
+		$('span[name="filter-value"').each(function(){
+			filId.push($(this).attr("id").replace(/[^0-9]/ig,""));
+			filClassId.push($(this).attr("classid"));
+			filCode.push($(this).attr("code"));
+			filParentCode.push($(this).attr("parentCode"));
+			filParentId.push($(this).attr("parentId"));
+			filMold.push($(this).attr("fieldMold"));
+			filName.push($(this).text());
+			if(values[$(this).attr("id")]==null || values[$(this).attr("id")]=="" && values[$(this).attr("id")]!=0){
+				flag = true;
+				fName = $(this).text();
+				return;
+			}
+			filValue.push(values[$(this).attr("id")]);
+			filDescribe.push(valuesDescribe[$(this).attr("id")]);
+		});
+		if(flag == true){
+			alert(fName + "不能为空");
+			return;
+		}
+		// 获取统计对象属性相关数据
+		var ruleFlag = false;
+		$('li[name="rule-value"').each(function(){
+			ruleId.push($(this).attr("id").replace(/[^0-9]/ig,""));
+			ruleClassId.push($(this).attr("classid"));
+			ruleCode.push($(this).attr("code"));
+			ruleParentCode.push($(this).attr("parentCode"));
+			ruleName.push($(this).children("b").text());
+			isCalculateField.push($(this).attr("isCalculateField"));
+			sqlCode.push($(this).attr("sqlCode"));
+			if(typeof($(this).attr("methodid")) == "undefined" 
+				&& $(this).attr("isCalculateField") != "yes"){
+				alert("统计对象属性-"+$(this).children("b").text() + "没有选择计算方法");
+				ruleFlag = true;
+				return false;
+			}else{
+				methodId.push($(this).attr("methodid"));
+				methodName.push($(this).attr("methodname"));
+				methodCode.push($(this).attr("methodcode"));
+			}
+		});
+		if(ruleFlag){
+			return false;
+		}
+		if(ruleId.length == 0){
+			alert("统计对象属性不能为空");
+			return;
+		}
+		ruleFlag = null;
+		if(calculateId == "" || calculateId == null){
+			for(var i=0;i<isCalculateField.length;i++){
+				if(isCalculateField[i] != "yes"){
+					ruleFlag = true;
+					return;
+				}
+			}
+			if(ruleFlag == true){
+				alert("计算组件不能为空");
+				return;
+			}
+		}
+		
+		if(indexId == null || indexId == ""){
+			var voParam = {"metadataCode":randomString(8),"metadataName":name, "catalogId":catalogId,"createDate":getNowFormatDate()};
+			var params = {"indexType":indexTypeName,"vo":voParam,
+			 "objectId":metadataId,"oblClassId":oblClassId,"oblCode":oblCode,
+			"dimensionId":dimensionId,"dimClassId":dimClassId,"dimCode":dimCode,"dimName":dimName,"dimParentCode":dimParentCode,"dimParentId":dimParentId,
+			"statId":statId,"statCode":statCode,"statClassId":statClassId,"statParentClassId":statParentClassId,"isGroupField":isGroupField,"filMold":filMold,
+			"filterId":filId,"filClassId":filClassId,"filCode":filCode,"filName":filName,"filValue":filValue,"filDescribe":filDescribe,"filParentCode":filParentCode,"filParentId":filParentId,
+			"ruleId":ruleId,"ruleClassId":ruleClassId,"ruleCode":ruleCode,"ruleName":ruleName,"ruleParentCode":ruleParentCode,"calculateCode":sqlCode,"isCalculateField":isCalculateField,
+			"business":business, "calculateId":calculateId,"calName":calName, "calCode":calCode,"methodId":methodId,"methodName":methodName,"methodCode":methodCode,
+			"calClassId":calClassId,"describe":describe,"method":method,"frequency":frequency,"indexTime":indexTime};
+		}else{
+			var voParam = {"metadataId":indexId,"metadataCode":indexVO.metadataCode,"metadataName":name, "catalogId":catalogId,"createDate":indexVO.createDate};
+			var indexVOParam = {"indexjsonId":indexJsonVO.indexjsonId};
+			var params = {"indexId":indexId, "indexType":indexTypeName,"vo":voParam,
+			 "objectId":metadataId,"oblClassId":oblClassId,"oblCode":oblCode,
+			"dimensionId":dimensionId,"dimClassId":dimClassId,"dimCode":dimCode,"dimName":dimName,"dimParentCode":dimParentCode,"dimParentId":dimParentId,
+			"statId":statId,"statCode":statCode,"statClassId":statClassId,"statParentClassId":statParentClassId,"isGroupField":isGroupField,"filMold":filMold,
+			"filterId":filId,"filClassId":filClassId,"filCode":filCode,"filName":filName,"filValue":filValue,"filDescribe":filDescribe,"filParentCode":filParentCode,"filParentId":filParentId,
+			"ruleId":ruleId,"ruleClassId":ruleClassId,"ruleCode":ruleCode,"ruleName":ruleName,"ruleParentCode":ruleParentCode,"calculateCode":sqlCode,"isCalculateField":isCalculateField,
+			"business":business, "calculateId":calculateId,"calName":calName, "calCode":calCode,"methodId":methodId,"methodName":methodName,"methodCode":methodCode,
+			"calClassId":calClassId,"describe":describe,"method":method,"frequency":frequency,"indexTime":indexTime,"indexVO":indexVOParam};
+		}
+		ajaxSendload("/bdp-web/index/addIndexAction",{"param" : JSON.stringify(params)},function(){
+        	$("#load").empty();
+        	alert("成功保存指标！");		
+			$("#save").removeAttr("disabled");
+			window.open("/bdp-web/index/index-index.html?classType=2&menuCode=192","_top");
+		});
+		
+	}
+	
+	// 取消
+	function cancel(){
+		
+		metadataId = "";
+		
+		// 清空统计对象
+		$("#object").empty();
+		// 清空属性检索框
+		$("#pro_search").empty();
+		// 清空统计对象属性
+		$("#choiceList").empty();
+		// 清空统计维度
+		$("#objdimen").empty();
+		// 清空统计对象属性
+		$("#objattr").empty();
+		// 清空可选维度检索框
+		$("#relation_search").empty();
+		// 清空可选维度
+		$("#vallist").empty();
+		// 清空筛选器
+		$("#Filter").empty();
+		// 情况筛选器保存的值
+		values = new Object();
+		// 情况筛选器保存的值的描述
+		valuesDescribe = new Object();
+		// 清空指标代码
+		$("#indexCode").val("");
+		// 清空指标名字
+		$("#indexName").val("");
+		// 清空业务含义
+		$("#indexBusiness").val("");
+		// 清空统计口径描述
+		$("#indexDescribe").val("");
+		// 清空更新频率
+		$("#indexFrequency").val("");
+		// 重置指标分类目录
+		$("#indexType").text("");
+		$("#selectOne").attr("selected", true);
+		// 清空启动时间
+		initStartTime();
+	}
+	
+	// 返回
+	function back(){
+		//ajaxSend("/pms-web/ajax/ajaxInitIndexMenuAction",null,function(){});
+		window.open("/bdp-web/index/index-index.html?identify=index&classType=2&index=4&menuCode="+menuCode,"_top");
+	}
+	
+	function statElem(){
+	   //选择统计对象属性
+		for(var i=0; i<choiceLi.length;i++){
+			choiceLi[i].ondragstart = function(ev){
+				//this.style.background ="#fff";
+				ev.dataTransfer.setData("name",this.innerText);
+				ev.dataTransfer.setData("title",this.innerText);
+				ev.dataTransfer.setData("val",this.value);	
+				ev.dataTransfer.setData("type",this.type);
+				ev.dataTransfer.setData("id",this.getAttribute("id"));
+				ev.dataTransfer.setData("classid",this.getAttribute("classid"));
+				ev.dataTransfer.setData("code",this.getAttribute("code"));
+				ev.dataTransfer.setData("parentCode",this.getAttribute("parentCode"));
+				ev.dataTransfer.setData("parentId",this.getAttribute("parentId"));
+				ev.dataTransfer.setData("isGroupField",this.getAttribute("isGroupField"));
+				ev.dataTransfer.setData("isCalculateField",this.getAttribute("isCalculateField"));
+				ev.dataTransfer.setData("sqlCode",this.getAttribute("sqlCode"));
+				ev.dataTransfer.setData("fieldType",this.getAttribute("value"));
+			};
+			choiceLi[i].ondragend = function(ev){
+				//this.style.background ="#f3f5f6";
+			};
+		}
+	
+	}
+	
+	//可选统计维度
+	function optElem(){	
+		for(var i=0; i<valSpan.length;i++){
+			valSpan[i].ondragstart = function(ev){
+				//this.style.background ="#fff";
+				ev.dataTransfer.setData("name",this.innerText);
+				ev.dataTransfer.setData("val",this.getAttribute("value"));
+				ev.dataTransfer.setData("id",this.getAttribute("id"));
+				ev.dataTransfer.setData("classid",this.getAttribute("classid"));
+				ev.dataTransfer.setData("code",this.getAttribute("code"));
+				ev.dataTransfer.setData("parentCode",this.getAttribute("parentCode"));
+				ev.dataTransfer.setData("parentId",this.getAttribute("parentId"));
+				ev.dataTransfer.setData("fieldType",this.getAttribute("value"));
+			};
+			valSpan[i].ondragend = function(ev){
+				//this.style.background ="#f3f5f6";
+			};
+		}
+	}
+	
+	//统计维度释放事件	
+	function optCreate(){	
+		objdimen.ondragover = function(ev){
+			ev.preventDefault();
+		}
+		objdimen.ondrop = function(ev){
+			ev.preventDefault();		
+			var sTitle = ev.dataTransfer.getData("name");
+			var id = ev.dataTransfer.getData("id");
+			var classId = ev.dataTransfer.getData("classId");
+			var code = ev.dataTransfer.getData("code");
+			var parentCode = ev.dataTransfer.getData("parentCode");
+			var parentId = ev.dataTransfer.getData("parentId");
+			var isGroupField = ev.dataTransfer.getData("isGroupField");
+			var isCalculateField = ev.dataTransfer.getData("isCalculateField");
+			var fieldType = ev.dataTransfer.getData("fieldType");
+			
+			statisticsId = null;
+			statisticsName = null;
+			if(isCalculateField != null){
+				if(isCalculateField == "yes"){
+					alert("计算字段只能作为统计属性");
+					return;
+				}
+			}
+			var pro = false;
+			$('li[name="dimension-value"]').each(function(){
+			
+				if($(this).attr("id").replace(/[^0-9]/ig,"") == id.replace(/[^0-9]/ig,"")){
+					pro = true;
+					return;
+				}
+		
+			});
+		
+			if(pro == true){
+				alert("该属性已存在");
+				return;
+			}
+			
+			dfinejson = new Array();
+			if(fieldType == "1" && isGroupField != "yes"){
+				var params = {"flag":"calculateTimeStatistics"};
+				ajaxSend("/bdp-web/index/queryTimeStatisticsAction",{"param" : JSON.stringify(params)},initTimeGroup);
+			}
+			
+			if(sortName != null && sortName != "" && sortName != "null")
+				sTitle = "["+sortName+"]" + sTitle;
+			var oLi = document.createElement("li");
+				oLi.setAttribute("id", id);
+				oLi.setAttribute("name", "dimension-value");
+				oLi.setAttribute("classId", classId);
+				oLi.setAttribute("code", code);
+				oLi.setAttribute("parentCode", parentCode);
+				oLi.setAttribute("parentId", parentId);
+				oLi.setAttribute("isGroupField", isGroupField);
+			var oB = document.createElement("b");
+				oB.innerHTML = sTitle;				
+			var oEm = document.createElement("em");
+				oEm.className = "icon-angle-down";
+				oB.appendChild(oEm);
+			var oI = document.createElement("i");
+			    oI.className = "icon-remove";
+				oB.appendChild(oI);
+				oLi.appendChild(oB);
+			var oUl = document.createElement("ul");	
+				oUl.className = "attrshow";
+				oUl.innerHTML = creamDfine();			
+				oLi.appendChild(oUl);			
+				objdimen.appendChild(oLi);
+		}
+	}
+	
+	
+	//统计对象属性释放事件
+	function attrCreate(){	
+		
+		objattr.ondragover = function(ev){
+			ev.preventDefault();
+		}
+		objattr.ondrop = function(ev){
+			ev.preventDefault();
+		
+			// 清空计算方法
+			method = null;
+			// 清空计算组件
+			calculateId = null;
+			
+			if(objattrLi.length == 0){
+				
+			}else{
+			  alert("只能拖入一个字段！");
+			  return;
+			}
+			var val = ev.dataTransfer.getData("val");
+			var sTitle = ev.dataTransfer.getData("name");
+			var sType = ev.dataTransfer.getData("type");
+			var id = ev.dataTransfer.getData("id");
+			var classId = ev.dataTransfer.getData("classId");
+			var code = ev.dataTransfer.getData("code");
+			var parentCode = ev.dataTransfer.getData("parentCode");
+			var parentId = ev.dataTransfer.getData("parentId");
+			var isGroupField = ev.dataTransfer.getData("isGroupField");
+			var isCalculateField = ev.dataTransfer.getData("isCalculateField");
+			var sqlCode = ev.dataTransfer.getData("sqlCode");
+			if(isGroupField != null){
+				if(isGroupField == "yes"){
+					alert("分组字段只能作为维度");
+					return;
+				}
+			}
+			var pro = false;
+			$('li[name="rule-value"]').each(function(){
+			
+				if($(this).attr("id").replace(/[^0-9]/ig,"") == id.replace(/[^0-9]/ig,"")){
+					pro = true;
+					return;
+				}
+			
+			});
+			
+			if(pro == true){
+				alert("该属性已存在");
+				return;
+			}
+			menujson = new Array();
+			if(isCalculateField == "yes"){
+				var item1 = {"id":"-1","name":"数据格式设置","parentId":"0","childMenus":""};
+				var item2 = {"id":"-2","name":"设置属性信息","parentId":"0","childMenus":""};
+				menujson.push(item1);
+				menujson.push(item2);
+			}else{
+				var params = {"flag":"calculateIndexRule"};
+				ajaxSend("/bdp-web/index/queryCalculateIndexRuleAction",{"param" : JSON.stringify(params)},initAssembly);
+			}
+			
+			if(sType == '1'){
+					var oLi = document.createElement("li");
+					    oLi.className = "attrli";
+					    oLi.setAttribute("id", id);
+						oLi.setAttribute("classid", classId);
+						oLi.setAttribute("name", "rule-value");
+						oLi.setAttribute("code", code);
+						oLi.setAttribute("parentCode", parentCode);
+						oLi.setAttribute("parentId", parentId);
+						oLi.setAttribute("isCalculateField", isCalculateField);
+						oLi.setAttribute("sqlCode", sqlCode);
+						oLi.setAttribute("fieldMold", val);
+					var oB = document.createElement("b");
+						oB.innerHTML = sTitle;				
+					var oEm = document.createElement("em");
+						oEm.className = "icon-angle-down";
+						oB.appendChild(oEm);
+					var oI = document.createElement("i");
+						oI.className = "icon-remove";
+						oB.appendChild(oI);	
+						oLi.appendChild(oB);
+					var oUl = document.createElement("ul");	
+					    oUl.className = "attrshow01 catshow";
+						oUl.innerHTML = creamElm();
+						oLi.appendChild(oUl);
+						objattr.appendChild(oLi);
+			}
+			
+		}
+	}
+	 
+    //筛选器   
+	Filter.ondragover = function(ev){
+		//要想触发drop事件，就必须在dragover当中阻止默认事件
+		ev.preventDefault();
+	}
+	Filter.ondrop = function(ev){
+		ev.preventDefault();
+		var val = ev.dataTransfer.getData("val");
+		var id = ev.dataTransfer.getData("id");
+		var classid = ev.dataTransfer.getData("classid");
+		var code = ev.dataTransfer.getData("code");
+		var parentCode = ev.dataTransfer.getData("parentCode");
+		var parentId = ev.dataTransfer.getData("parentId");
+		var isGroupField = ev.dataTransfer.getData("isGroupField");
+		var isCalculateField = ev.dataTransfer.getData("isCalculateField");
+		var pro = false;
+		$('span[name="filter-value"]').each(function(){
+		
+			if($(this).attr("id").replace(/[^0-9]/ig,"") == id.replace(/[^0-9]/ig,"")){
+				pro = true;
+				return;
+			}
+		
+		});
+		
+		if(isGroupField != null){
+			if(isGroupField == "yes"){
+				alert("分组字段只能作为维度");
+				return;
+			}
+		}
+		
+		if(isCalculateField != null){
+			if(isCalculateField == "yes"){
+				alert("计算字段只能作为统计属性");
+				return;
+			}
+		}
+		
+		if(pro == true){
+			alert("该属性已存在");
+			return;
+		}
+		
+		if(val == "1"){
+			//document.getElementsByClassName("Choice-btn").onclick();
+			var sTitle = ev.dataTransfer.getData("name");
+			var oLi = document.createElement('li');
+				 oLi.className = "timelistshow";
+			var oSpan = document.createElement('span');
+				oSpan.innerText = sTitle;
+				oSpan.setAttribute("id", id);
+				oSpan.setAttribute("classid", classid);
+				oSpan.setAttribute("name", "filter-value");
+				oSpan.setAttribute("code", code);
+				oSpan.setAttribute("parentCode", parentCode);
+				oSpan.setAttribute("parentId", parentId);
+				oSpan.setAttribute("fieldMold", val);
+			var oEm = document.createElement('em');
+				 oEm.className = "icon-cog";
+				oSpan.appendChild( oEm )
+			var oB = document.createElement('b');
+				oB.className = "icon-remove";
+				oSpan.appendChild( oB )		
+				oLi.appendChild( oSpan )
+			var oDiv = document.createElement("div");
+			    oDiv.setAttribute("id", "date-"+id);
+				oLi.appendChild( oDiv )
+				Filter.appendChild( oLi )
+		}else if(val == "2"){
+			var sTitle = ev.dataTransfer.getData("name");
+			var oLi = document.createElement('li');
+				 oLi.className = "chartlistshow";
+			var oSpan = document.createElement('span');
+				oSpan.innerText = sTitle;
+				oSpan.setAttribute("id", id);
+				oSpan.setAttribute("classid", classid);
+				oSpan.setAttribute("name", "filter-value");
+				oSpan.setAttribute("code", code);
+				oSpan.setAttribute("parentCode", parentCode);
+				oSpan.setAttribute("parentId", parentId);
+				oSpan.setAttribute("fieldMold", val);
+			var oEm = document.createElement('em');
+				 oEm.className = "icon-cog";
+				oSpan.appendChild( oEm )
+			var oB = document.createElement('b');
+				oB.className = "icon-remove";
+				oSpan.appendChild( oB )	
+				oLi.appendChild( oSpan )
+			var oDiv = document.createElement("div");
+			    oDiv.setAttribute("id", "chara-"+id);
+				oLi.appendChild( oDiv )	
+				Filter.appendChild( oLi )
+		}else if(val == "3"){
+			var sTitle = ev.dataTransfer.getData("name");
+			var oLi = document.createElement('li');
+				 oLi.className = "vallistshow";
+			var oSpan = document.createElement('span');
+				oSpan.innerText = sTitle;
+				oSpan.setAttribute("id", id);
+				oSpan.setAttribute("classid", classid);
+				oSpan.setAttribute("name", "filter-value");
+				oSpan.setAttribute("code", code);
+				oSpan.setAttribute("parentCode", parentCode);
+				oSpan.setAttribute("parentId", parentId);
+				oSpan.setAttribute("fieldMold", val);
+			var oEm = document.createElement('em');
+				 oEm.className = "icon-cog";
+				oSpan.appendChild( oEm )
+			/*var oI = document.createElement('i');
+				oI.className = "icon-angle-down";
+				oSpan.appendChild( oI )*/
+			var oB = document.createElement('b');
+				oB.className = "icon-remove";
+				oSpan.appendChild( oB )		
+				oLi.appendChild( oSpan )
+			var oDiv = document.createElement("div");
+			    oDiv.setAttribute("id", "num-"+id);
+				oLi.appendChild( oDiv )	
+				Filter.appendChild( oLi )
+		}
+	}	
+
+     var proValue = "";
+     var arr = [];
+      $(document).on("click",".downlist li > span",function(event){
+            event.stopPropagation();
+            var Val = $(this).attr("value");
+            var text = $(this).html();  
+            var btn = $(this).closest('.downlist').siblings('.downinput');            
+            if(Val == "0"){
+               // $(".downlist li > span").attr("value","0");
+               // $(".downlist li > i").hide();
+                $(this).attr("value","1");
+                $(this).siblings('i').show(); 
+                arr.push(text);  
+                btn.text(arr); 
+               // btn.text(text);                     
+            }else if(Val == "1"){
+                $(this).attr("value","0");
+                $(this).siblings('i').hide(); 
+                arr.splice($.inArray(text,arr),1);  
+                btn.text(arr);
+               // btn.text("请选择");
+            }
+          
+        });
+        
+	    var time = null;
+	    var timeName = "";
+	    $(document).on("click",".wordbook li",function(){
+	       $(".wordbook li").removeClass("current");
+	       $(this).addClass("current");
+	       time = $(this).val();
+	       timeName = $(this).text();
+	    });
+	    
+	    $(document).on("click","#searchBtnchart",function(event){
+	       event.stopPropagation();
+	      var val = $("#searchInputchart").val();
+	      var searchChartlist = $("#searchChartlist").children("li");	      
+	      
+	      if(val == ""){
+	         //alert("请输入要查询的内容!");
+	        // $(".downlist").show();
+	         $(".downlist li").removeClass('activeLi01').removeClass('activeLi')
+	      }else{
+	         $.each(searchChartlist,function(index,i){
+	            var text = $(this).text();
+	            if(text.indexOf(val) != -1){
+	              // $(".downlist").show();
+	               $(this).addClass('activeLi01').removeClass('activeLi');
+	            }else{
+	               $(this).addClass('activeLi').removeClass('activeLi01');
+	            }
+	         })
+	      }
+	    })
+	    
+	    //wordbook
+	    $(document).on("click","#searchBtnchart01",function(event){
+	       event.stopPropagation();
+	      var val = $("#searchInputchart01").val();
+	      var searchChartlist = $(".wordbook").children("li");	      
+	      
+	      if(val == ""){
+	         //alert("请输入要查询的内容!");
+	        // $(".wordbook").show();
+	         $(".wordbook li").removeClass('activeLi01').removeClass('activeLi')
+	      }else{
+	         $.each(searchChartlist,function(index,i){
+	            var text = $(this).text();
+	            if(text.indexOf(val) != -1){
+	               //$(".downlist").show();
+	               $(this).addClass('activeLi01').removeClass('activeLi');
+	            }else{
+	               $(this).addClass('activeLi').removeClass('activeLi01');
+	            }
+	         })
+	      }
+	    })	    
+
+	
+	
+		//筛选器-字符型切换
+		$("#siteBtnground1 input[type='radio']").click(function(){		
+			if($("#siteBtn3").is(":checked")){
+				$("#site-r-li li").remove();
+				$("#site-l-list li >span").attr("value","0");
+				$("#siteDiv3").slideDown();
+				$("#siteDiv4").slideUp();
+			}else{
+				$("#siteDiv3").slideUp();
+				$("#siteDiv4").slideDown();			
+			}
+			if($("#siteBtn4").is(":checked")){
+				$("#text1").val("");
+				$("#siteDiv4").slideDown();
+				$("#siteDiv3").slideUp();
+			}else{
+				$("#siteDiv4").slideUp();
+				$("#siteDiv3").slideDown();
+			}		
+		})
+
+/**
+获取当前的系统时间
+*/
+function getNowFormatDate() {
+    var date = new Date();
+    var seperator1 = "-";
+    var seperator2 = ":";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + " " + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate;
+}
+
+/**
+	自动生成指定长度len的随机数
+*/
+function randomString(len) {
+    len = len || 32;
+	var $chars = 'qwertyuiopasdfghjklzxcvbnm';
+	var maxPos = $chars.length;
+	var pwd = '';
+	for (var i = 0; i < len; i++) {
+		pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+	}
+	return pwd;
+}
+
+function getFilterName(type, value){
+	//if(value == ""){}
+	if(type == "chara"){
+		if(value == "="){
+			return "chara-equal";
+		}else if(value == "!="){
+			return "chara-notequal";
+		}else if(value == "like"){
+			return "chara-contain";
+		}else if(value == "not like"){
+			return "chara-notcontain";
+		}else if(value == "start"){
+			return "chara-startcontain";
+		}else if(value == "end"){
+			return "chara-endcontain";
+		}
+	}else if(type == "num"){
+			if(value == "="){
+				return "#equal";
+			}else if(value == "!="){
+				$("#notequal").attr("selected", "true");
+				return "#notequal";
+			}else if(value == ">"){
+				return "#greater";
+			}else if(value == "<"){
+				return "#less";
+			}else if(value == ">="){
+				return "#greaterequal";
+			}else if(value == "<="){
+				return "#lessequal";
+			}else if(value == "between"){
+				return "#between";
+			}else if(value == "not between"){
+				return "#notbetween";
+			}
+	}
+}
+
+function initStartTime(){
+
+	$(".datetimepicker-month").datetimepicker({
+        format: 'dd,hh:ii:ss',
+        minView :2,
+        startView:2,
+        initialDate: new Date(),//初始化当前日期
+        todayBtn: true,
+        autoclose:true
+    });    
+    $(".datetimepicker-day").datetimepicker({
+        format: 'hh:ii:ss',
+        minView :1,
+        startView:0,
+        initialDate: new Date(),//初始化当前日期
+        todayBtn: true,
+        autoclose:true
+    });
+    $(".datetimepicker-mine").datetimepicker({
+        format: 'ii:ss',
+        minView :1,
+        startView:0,
+        minuteStep:1,
+        initialDate: new Date(),//初始化当前日期
+        todayBtn: true,
+        autoclose:true
+    });
+    $(".startup-timelist td input").hide();
+    $("input[name='no-time']").show();
+    $("#indexFrequency").change(function() {      
+       var val = $(this).val();
+      if(val == "month"){
+        $("input[name='moth-time']").show().siblings().hide();
+         $("input[name='moth-time']").show().siblings().val("");
+      }else if(val == "day"){
+        $("input[name='day-time']").show().siblings().hide();
+        $("input[name='day-time']").show().siblings().val("");
+      }else if(val == "hour"){
+        $("input[name='time-time']").show().siblings().hide();
+        $("input[name='time-time']").show().siblings().val("");
+      }else if(val == ""){
+        $("input[name='no-time']").show().siblings().hide();
+      }
+    });
+
+}
+
+	function initTimeGroup(data){
+		var assembly = data.assembly;
+		var timeMethodList = data.timeMethodList;
+		if(assembly != null){
+			dfinejson =new Array();
+			assembly.forEach(function(e,i){
+				var assemblyObj = {"id":e.metadataId,"name":e.metadataName,"parentId":"0","value":e.metadataId,"code":e.metadataCode,"classId":e.classId};
+				var method = new Array();
+				var index = -4;
+				if(timeMethodList[i] != null){
+					timeMethodList[i].forEach(function(vo,j){
+						var methodObj = {"id":vo.metadataId,"name":vo.metadataName,"parentId":vo.parentMetadata,"value":vo.metadataId,
+							"classId":vo.classId,"code":vo.metadataCode,"childMenus":""};
+						method.push(methodObj);
+					});
+				}
+				assemblyObj.childMenus = method;
+				dfinejson.push(assemblyObj);
+			});
+		}
+	}
+
+//  添加计算字段点击事件
+$(function(){
+	$("#filedShowconent").on("click",function(){
+
+		calculateFieldMange(metadataId, null, "index");
+	});
+});
+
+//  添加分组字段点击事件
+$("#groupShowconent").click(function(){  
+	    
+    groupFieldMange(metadataId, null, "index");
+	    
+});
+
+//删除自定义字段
+$(document).on("click",".selectGroupField",function(){   
+	
+    var delId = $(this).parent("li").attr("id").replace(/[^0-9]/ig,"");
+    var groupFieldFlag = $(this).parent("li").attr("isGroupField");
+    var calculateFieldFlag = $(this).parent("li").attr("iscalculatefield");
+    if(groupFieldFlag == "yes"){
+    	delGroupFiled(metadataId, delId, "index");
+    }else if(calculateFieldFlag == "yes"){
+    	removeCalculateField(metadataId, delId, "index");
+    }
+    
+});
+
+//编辑自定义字段
+$(document).on("click",".editGroundfiled",function(){   
+    var editId=$(this).parent("li").attr("id").replace(/[^0-9]/ig,"");
+    var groupFieldFlag = $(this).parent("li").attr("isGroupField");
+    var calculateFieldFlag = $(this).parent("li").attr("iscalculatefield");
+   	if(groupFieldFlag == "yes"){
+    	groupFieldMange(metadataId, editId, "index");
+    }else if(calculateFieldFlag == "yes"){
+    	calculateFieldMange(metadataId, editId, "index");
+    }
+});
+
+/**
+检索框回调方法
+*/
+function setSearchFlag(flag){
+
+	if(flag == "object"){
+		initSearchFlag();
+		objectSearch = true;
+	}else if(flag == "pro"){
+		initSearchFlag();
+		proSearch = true;
+	}else if(flag == "relation"){
+		initSearchFlag();
+		relationSearch = true;
+	}else if(flag == "character"){
+		initSearchFlag();
+		characterSearch = true;
+	}else if(flag == "date"){
+		initSearchFlag();
+		dateSearch = true;
+	}
+
+}
+
+function initSearchFlag(){
+
+	objectSearch = false;
+	proSearch = false;
+	relationSearch = false;
+	characterSearch = false;
+	dateSearch = false;
+
+}
+
+// 监听检索回车事件
+$(document).keydown(function(event){  
+  //判断当event.keyCode 为37时（即左方面键），执行函数to_left();  
+  //判断当event.keyCode 为39时（即右方面键），执行函数to_right();  
+
+  if(event.keyCode == 13){  
+    
+    if(objectSearch == true){
+    	search("search");
+    }else if(proSearch == true){
+    	search("pro_search");
+    }else if(relationSearch == true){
+    	search("relation_search");
+    }else if(characterSearch == true){
+    	var val = $("#searchInputchart").val();
+	      var searchChartlist = $("#searchChartlist").children("li");	      
+	      
+	      if(val == ""){
+	         //alert("请输入要查询的内容!");
+	        // $(".downlist").show();
+	         $(".downlist li").removeClass('activeLi01').removeClass('activeLi')
+	      }else{
+	         $.each(searchChartlist,function(index,i){
+	            var text = $(this).text();
+	            if(text.indexOf(val) != -1){
+	              // $(".downlist").show();
+	               $(this).addClass('activeLi01').removeClass('activeLi');
+	            }else{
+	               $(this).addClass('activeLi').removeClass('activeLi01');
+	            }
+	         })
+	      }
+    }else if(dateSearch == true){
+    	var val = $("#searchInputchart01").val();
+	      var searchChartlist = $(".wordbook").children("li");	      
+	      
+	      if(val == ""){
+	         //alert("请输入要查询的内容!");
+	        // $(".wordbook").show();
+	         $(".wordbook li").removeClass('activeLi01').removeClass('activeLi')
+	      }else{
+	         $.each(searchChartlist,function(index,i){
+	            var text = $(this).text();
+	            if(text.indexOf(val) != -1){
+	               //$(".downlist").show();
+	               $(this).addClass('activeLi01').removeClass('activeLi');
+	            }else{
+	               $(this).addClass('activeLi').removeClass('activeLi01');
+	            }
+	         })
+	      }
+    }
+       
+  }
+    
+}); 
+
+$(function(){
+  $(".datepicker01").datetimepicker({
+		format: 'yyyy-mm-dd',
+		minView :2,
+		todayBtn: true,
+		autoclose:true
+	});
+})
+
+</script>

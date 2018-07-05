@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.com.infohold</groupId>
+    <version>0.0.26</version>
+    <description>
+        0.0.26 设置最大连接数
+        0.0.25 去掉实际jdbc驱动
+        0.0.24 去掉mongo工具，mongo-util放入另外的包
+        0.0.23 mongo查询使用allowDiskUse:true
+        0.0.22 增加mongo的日志
+        0.0.21 增加使用mongoclient的版本
+        0.0.20 使用连接池，不开闭多个连接，减少连接数
+        0.0.19 支持多个mongo地址，例如：m2,m3,m4,m5
+    0.0.18 新增一个查询方法
+    0.0.17 江西版本合并。修改mongo连接为池化连接
+    0.0.16 关闭mongo链接
+    0.0.15 增加返回list数组的方法
+    0.0.14 增加oracle驱动jar包
+    0.0.13 bean增加一个参数为pg外部服务器名
+    0.0.12 增加pg驱动jar包
+    0.0.10 增加mongodb操作方法
+    0.0.9 修改获取数据库元数据信息方法
+    0.0.8 增加数据库连接超时时间
+    0.0.7 增加获取数据库元数据信息方法
+    0.0.6 增加批量执行数据库脚本代码
+    0.0.5 对存储过程返回值提示信息调整
+    0.0.4 对sql操作进行null处理
+    0.0.3 增加执行sql返回值、调用存储过程的方法
+    0.0.2 增加获取单个值的方法
+    </description>
+    <artifactId>basic-util-jdbc</artifactId>
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.10</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.16</version>
+            <type>jar</type>
+        </dependency>
+        <!-- mongodb -->
+        <!-- 
+           <dependency>  
+            <groupId>org.mongodb</groupId>  
+            <artifactId>mongo-java-driver</artifactId>  
+            <version>3.4.3</version>  
+        </dependency> 
+        -->
+        <!-- https://mvnrepository.com/artifact/postgresql/postgresql -->
+		
+        <!-- 加载oracel jdbc驱动包 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>basic-util-json</artifactId>
+            <version>0.0.1</version>
+        </dependency> 
+    </dependencies>
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+    <build>
+        <defaultGoal>compile</defaultGoal>
+        <plugins>  
+               
+            <!-- compiler插件, 设定JDK版本 最好是用1.7，因为利为的是运行在jre7上面的，如果用1.8的话，会报错 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version> 
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin> 
+        </plugins>
+    </build>
+    <distributionManagement>
+        
+        <repository>  
+            <id>localnexus-re</id>  
+            <name>localnexus-re</name>  
+            <url>http://192.168.31.72:8081/nexus/content/repositories/releases/</url>  
+        </repository>  
+	
+        <snapshotRepository>
+            <id>localnexus-snapshot</id>
+            <name>User Porject Snapshot</name>
+            <url>http://192.168.31.72:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>角色管理</title>
+</head>
+<body>
+	<!-- 引入的头部文件不可删 -->
+    <!--#include virtual="../workbench/header.shtml"-->
+	<div class="menuBar">
+		<div id="menu2" class="w1170"></div>
+	</div>
+	<!-- wrap star -->	
+	<div class="wrap">
+	    <!-- asider start -->
+	    <div class="asider queryasider">
+	         <div id="tree"></div>
+	    </div>
+	    <!-- asider end -->
+	    <!-- content start -->
+	    <div class="section">
+	        <div class="content">
+	           <div class="title-query">
+	              <em>角色管理</em>                  
+               </div>
+               <div class="search-form-model">
+					<div class="item">
+						<span>角色名称：</span><input id="menu_Name" class="form-control"
+							placeholder="角色名称" />
+					</div>
+					<div class="item">
+						<button id="btn-search" class="btn btn-primary">
+							<img src="../resource/images/search.png">查询
+						</button>
+					</div>
+					<div class="item">
+						<button id="btnadd" class="btn btn-success">+ 新增</button>
+					</div>
+				</div>
+				<div class="table-form">
+					<table id="table" class="table table-striped"
+						data-id-field="roleId">
+						<thead>
+							<tr>
+								<th data-field="roleCode">角色编号</th>
+								<th data-field="roleName">角色名称</th>
+								<th data-field="roleDesc">角色描述</th>
+								<th data-field="creatTime">创建时间</th>
+								<th data-field="creator">创建人</th>
+								<th data-field="" data-formatter="operateFormatter">操作</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+	        </div>
+	    </div>
+	    <!-- content end -->
+	</div>
+	<!-- wrap end -->
+	<!-- 引入的低部文件不可删 -->
+    <!--#include virtual="../workbench/footer.shtml"-->
+
+<script type="text/javascript" src="../resource/js/jsonp4Table.js"></script>
+<script type="text/javascript">
+	//var menuurl="http://192.168.31.251:8070/";
+	
+	var _json4Table = new $.jsonp4Table({
+		action : "/bdp-web/sysRole/selectRole",
+		formatter : operateFormatter
+	});
+	$(document).ready(function() {
+		$("#btnadd").click(function() {
+			qiao.bs.dialog({
+				url : 'add_role.html',
+				title : '新增',
+				qubtn : '取消',
+				btn : true,
+				okbtn : '保存',
+				callback : function() {
+					var param = {
+						"pageSize" : 999
+					};
+					ajaxSendCloud("/bdp-web/sysMenu/selectMenu", param,function(data) {
+						$("#parentId").html("");
+						var options = "<option value='0'>无</option>";
+						$.each(data.list, function(i, obj) {
+							options += "<option value='" + obj["menuCode"] + "'>" + obj["menuName"] + "</option>";
+						});
+						$("#parentId").html(options);
+					});
+				}
+			},
+				function() {
+					var roleCode = $("#roleCode").val();
+					var roleName = $("#roleName").val();
+					var roleDesc = $("#roleDesc").val();
+					var delFlag = $("#delFlag").val();
+					var params = {
+						"roleCode" : roleCode,
+						"roleName" : roleName,
+						"roleDesc" : roleDesc,
+						"delFlag" : delFlag
+					};
+					ajaxSend("/bdp-web/sysRole/addRole", {
+						"json" : JSON.stringify(params)
+					}, callfunction);
+					return true;
+				});
+		});
+		$("#btn-search").click(function() {
+			var roleName = $("#menu_Name").val();
+			var params = {
+				"roleName" : roleName
+			};
+			_json4Table.drewTable({
+					"param" : JSON.stringify(params)
+				});
+		});
+		var params = {};
+		_json4Table.drewTable(params);
+	});
+
+	function operateFormatter(id) {
+		return [
+			'<a class="edit" href="javascript:edit(\'' + id
+			+ '\')" title="修改">',
+			'<i class="glyphicon glyphicon-edit">修改</i>',
+			'</a>  ',
+			'<a class="remove" href="javascript:remove(\'' + id
+			+ '\')" title="删除">',
+			'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+			.join('');
+	}
+	var parentList = "";
+	function edit(id) {
+		qiao.bs.dialog({
+			url : 'add_role.html',
+			title : '编辑',
+			qubtn : '取消',
+			btn : true,
+			okbtn : '保存',
+			callback : function() {
+				var params = {
+					"roleId" : id
+				};
+				ajaxSend("/bdp-web/sysRole/selectRoleByRoleId", params, initVO);
+			}
+		}, function() {
+		
+			var roleId = $("#roleId").val();
+			var roleCode = $("#roleCode").val();
+			var roleName = $("#roleName").val();
+			var roleDesc = $("#roleDesc").val();
+			var delFlag = $("#delFlag").val();
+			var params = {
+				"roleId" : roleId,
+				"roleCode" : roleCode,
+				"roleName" : roleName,
+				"delFlag" : delFlag,
+				"roleDesc" : roleDesc
+			};
+			
+			ajaxSend("/bdp-web/sysRole/updateRole", {
+				"json" : JSON.stringify(params)
+			}, callfunction);
+			return true;
+		});
+	}
+	
+	function initVO(data) {
+		if (data.role == null) {
+			alert("加载失败！");
+		} else {
+			var role = data.role;
+			$("#roleId").val(role.roleId);
+			$("#roleCode").val(role.roleCode);
+			$("#roleName").val(role.roleName);
+			$("#roleDesc").val(role.roleDesc);
+			$("#delFlag").val(role.delFlag);
+		}
+	}
+
+	function remove(id) {
+		qiao.bs.confirm({
+			msg : "是否确认删除？"
+		}, function() {
+			var params = {
+				"roleId" : id
+			};
+			ajaxSend("/bdp-web/sysRole/delRole", params, callfunction);
+		}, function() {});
+	}
+
+	function callfunction(data) {
+		if (data.code != null &&( data.code != 0 || data.code != "0")) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+			var params = {};
+			_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+		}
+		var params = {};
+		_json4Table.drewTable(params);
+	}
+</script>
+
+	<script type="text/javascript">
+		var $tree = $("#tree");
+		$(function() {
+			
+			ajaxSend("/bdp-web/sysBranch/selectBranchAll",
+				{}, inittree);
+		});
+		function inittree(data) {
+			var treedata = list2Json7(data.list);
+			$tree.treeview({
+				showBorder : false,
+				enableLinks : true,
+				data : treedata
+			});
+		}
+		function treeclick(field, value) {
+			if (field == "" && value == "") {
+				var params = {};
+				_json4Table.drewTable(params);
+			} else {
+				var params = {
+					"parentId" : value
+				};
+				_json4Table.drewTable({
+					"json" : JSON.stringify(params)
+				});
+			}
+		}
+	</script>
+</body>
+</html>

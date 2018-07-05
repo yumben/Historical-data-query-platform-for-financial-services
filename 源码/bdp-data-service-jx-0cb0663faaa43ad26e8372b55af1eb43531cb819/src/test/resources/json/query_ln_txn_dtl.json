@@ -1,0 +1,165 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "ln_txn_dtl",
+    "if_count": true,
+    "fields": [
+        {
+            "name": "ln_acc_opnorg_utid"
+        },
+        {
+            "name": "opnorg_nm"
+        },
+        {
+            "name": "ou_ip_id"
+        },
+        {
+            "name": "ou_nm"
+        },
+        {
+            "name": "dil_id"
+        },
+        {
+            "name": "cst_id"
+        },
+        {
+            "name": "cst_nm"
+        },
+        {
+            "name": "ln_txn_flow_no"
+        },
+        {
+            "name": "optr_empe_id"
+        },
+        {
+            "name": "chk_ep_ip_id"
+        },
+        {
+            "name": "teller_name"
+        },
+        {
+            "name": "main_ep_ip_id"
+        },
+        {
+            "name": "bsns_line"
+        },
+        {
+            "name": "bsns_line_nm"
+        },
+        {
+            "name": "fvcl_cl_id"
+        },
+        {
+            "name": "fvcl_cl_nm"
+        },
+        {
+            "name": "ln_pro_cd"
+        },
+        {
+            "name": "pd_nm"
+        },
+        {
+            "name": "loan_ac_sts"
+        },
+        {
+            "name": "loan_ac_sts_nm"
+        },
+        {
+            "name": "biz_cgy_id"
+        },
+        {
+            "name": "biz_cgy_nm"
+        },
+        {
+            "name": "asr_tp"
+        },
+        {
+            "name": "asr_tp_nm"
+        },
+        {
+            "name": "isue_tp"
+        },
+        {
+            "name": "isue_tp_nm"
+        },
+        {
+            "name": "txn_tp_id"
+        },
+        {
+            "name": "txn_tp_nm"
+        },
+        {
+            "name": "txn_smy"
+        },
+        {
+            "name": "scn_cd"
+        },
+        {
+            "name": "scn_cd_nm"
+        },
+        {
+            "name": "txn_chnl_id"
+        },
+        {
+            "name": "txn_chnl_nm"
+        },
+        {
+            "name": "ac_pty_tp_id"
+        },
+        {
+            "name": "src_code"
+        },
+        {
+            "name": "dbt_cdt_f"
+        },
+        {
+            "name": "rvse_tp_id"
+        },
+        {
+            "name": "acg_stc_itm_id"
+        },
+        {
+            "name": "mtg_ln_f"
+        },
+        {
+            "name": "mtg_ln_f_nm"
+        },
+        {
+            "name": "cmty_ln_f"
+        },
+        {
+            "name": "cmty_ln_f_nm"
+        },
+        {
+            "name": "sft_ln_f"
+        },
+        {
+            "name": "sft_ln_f_nm"
+        },
+        {
+            "name": "txn_dt"
+        },
+        {
+            "name": "ln_isu_dt"
+        },
+        {
+            "name": "exp_dt"
+        },
+        {
+            "name": "txn_amt"
+        },
+        {
+            "name": "bal"
+        },
+        {
+            "name": "ln_amt"
+        },
+        {
+            "name": "crn_bal"
+        },
+        {
+            "name": "leg_unit"
+        }
+    ] 
+}

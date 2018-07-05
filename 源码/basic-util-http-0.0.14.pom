@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>cn.easybdp</groupId>
+    <artifactId>basic-util-http</artifactId>
+    <version>0.0.14</version>
+    <description>
+        0.0.14 修复是否使用连接池和线程池判断问题
+        0.0.13 增加自动定义参数，默认不使用线程池 
+             java -DuseHttpConnPool=false -jar demo.jar 
+        0.0.12 使用自定义线程池，并提供异步http请求postRequstAsyn
+        0.0.11 不使用线程池
+        0.0.10 增加hp.releaseConnection();
+        0.0.9 设置 ExpectContinueEnabled(false) 
+        0.0.8 修改默认http连接池个数为100，如果设置了 http.maxConnections则使用该参数
+                    java -Dhttp.maxConnections=200 -jar demo.jar 
+        0.0.7 使用线程池管理http请求，关闭已使用的连接
+        0.0.6 使用线程池管理http请求
+        0.0.5 去掉httpclient.getParams();
+        0.0.4 优化代码，并增加默认参数的输出/调试
+        0.0.3 修改依赖关系</description>
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>cn.com.infohold</groupId>
+            <artifactId>basic-util-json</artifactId>
+            <version>0.0.1</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    
+    <distributionManagement>
+        
+        <repository>  
+            <id>localnexus-re</id>  
+            <name>localnexus-re</name>  
+            <url>http://192.168.31.72:8081/nexus/content/repositories/releases/</url>  
+        </repository>  
+	
+        <snapshotRepository>
+            <id>localnexus-snapshot</id>
+            <name>User Porject Snapshot</name>
+            <url>http://192.168.31.72:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

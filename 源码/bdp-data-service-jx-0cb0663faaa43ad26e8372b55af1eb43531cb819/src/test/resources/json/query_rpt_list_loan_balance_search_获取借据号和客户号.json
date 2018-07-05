@@ -1,0 +1,16 @@
+{
+    "sys_code": "system1",
+    "sys_token": "system1token.........",
+    "query_time": "2017-10-18 11:08:01.123",
+    "table": "rpt_list_loan_balance_search_20171102_1",
+    "limit":50001,
+    "if_count": true,
+    "fields": [ 
+        {
+            "name": "due_bill_id"
+        }, 
+        {
+            "name": "customer_id"
+        } 
+    ] 
+}

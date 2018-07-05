@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 头部引入的公共文件不可删 -->
+<!--#include virtual="../workbench/header-file.shtml"-->
+
+<!-- <link rel="stylesheet" type="text/css" href="../resource/js/bootstrap/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/layer.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/css/main.css">
+<link rel="stylesheet" type="text/css" href="../resource/style/css/mainModel.css">
+<script type="text/javascript" src="../resource/js/jquery-1.9.0.js"></script>
+<script type="text/javascript" src="../resource/js/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="../resource/js/ajax.js"></script>
+<script type="text/javascript" src="../resource/js/initmenu.js"></script>
+<script type="text/javascript" src="../resource/js/main.js"></script>
+
+<script type="text/javascript" src="../resource/js/layer.js"></script>
+<script type="text/javascript" src="../resource/js/modal.js"></script>
+
+<script type="text/javascript" src="../resource/js/json4Table.js"></script>
+<script type="text/javascript" src="../resource/js/qiao/qiao.js"></script>
+<script type="text/javascript" src="../resource/js/config.js"></script> -->
+
+<script type="text/javascript" src="../resource/js/modal.js"></script>
+
+<title>元模型管理</title>
+<script type="text/javascript">
+//进来加载
+
+	var _json4Table = new $.json4Table({
+		action : metadataControl,//"/pms-web/ajax/ajaxQueryModelPackageAction",
+		formatter : operateFormatter
+	});
+
+	$(document).ready(function() {
+	
+
+	$("#btn-search").click(function() {
+			var packageName = $("#name").val();
+			packageName = packageName.trim();
+			var params = {
+				"packageName" : packageName,
+				"packageId" : id
+			};
+			var param = {"param":JSON.stringify(params),"menuUrl":"metamodelClass/ajaxQueryModelPackageAction"};
+			_json4Table.drewTable(param);
+			return;
+		});
+		var id = GetQueryString("id");
+		var params = {
+			"packageId" : id
+		};
+		var param = {"param":JSON.stringify(params),"menuUrl":"metamodelClass/ajaxQueryModelPackageAction"};
+		_json4Table.drewTable(param);
+	});
+	//模型包
+
+	function modelpack() {
+		var _json4Table = new $.json4Table({
+			action : metadataControl,//"/pms-web/ajax/ajaxQueryModelPackageAction",
+			formatter : operateFormatter
+		});
+		$(document).ready(function() {
+			$("#name").val("");
+			$("#btn-search").click(function() {
+				var packageName = $("#name").val();
+				packageName = packageName.trim();
+				var params = {
+					"packageName" : packageName,
+					"packageId" : id
+				};
+				var param = {"param":JSON.stringify(params),"menuUrl":"metamodelClass/ajaxQueryModelPackageAction"};
+				_json4Table.drewTable(param);
+				return;
+			});
+			var id = GetQueryString("id");
+			var params = {
+				"packageId" : id
+			};
+			var param = {"param":JSON.stringify(params),"menuUrl":"metamodelClass/ajaxQueryModelPackageAction"};
+			_json4Table.drewTable(param);
+		});
+	}
+	function operateFormatter(id) {
+		return [
+				'<a class="edit" href="javascript:edit(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:remove(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+
+	function callfunction(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		/* var params = {};
+		_json4Table.drewTable(params); */
+		modelpack();
+		window.parent.initMenu();
+	}
+
+	/*
+	 模型类
+	 */
+
+	function modelclass() {
+		var _json4Table1 = new $.json4Table({
+			action : metadataControl,
+			//action : "/pms-web/ajax/ajaxQueryModelClassAction",
+			formatter : operateFormatter1,
+			tableid : "table1",
+		//pageIndex:1
+		});
+
+		$(document).ready(function($) {
+			var params;
+			var id = GetQueryString("id");
+			$("#classname").val("");
+			$("#btn-search-class").click(function() {
+				var classname = $("#classname").val();
+				classname = classname.trim();
+				params = {
+					"classname" : classname,
+					"queryType" : "classlist",
+					"packageId" : id
+				};
+				var param = {"param":JSON.stringify(params),"menuUrl":"metamodelClass/ajaxQueryModelClassAction"};
+				_json4Table1.drewTable(param);
+				return;
+			});
+
+			params = {
+				"queryType" : "classlist",
+				"packageId" : id
+			};
+			var param = {"param":JSON.stringify(params),"menuUrl":"metamodelClass/ajaxQueryModelClassAction"};
+			_json4Table1.drewTable(param);
+		});
+	}
+	function operateFormatter1(id) {
+		return [
+				'<a class="edit" href="javascript:editclass(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:removeclass(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+
+	function callfunction1(data) {
+		if (data != null && data.code != null && data.code!=0) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		modelclass();
+		window.parent.initMenu();
+	}
+
+	//数据类型自定义
+
+	function datatype() {
+		var _json4Table1 = new $.json4Table({
+			action : metadataControl,//"/pms-web/ajax/ajaxQueryModelDataTypeAction",
+			formatter : operateFormatter2,
+			tableid : "table2",
+		//pageIndex:1
+		});
+
+		$(document).ready(function($) {
+			var params;
+			var id = GetQueryString("id");
+			$("#dataTypename").val("");
+			$("#dataType-search").click(function() {
+				var dataTypename = $("#dataTypename").val();
+				dataTypename = dataTypename.trim();
+				params = {
+					"datatypeName" : dataTypename,
+					"queryType" : "datatypelist",
+					"packageId" : id
+				};
+				var param = {"param":JSON.stringify(params),"menuUrl":"metamodelDatatype/ajaxQueryModelDataTypeAction"};
+				_json4Table1.drewTable(param);
+				return;
+			});
+
+			var params = {
+				"queryType" : "datatypelist",
+				"packageId" : id
+			};
+			var param = {"param":JSON.stringify(params),"menuUrl":"metamodelDatatype/ajaxQueryModelDataTypeAction"};
+			
+			_json4Table1.drewTable(param);
+		});
+	}
+
+	function operateFormatter2(id) {
+		return [
+				'<a class="edit" href="javascript:editdatatype(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:removedatatype(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+
+	function callfunction2(data) {
+		if (data !=null && data.code != null && data.code != 0) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		datatype();
+		window.parent.initMenu();
+	}
+
+	//枚举管理
+	function modelMeijue() {
+		var _json4Table1 = new $.json4Table({
+			action : metadataControl,
+			//action : "/pms-web/ajax/ajaxQueryModelEnumerateAction",
+			formatter : operateFormatter3,
+			tableid : "table3",
+		});
+		$(document).ready(function($) {
+			var params;
+			var id = GetQueryString("id");
+			$("#enumerateNameOrCode").val("");
+
+			$("#btn-search-enumerate").click(function() {
+				var enumerateNameOrCode = $("#enumerateNameOrCode").val();
+				enumerateNameOrCode = enumerateNameOrCode.trim();
+				params = {
+					"enumerateNameOrCode" : enumerateNameOrCode,
+					"queryType" : "enumeratelist",
+					"packageId" : id
+				};
+				var param = {"param":JSON.stringify(params),"menuUrl":"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction"};
+				_json4Table1.drewTable(param);
+				return;
+			});
+
+			params = {
+				"queryType" : "enumeratelist",
+				"packageId" : id
+			};
+			var param = {"param":JSON.stringify(params),"menuUrl":"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction"};
+			_json4Table1.drewTable(param);
+		});
+	}
+
+	function operateFormatter3(id) {
+		return [
+				'<a class="edit" href="javascript:editenumerate(\'' + id
+						+ '\')" title="修改">',
+				'<i class="glyphicon glyphicon-edit">修改</i>',
+				'</a>  ',
+				'<a class="remove" href="javascript:removeenumerate(\'' + id
+						+ '\')" title="删除">',
+				'<i class="glyphicon glyphicon-remove">删除</i>', '</a>' ]
+				.join('');
+	}
+
+	function callfunction3(data) {
+		if (data != null && data.code != null && data.code !=0) {
+			alert("操作失败！");
+		} else {
+			alert("操作成功！");
+		}
+		modelMeijue();
+		window.parent.initMenu();
+	}
+</script>
+</head>
+<body style="min-width:auto;">
+
+            <div class="content">
+               <div class="title-query">	              
+                  <em>元模型管理</em>
+               </div>
+            
+                <div class="tab-right">
+                    <ul class="tab-right-menu">
+                       <li class="current"><a href="javascript:modelpack();">模型包管理</a></li>
+                       <li><a href="javascript:modelclass();"  id="model-class" >模型类管理</a></li>
+                       <li><a href="javascript:datatype();">数据类型自定义</a></li>
+                       <!--<li><a href="javascript:;">枚举管理</a></li>-->
+                    </ul>
+                    <div class="tab-content">
+                        <!-- 模型包管理 star -->
+                        <div style="display:block">
+                            <div class="search-form-model">
+                                <div class="item"><span>包名称：</span><input id="name" class="form-control" placeholder="包名称/代码"></div>
+                                <div class="item pt"><a id="btn-search" class="btn btn-primary"><i class="fa fa-search"></i> 查询</a></div>
+                                <div class="item pt"><a class="btn btn-warning" id="addbtn"><i class="fa fa-plus-circle"></i> 增加包</a></div>
+                                <!-- <div class="item"><a class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a></div> -->
+                            </div>
+                            <div class="table-form">
+                                <table id="table" data-id-field="packageId" class="table table-striped alltable">
+                                    <thead>
+                                        <tr>
+                                           <!--  <th><input class="selectinput" type="checkbox" value="0">全选</th>  -->
+                                            <!-- <th data-field="id">包id</th> -->
+                                            <th data-field="packageCode">包代码</th>
+                                            <th data-field="packageName">包名称</th>
+                                            <th data-field="describes">描述</th>
+                                            <th data-field="parentName">上级包代码名称</th>
+                                            <th data-field="createName">创建人</th>
+                                            <th data-field="id" data-formatter="operateFormatter">操作</th>
+                                        </tr>
+                                    </thead>
+                                  <!--   <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_relational</td>
+                                            <td>关系型包</td>
+                                            <td>关系型库表模型</td>
+                                            <td>metadata_package </td>
+                                            <td>王翰</td>
+                                            <td><a class="blue edit" title="修改"><i class="glyphicon glyphicon-edit"></i> 修改</a><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_relational</td>
+                                            <td>关系型包</td>
+                                            <td>关系型库表模型</td>
+                                            <td>metadata_package </td>
+                                            <td>王翰</td>
+                                            <td><a class="blue edit" title="修改" id="detedbtn"><i class="glyphicon glyphicon-edit"></i> 修改</a><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                                <!-- <div class="page">
+                                      <nav>
+                                          <ul class="pagination">
+                                              <li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                                              <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                                              <li class="active"><a href="#">1</a></li>
+                                              <li><a href="#" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                                              <li><a href="#" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                                          </ul>
+                                          <span class="count">总共 4条记录，每页显示10条记录，共1页</span>
+                                      </nav>
+                                </div> -->
+                            </div> 
+                        </div>
+                        <!-- 模型包管理 end -->
+                        <!-- 模型类管理 star -->
+                        <div>
+                            <div class="search-form-model">
+                                <div class="item"><span>类名称：</span><input id="classname" class="form-control" placeholder="类名称/代码"></div>
+                                <div class="item pt"><a id="btn-search-class" class="btn btn-primary"><i class="fa fa-search"></i> 查询</a></div>
+                                <div class="item pt"><a class="btn btn-warning" id="addclass"><i class="fa fa-plus-circle"></i> 增加类</a></div>
+                                <!-- <div class="item"><a class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a></div> -->
+                            </div>
+                            <div class="table-form">
+                                <table id="table1" data-id-field="classId" class="table table-striped alltable">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th><input class="selectinput" type="checkbox" value="0">全选</th> -->
+                                           <!--  <th data-field="id">类id</th> -->
+                                            <th data-field="classCode">类代码</th>
+                                            <th data-field="className">类名称</th>
+                                            <th data-field="describes">描述</th>
+                                            <th data-field="packageName">所属包代码</th>
+                                            <th data-field="isshow">是否显示</th>
+                                            <th data-field="displayIcon">显示图标</th>
+                                            <th data-field="createName">创建人</th>
+                                            <th data-field="id" data-formatter="operateFormatter">操作</th>
+                                        </tr>
+                                    </thead>
+                                   <!--  <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_relational</td>
+                                            <td>关系型包</td>
+                                            <td>关系型库表模型</td>
+                                            <td>metadata_package </td>
+                                            <td>否</td>
+                                            <td>images/Table.gif</td>
+                                            <td>王翰</td>                                            
+                                            <td><a class="blue editclass" title="修改"><i class="glyphicon glyphicon-edit"></i> 修改</a><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_relational</td>
+                                            <td>关系型包</td>
+                                            <td>关系型库表模型</td>
+                                            <td>metadata_package </td>
+                                            <td>否</td>
+                                            <td>images/Table.gif</td>
+                                            <td>王翰</td>                                            
+                                            <td><a class="blue editclass" title="修改"><i class="glyphicon glyphicon-edit"></i> 修改</a><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                                <div class="page">
+                                      <nav>
+                                          <ul class="pagination">
+                                              <li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                                              <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                                              <li class="active"><a href="#">1</a></li>
+                                              <li><a href="#" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                                              <li><a href="#" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                                          </ul>
+                                          <span class="count">总共 4条记录，每页显示10条记录，共1页</span>
+                                      </nav>
+                                </div>
+                            </div> 
+                        </div>
+                        <!-- 模型类管理 end -->
+                        <!-- 数据类型自定义 star -->
+                        <div>
+                            <div class="search-form-model">
+                                <div class="item"><span>数据类型名称：</span><input class="form-control" id="dataTypename" placeholder="类名称/代码"></div>
+                                <div class="item pt"><a class="btn btn-primary" id="dataType-search"><i class="fa fa-search"></i> 查询</a></div>
+                                <div class="item pt"><a class="btn btn-warning" id="addtype"><i class="fa fa-plus-circle"></i> 增加</a></div>
+                                <!-- <div class="item"><a class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a></div> -->
+                                <div class="item pt"><a class="btn btn-success"  href="javascript:modelMeijue();" id="modelMeijue"><i class="fa fa-list-alt"></i> 枚举管理</a></div>
+                            </div>
+                            <div class="table-form">
+                                <table id="table2" data-id-field="datatypeId" class="table table-striped alltable">
+                                    <thead>
+                                        <tr>
+                                           <!--  <th><input class="selectinput" type="checkbox" value="0">全选</th> -->
+                                            <th data-field="datatypeCode">数据类型代码</th>
+                                            <th data-field="datatypeName">数据类型名称</th>
+                                            <th data-field="datatypeDescribe">描述</th>
+                                            <th data-field="packageName">所属包代码</th>
+                                            <th data-field="visibility">可见性</th>
+                                            <th data-field="createName">创建人</th>
+                                            <th data-field="id" data-formatter="operateFormatter">操作</th>
+                                        </tr>
+                                    </thead>
+                               <!--      <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_relational</td>
+                                            <td>关系型包</td>
+                                            <td>关系型库表模型</td>
+                                            <td>metadata_package </td>
+                                            <td>否</td>
+                                            <td>王翰</td>                                            
+                                            <td><a class="blue edittype" title="修改"><i class="glyphicon glyphicon-edit"></i> 修改</a><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_relational</td>
+                                            <td>关系型包</td>
+                                            <td>关系型库表模型</td>
+                                            <td>metadata_package </td>
+                                            <td>否</td>
+                                            <td>王翰</td>                                            
+                                            <td><a class="blue edittype" title="修改"><i class="glyphicon glyphicon-edit"></i> 修改</a><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                                <div class="page">
+                                      <nav>
+                                          <ul class="pagination">
+                                              <li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                                              <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                                              <li class="active"><a href="#">1</a></li>
+                                              <li><a href="#" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                                              <li><a href="#" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                                          </ul>
+                                          <span class="count">总共 4条记录，每页显示10条记录，共1页</span>
+                                      </nav>
+                                </div>
+                            </div>                         
+                        </div>   
+                        <!-- 数据类型自定义 end -->   
+                        <!-- 枚举管理 star -->
+                        <div>
+                            <div class="search-form-model">
+                             <div class="item"><span>类名称：</span><input id="enumerateNameOrCode" class="form-control" placeholder="类名称/代码"></div>
+                                <div class="item"><a id="btn-search-enumerate" class="btn btn-primary"><i class="fa fa-search"></i> 查询</a></div>
+                                <div class="item"><a class="btn btn-warning" id="addenume"><i class="fa fa-plus-circle"></i> 增加枚举</a></div>
+                                <!-- <div class="item"><a class="btn btn-danger"><i class="fa fa-trash-o"></i> 批量删除</a></div> -->
+                                <div class="item"><a class="btn btn-success" id="addenumeitembtn"><i class="fa fa-list-alt"></i> 枚举项管理</a></div>
+                            </div>
+                            <div class="table-form">
+                                <table id="table3" data-id-field="enumerateId" class="table table-striped alltable">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th><input class="selectinput" type="checkbox" value="0">全选</th> -->
+                                            <th data-field="enumerateCode">枚举代码</th>
+                                            <th data-field="enumerateName">枚举名称</th>
+                                            <th data-field="datatypeName">数据类型名称</th>
+                                            <th data-field="enumitemsName">枚举项名称</th>
+                                            <th data-field="enumerateDescribe">描述信息</th>
+                                            <th data-field="id" data-formatter="operateFormatter">操作</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <!-- <tbody>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_package </td>
+                                            <td>否</td>
+                                            <td>王翰</td>                                            
+                                            <td><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><input type="checkbox"></td>
+                                            <td>metadata_package </td>
+                                            <td>否</td>
+                                            <td>王翰</td>                                            
+                                            <td><a class="remove"><i class="glyphicon glyphicon-remove"></i> 删除</a> </td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                                <div class="page">
+                                      <nav>
+                                          <ul class="pagination">
+                                              <li><a href="#" aria-label="first"><span aria-hidden="true">首页</span></a></li>
+                                              <li><a href="#" aria-label="Previous"><span aria-hidden="true">上一页</span></a></li>
+                                              <li class="active"><a href="#">1</a></li>
+                                              <li><a href="#" aria-label="Next"><span aria-hidden="true">下一页</span></a></li>
+                                              <li><a href="#" aria-label="last"><span aria-hidden="true">最后一页</span></a></li>
+                                          </ul>
+                                          <span class="count">总共 4条记录，每页显示10条记录，共1页</span>
+                                      </nav>
+                                </div>
+                            </div>                         
+                        </div>   
+                        <!-- 枚举管理 end -->  
+                     </div>
+
+                </div>
+              </div>
+            </div> 
+</body>
+</html>
+  
+    
+<script>
+/*
+弹窗
+*/
+//关闭窗口
+function closeWindows(){
+	//alert("close");
+}
+
+//增加包
+ $("#addbtn").on("click",function(){
+	//var main = $("#addcon");
+	top.layer.open({
+		title:'增加模型包',
+		closeBtn:2,
+		type:2,
+		area:['420px','410px'],
+		shadeClass:true,
+		content:"model-add.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+			//打开页面【content】后的回调
+			var id = GetQueryString("id");
+			var doc=$(layero).find("iframe")[0].contentWindow.document;
+					var params = {"pageSize":-1};
+					ajaxSendService(metadataControl,params,"metamodelPackage/queryModelPackage",function(data){
+					$(doc).find("#parentId").html("");
+					var options ="<option value=''>无</option>" ;
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["packageId"]+"'>"+obj["packageName"]+"</option>";
+					});
+					$(doc).find("#parentId").html(options);
+					$(doc).find("#parentId").val(id);
+				});
+
+		},		
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		//alert("yes");
+    		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#packname").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var parentId = $(doc).find("#parentId").val().trim();
+				var createName = $(doc).find("#createName").val().trim();
+                if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                //检查是否已有此条记录
+				var param={"operate":"check","code" : code};
+				var listcode=null;
+				//ajaxSendService("/pms-web/ajax/savePackage", param,function call(data){
+				ajaxSendService(metadataControl,param,"metamodelPackage/savePackage",function call(data){
+			       listcode=data.listcode;
+			  	});
+			   	if(listcode.length==0){
+			      }else{
+			         alert("代码已存在,请重新输入");
+			         return;
+			      }
+			   var metamodelPackage={
+			  	 		"packageCode" : code,
+						"packageName" : name,
+						"describes" : describes,
+						"parentId" : parentId,
+						"createName" : createName,
+						"createDate" :getNowFormatDate()
+			  	}
+				var params = {
+						"operate" : "add",
+						"metamodelPackage" : metamodelPackage
+						};
+				//ajaxSendService("/pms-web/ajax/savePackage",params,callfunction);
+				ajaxSendService(metadataControl,params,"metamodelPackage/savePackage",callfunction);
+    		    top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+			
+	});
+}); 
+
+
+//修改包
+var oldCode = null;
+function edit(id){
+	//var main = $("#edit");
+	top.layer.open({
+		title:'模型包修改',
+		closeBtn: 2, 
+		type:2,
+		area:['420px','450px'],
+		shadeClass:true,
+		content:"model-edit.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+			//打开页面【content】后的回调
+			var params = {
+					"id" : id
+				};
+				var doc=$(layero).find("iframe")[0].contentWindow.document;
+				var param = {"pageSize":-1};
+				// ajaxSendService("/pms-web/ajax/goaddPackage", {"pageSize":-1},function(data){
+				ajaxSendService(metadataControl,param,"metamodelPackage/queryModelPackage",function(data){
+					$(doc).find("#parentId").html("");
+					var options="<option value=''>无</option>";
+					$.each(data.list, function(i, obj) {
+					       //下拉框去掉属于自己本身的包
+					       if(obj.packageId==id){
+					       }else
+							options+="<option value='"+obj["packageId"]+"'>"+obj["packageName"]+"</option>";
+					});
+					$(doc).find("#parentId").html(options);
+					//ajaxSendService("/pms-web/ajax/ajaxQueryModelPackageUpdateGoAction", params, function initVO(data) {
+					ajaxSendService(metadataControl,params,"metamodelPackage/getMetamodelPackageById", function initVO(data) {
+		        if (data.errorCode != null || data.errorMessage != null) {
+			        alert("加载失败！");
+		        } else {
+		           var doc=$(layero).find("iframe")[0].contentWindow.document;
+				    $(doc).find("#code").val(data.metamodelPackageVO.packageCode);
+				    oldCode = $(doc).find("#code").val();
+				    $(doc).find("#packname").val(data.metamodelPackageVO.packageName);
+				    $(doc).find("#describes").val(data.metamodelPackageVO.describes);
+			      	$(doc).find("#parentId").val(data.metamodelPackageVO.parentpackId);
+			     	$(doc).find("#createName").val(data.metamodelPackageVO.createName);
+				    $(doc).find("#editName").val(data.metamodelPackageVO.editName);
+
+		}
+	});
+				}); 
+			
+
+		},		
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		//alert("yes");
+    		    var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#packname").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var parentId = $(doc).find("#parentId").val().trim();
+				var createName = $(doc).find("#createName").val().trim();
+				var editName = $(doc).find("#editName").val().trim();
+				//alert("packageId---"+packageId);
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                var param={"operate":"check","code" : code};
+				var listcode=null;
+				//ajaxSendService("/pms-web/ajax/savePackage", param,function call(data){
+				ajaxSendService(metadataControl,param,"metamodelPackage/savePackage",function call(data){
+			       listcode=data.listcode;
+			  	});
+			  	if(oldCode != code && listcode.length > 0){
+			  		alert("代码已存在,请重新输入");
+			         return;
+			  	}
+			  	var metamodelPackage={
+			  			"packageId" : id,
+			  	 		"packageCode" : code,
+						"packageName" : name,
+						"describes" : describes,
+						"parentId" : parentId,
+						"createName" : createName,
+						"editName" : editName,
+						"createDate" :getNowFormatDate()
+			  	}
+				var params = {
+						"operate" : "edit",
+                        "metamodelPackage" : metamodelPackage
+			};
+			//ajaxSendService("/pms-web/ajax/savePackage", params, callfunction);
+    		ajaxSendService(metadataControl,params,"metamodelPackage/savePackage",callfunction)
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	
+	});
+}
+//删除包
+	function remove(id) {
+		var listcode = null;
+		var listcode2 = null;
+		var datalist;
+		top.layer.confirm('是否确认删除？',{
+		btn:['确定','取消']
+		}, function(index) {
+			var params = {
+				"operate" : "del",
+				"id" : id
+			};
+			ajaxSendService(metadataControl,params,"metamodelPackage/savePackage",function call(data){
+					datalist=data;
+			       listcode2=data.listcode2;
+			       listcode=data.listcode;
+			  });
+			   	if(listcode2.length==0&&listcode.length==0){						//模型包下面没有子类和子包
+			   		callfunction(datalist);
+			   		top.layer.close(index); 										//如果设定了yes回调，需进行手工关闭
+			      }else if(listcode2.length==0&&listcode.length!=0){				//模型包下面没有子类有子包
+			         alert("该模型包中包含有模型包，无法删除");
+			         top.layer.close(index);
+			         return false;
+			      }else if(listcode2.length!=0&&listcode.length==0){				//模型包下面有子类没有子包
+			         alert("该模型包中包含有模型类，无法删除");
+			         top.layer.close(index);
+			         return false;			      
+			      }else{															//模型包下面有子类和子包
+			         alert("该模型包中包含有模型包和模型类，无法删除");
+			         top.layer.close(index);
+			         return false;			      	
+			      }	
+/*			      		
+			ajaxSendService("/pms-web/ajax/savePackage", params, callfunction);
+			top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+*/			
+		}, function() {
+		});
+	}
+
+
+//增加类
+$("#addclass").on("click",function(){
+	//var main = $("#addclasscon");
+	top.layer.open({
+		title:'增加模型类',
+		closeBtn:2,
+		type:2,
+		area:['400px','520px'],
+		shadeClass:true,
+		content:"model-addclass.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+			//打开页面【content】后的回调
+			var id = GetQueryString("id");
+			var doc=$(layero).find("iframe")[0].contentWindow.document;
+			  	//ajaxSendService("/pms-web/ajax/goaddClass", {"pageSize":-1},function(data){
+                 var params = {"pageSize":-1};
+                  ajaxSendService(metadataControl,params,"metamodelPackage/queryModelPackage",function(data){
+                    //$(doc).find("#classname").attr("value","22");
+					$(doc).find("#packageId").html("");
+					var options/* ="<option value='-1'>无</option>" */;
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["packageId"]+"'>"+obj["packageName"]+"</option>";
+					});
+					$(doc).find("#packageId").html(options);
+					 $(doc).find("#packageId").val(id); 
+				}); 
+		},		
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#classname").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var packageId = $(doc).find("#packageId").val();
+				var isshow = $(doc).find('input[name="group"]:checked').val();
+				var displayIcon = $(doc).find("#displayIcon").val().trim();
+				var createName = $(doc).find("#createName").val().trim();
+				var type = $(doc).find("#type").val().trim();
+			    //^[a-zA-Z0-9_\s]*$
+			    var ref=/^[a-zA-Z0-9_]*$/;
+			    if(code==""){
+                alert("请输入代码");
+                return false;
+                }else{
+                   if(ref.test(code)){
+                    }else{
+                    alert("类代码只能输入字母、数字、下划线");
+                    return false;
+                    }
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                if(isshow==""||isshow==undefined){
+                alert("请选择是or否");
+                return false;
+                }
+                if(displayIcon==""){
+                alert("请输入图标");
+                return false;
+                }
+                
+                var vo = {
+                		"classCode" : code,
+						"className" : name,
+						"describes" : describes,
+						"packageId" : packageId,
+						"isshow" : isshow,
+						"displayIcon" : displayIcon,
+						"createName" : createName,
+						"type" : type
+                }
+				var params = {
+						"operate" : "add",
+                        "metamodelClass":vo
+			};
+			//检查是否已有此条记录
+			var param={"operate":"check","code" : code,"packageId":packageId};
+			var listcode=null;
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelClassSaveAction", param,function call(data){
+			ajaxSendService(metadataControl,param,"metamodelClass/ajaxQueryModelClassSaveAction",function call(data){
+			       listcode=data.listcode;
+			  });
+			   if(listcode.length==0){
+			      }else{
+			         alert("代码已存在,请重新输入");
+			         return;
+			      }
+			//ajaxSendService("/pms-web/ajax/metamodelClass/ajaxQueryModelClassSaveAction", params, callfunction1);
+			ajaxSendService(metadataControl,params,"metamodelClass/ajaxQueryModelClassSaveAction", callfunction1);
+
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+    		
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}  
+		
+		
+	});
+});
+
+
+//修改类
+/* $(".editclass").on("click",function(){ */
+function editclass(id){
+	//var main = $("#editclass");
+	top.layer.open({
+		title:'模型类修改',
+		closeBtn: 2, 
+		type:2,
+		area:['400px','570px'],
+		shadeClass:true,
+		content:"model-editclass.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+			//打开页面【content】后的回调
+			var doc=$(layero).find("iframe")[0].contentWindow.document;
+			  	//ajaxSendService("/pms-web/ajax/goaddClass", {"pageSize":-1},function(data){
+			  	 var params = {"pageSize":-1};
+                  ajaxSendService(metadataControl,params,"metamodelPackage/queryModelPackage",function(data){
+                    //$(doc).find("#classname").attr("value","22");
+					$(doc).find("#packageId").html("");
+					var options="<option value='-1'>无</option>";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["packageId"]+"'>"+obj["packageName"]+"</option>";
+					});
+					$(doc).find("#packageId").html(options);
+
+					var params={"id":id};
+					//ajaxSendService("/pms-web/ajax/ajaxQueryModelClassUpdateGoAction", params, function initVO1(data) {
+					ajaxSendService(metadataControl,params,"metamodelClass/getMetamodelClassById",function initVO1(data) {
+		if (data.code == null || data.code!=0) {
+			alert("加载类失败！");
+		} else {
+		        
+		        var doc=$(layero).find("iframe")[0].contentWindow.document;
+ 		        if(data.metamodelClassVO.isshow=="是"){
+		             $(doc).find("#d1 input").attr("checked","checked"); 
+		        }else if(data.metamodelClassVO.isshow=="否"){
+		             $(doc).find("#d2 input").attr("checked","checked"); 
+		        }   
+    		    $(doc).find("#classcode").val(data.metamodelClassVO.classCode);
+    		    $(doc).find("#name").val(data.metamodelClassVO.className);
+    		    $(doc).find("#describes").val(data.metamodelClassVO.describes);
+    		    $(doc).find("#packageId").val(data.metamodelClassVO.packageId);
+    		   // $(doc).find("#isshow").val(data.metamodelClassVO.isshow);
+    		    $(doc).find("#displayIcon").val(data.metamodelClassVO.displayIcon);
+    		    $(doc).find("#createName").val(data.metamodelClassVO.createName);
+    		    $(doc).find("#editName").val(data.metamodelClassVO.editName);
+    		    $(doc).find("#type").val(data.metamodelClassVO.type);
+		}
+	});
+	
+				}); 
+		},		
+		yes: function(index, layero){
+    		//按钮【确定】的回调
+    		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#classcode").val().trim();
+				var name = $(doc).find("#name").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var packageId = $(doc).find("#packageId").val().trim();
+                var isshow =$(doc).find('input[name="group"]:checked').val();
+				var displayIcon = $(doc).find("#displayIcon").val().trim();
+				var createName = $(doc).find("#createName").val().trim();
+				var editName = $(doc).find("#editName").val().trim();
+				var type = $(doc).find("#type").val().trim();
+				var ref=/^[a-zA-Z0-9_]*$/;
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }else{
+                   if(ref.test(code)){
+                    }else{
+                    alert("类代码只能输入字母、数字、下划线");
+                    return false;
+                    }
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                if(isshow==""||isshow==undefined){
+                alert("请选择是or否");
+                return false;
+                }
+                if(displayIcon==""){
+                alert("请输入图标");
+                return false;
+                }
+                
+                var vo = {
+                		"classId" : id,
+                		"classCode" : code,
+						"className" : name,
+						"describes" : describes,
+						"packageId" : packageId,
+						"isshow" : isshow,
+						"displayIcon" : displayIcon,
+						"createName" : createName,
+						"editName":editName,
+						"type" : type
+                }
+				var params = {
+						"operate" : "edit",
+                       	"metamodelClass":vo
+			};
+			
+			//检查是否已有此条记录
+			var param={"operate":"check","code" : code,"id":id,"packageId":packageId};
+			var listcode=null;
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelClassSaveAction", param,function call(data){
+			ajaxSendService(metadataControl,param,"metamodelClass/ajaxQueryModelClassSaveAction",function call(data){
+			       listcode=data.listcode;
+			  });
+			   if(listcode.length==0){
+			      }else{
+			         alert("代码已存在,请重新输入");
+			         return;
+			      }
+			      
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelClassSaveAction", params, callfunction1);
+			ajaxSendService(metadataControl,params,"metamodelClass/ajaxQueryModelClassSaveAction", callfunction1);
+
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+    		
+  
+	  	},
+	  	btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+		
+	});
+//});
+}
+
+//删除类
+	function removeclass(id) {
+			top.layer.confirm('是否确认删除？', {
+				btn : [ '确定', '取消' ]
+			}, function(index) {
+				var params = {
+					"operate" : "del",
+					"id" : id
+				};
+				//先检查该类是否存在组合关系，关联关系
+				/* ajaxSendServiceCloud("/pms-web/ajax/distributionAction", {
+					"param" : JSON.stringify(params),
+					"menuUrl" : matadataUrl + "ajaxQueryModelClassSaveAction"
+				}, callfunc); */
+				ajaxSendService(metadataControl, params,"metamodelClass/ajaxQueryModelClassSaveAction", callfunc);
+				top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+			}, function() {});
+			/* 		layer.confirm('是否确认删除？', {
+			           btn: ['确定','取消'] //按钮
+			         }, function(){
+			          var params = {
+							"operate" : "del",
+							"id" : id
+						};
+						ajaxSendService("/pms-web/ajax/ajaxQueryModelClassSaveAction", params, callfunction1);
+			          }, function(){
+			     
+			}); */
+
+			}
+		function callfunc(data) {
+		if (data.isdelete =="yes" ) {
+			alert("操作失败,请先删除该类的关联关系、组合关系、继承关系！");
+		} else {
+			alert("操作成功！");
+		}
+		modelclass();
+		window.parent.initMenu();
+	}
+
+//增加数据类型
+$("#addtype").on("click",function(){
+	//var main = $("#addtypecon");
+	top.layer.open({
+		title:'增加数据类型',
+		closeBtn:2,
+		type:2,
+		area:['420px','400px'],
+		shadeClass:true,
+		content:"model-addtype.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+		//打开页面【content】后的回调
+		var id=GetQueryString("id");
+			var doc=$(layero).find("iframe")[0].contentWindow.document;
+				var params = {"pageSize":-1,"queryType":"goaddDataType"};
+				
+			  	//ajaxSendService("/pms-web/ajax/ajaxQueryModelDataTypeAction",params,function(data){
+                ajaxSendService(metadataControl,params,"metamodelDatatype/ajaxQueryModelDataTypeAction",function(data){
+                    //$(doc).find("#classname").attr("value","22");
+					$(doc).find("#packageId").html("");
+					var options/* ="<option value='-1'>无</option>" */;
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["packageId"]+"'>"+obj["packageName"]+"</option>";
+					});
+					$(doc).find("#packageId").html(options);
+					$(doc).find("#packageId").val(id);
+					
+				}); 
+		},		
+		yes: function(index, layero){
+		    //按钮【确定】的回调
+    		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#name").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var packageId = $(doc).find("#packageId").val().trim();
+				var visibility = $(doc).find("#visibility").val().trim();
+				var createName = $(doc).find("#createName").val().trim();
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                var metamodelDataTypeVO ={
+                	 	"datatypeCode" : code,
+						"datatypeName" : name,
+						"datatypeDescribe" : describes,
+						"packageId" : packageId,
+						"visibility" : visibility,
+						"createName" : createName,
+                }
+				var params = {
+						"queryType" : "saveAddDataType",
+                        "metamodelDataType" : metamodelDataTypeVO
+			};
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelDataTypeAction", params, callfunction2);
+				ajaxSendService(metadataControl,params,"metamodelDatatype/ajaxQueryModelDataTypeAction",callfunction2);
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+		
+		
+	});
+});
+
+//修改数据类型
+function editdatatype(id){
+	//var main = $("#edittypecon");
+	top.layer.open({
+		title:'修改数据类型',
+		closeBtn: 2, 
+		type:2,
+		area:['450px','400px'],
+		shadeClass:true,
+		content:"model-edittype.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+		var doc=$(layero).find("iframe")[0].contentWindow.document;
+					  //	ajaxSendService("/pms-web/ajax/ajaxQueryModelDataTypeAction", {"pageSize":-1,"queryType":"goaddDataType"},function(data){
+                    	var params = {"pageSize":-1,"queryType":"goaddDataType"};
+					  	ajaxSendService(metadataControl, params,"metamodelDatatype/ajaxQueryModelDataTypeAction",function(data){
+                    //$(doc).find("#classname").attr("value","22");
+					$(doc).find("#packageId").html("");
+					var options="<option value='-1'>无</option>";
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["packageId"]+"'>"+obj["packageName"]+"</option>";
+					});
+					$(doc).find("#packageId").html(options);
+					var params={"id":id,"queryType": "goUpDataType"};
+					ajaxSendService(metadataControl, params,"metamodelDatatype/ajaxQueryModelDataTypeAction", function initVO1(data) {
+					//ajaxSendService("/pms-web/ajax/ajaxQueryModelDataTypeAction", params, function initVO1(data) {
+		if (data!=null && data.code != null && data.code!=0) {
+			alert("加载类失败！");
+		} else {
+		        
+		        //var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    $(doc).find("#code").val(data.metamodelDataTypeVO.datatypeCode);
+    		    $(doc).find("#name").val(data.metamodelDataTypeVO.datatypeName);
+    		    $(doc).find("#describes").val(data.metamodelDataTypeVO.datatypeDescribe);
+    		    $(doc).find("#packageId").val(data.metamodelDataTypeVO.packageId);
+    		    $(doc).find("#visibility").val(data.metamodelDataTypeVO.visibility);
+    		    $(doc).find("#createName").val(data.metamodelDataTypeVO.createName);
+    		    $(doc).find("#editName").val(data.metamodelDataTypeVO.editName);
+		}
+	});
+	
+				}); 
+		},		
+		yes: function(index, layero){
+		    		//按钮【确定】的回调
+    		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#name").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var packageId = $(doc).find("#packageId").val().trim();
+				var visibility = $(doc).find("#visibility").val().trim();
+				//var createName = $(doc).find("#createName").val().trim();
+				var editName = $(doc).find("#editName").val().trim();
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                var metamodelDataTypeVO ={
+                		"datatypeId":id,
+                	 	"datatypeCode" : code,
+						"datatypeName" : name,
+						"datatypeDescribe" : describes,
+						"packageId" : packageId,
+						"visibility" : visibility,
+						"editName" : editName
+                }
+				var params = {
+						"queryType" : "saveUpDataType",
+                        "metamodelDataType" : metamodelDataTypeVO
+			};
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelDataTypeAction", params, callfunction2);
+			ajaxSendService(metadataControl,params,"metamodelDatatype/ajaxQueryModelDataTypeAction",callfunction2);
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	});
+
+}
+
+//删除数据类型
+	function removedatatype(id) {
+		top.layer.confirm('是否确认删除？',{
+		btn:['确定','取消']
+		}, function(index) {
+			var params = {
+				"queryType" : "delDataType",
+				"id" : id
+			};
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelDataTypeAction", params, function call(data){
+			ajaxSendService(metadataControl,params,"metamodelDatatype/ajaxQueryModelDataTypeAction",function call(data){
+			
+				if(data.enumerateVOs.length!=0){
+					alert("该数据类型正在被使用中，无法删除！");
+				}else{
+					callfunction2();
+				}
+			});
+			top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		}, function() {
+		});
+	}
+
+//增加枚举
+$("#addenume").on("click",function(){
+	//var main = $("#addenumcon");
+	top.layer.open({
+		title:'增加枚举',
+		closeBtn:2,
+		type:2,
+		area:['380px','340px'],
+		shadeClass:true,
+		content:"model-addenume.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+			var id=GetQueryString("id");
+			var doc=$(layero).find("iframe")[0].contentWindow.document;
+			  	//ajaxSendService("/pms-web/ajax/ajaxQueryModelEnumerateAction", {"pageSize":-1,"queryType":"goAddenumerate","packageId":id},function(data){
+			  	var params = {"pageSize":-1,"queryType":"goAddenumerate","packageId":id};
+			  	ajaxSendService(metadataControl, params,"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction",function(data){
+                    //$(doc).find("#classname").attr("value","22");
+					$(doc).find("#datatypeId").html("");
+					var options/* ="<option value='-1'>无</option>" */;
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["datatypeId"]+"'>"+obj["datatypeName"]+"</option>";
+					});
+					$(doc).find("#datatypeId").html(options);
+					//枚举项下拉框
+					var option;
+					$(doc).find("#enumitemsId").html("");
+					$.each(data.listEnumitems, function(i, obj) {
+						option+="<option value='"+obj["enumitemsId"]+"'>"+obj["enumitemsName"]+"</option>";
+					});
+					$(doc).find("#enumitemsId").html(option);
+					
+				}); 
+		},		
+		yes: function(index, layero){
+		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#name").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var datatypeId = $(doc).find("#datatypeId").val().trim();
+				var enumitemsId = $(doc).find("#enumitemsId").val().trim();
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                var metamodelEnumerateVO ={
+                        "enumerateCode" : code,
+						"enumerateName" : name,
+						"enumerateDescribe" : describes,
+						"datatypeId" : datatypeId,
+						"enumitemsId" : enumitemsId
+				}
+				var params = {
+						"queryType" : "saveAddEnumerate",
+                        "metamodelEnumerate" : metamodelEnumerateVO
+			};
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelEnumerateAction", params, callfunction3);
+			ajaxSendService(metadataControl, params,"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction", callfunction3);
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	});
+});
+
+
+//修改枚举
+function editenumerate(id){
+	//var main = $("#addenumcon");
+	top.layer.open({
+		title:'修改枚举',
+		closeBtn:2,
+		type:2,
+		area:['450px','400px'],
+		shadeClass:true,
+		content:"model-editenume.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+		success: function(layero, index){
+			var packageId=GetQueryString("id");
+			var doc=$(layero).find("iframe")[0].contentWindow.document;
+				var params = {"pageSize":-1,"queryType":"goAddenumerate","packageId":packageId};
+			  	//ajaxSendService("/pms-web/ajax/ajaxQueryModelEnumerateAction", {"pageSize":-1,"queryType":"goAddenumerate","packageId":packageId},function(data){
+			  	ajaxSendService(metadataControl, params,"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction",function(data){
+                    //$(doc).find("#classname").attr("value","22");
+					$(doc).find("#datatypeId").html("");
+					var options/* ="<option value='-1'>无</option>" */;
+					$.each(data.list, function(i, obj) {
+						options+="<option value='"+obj["datatypeId"]+"'>"+obj["datatypeName"]+"</option>";
+					});
+					$(doc).find("#datatypeId").html(options);
+					//枚举项下拉框
+					var option;
+					$(doc).find("#enumitemsId").html("");
+					$.each(data.listEnumitems, function(i, obj) {
+						option+="<option value='"+obj["enumitemsId"]+"'>"+obj["enumitemsName"]+"</option>";
+					});
+					$(doc).find("#enumitemsId").html(option);
+					
+					var params={"queryType":"goEditenumerate","id":id};
+					//ajaxSendService("/pms-web/ajax/ajaxQueryModelEnumerateAction", params,function initVO1(data) {
+					ajaxSendService(metadataControl, params,"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction",function initVO1(data) {
+		if (data.errorCode != null || data.errorMessage != null) {
+			alert("加载类失败！");
+		} else {
+		        
+		        //var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    $(doc).find("#code").val(data.metamodelEnumerateVO.enumerateCode);
+    		    $(doc).find("#name").val(data.metamodelEnumerateVO.enumerateName);
+    		    $(doc).find("#describes").val(data.metamodelEnumerateVO.enumerateDescribe);
+    		    $(doc).find("#datatypeId").val(data.metamodelEnumerateVO.datatypeId);
+    		    $(doc).find("#enumitemsId").val(data.metamodelEnumerateVO.enumitemsId);
+ 
+		}
+	});
+				}); 
+		},		
+		
+		
+		yes: function(index, layero){
+		var doc=$(layero).find("iframe")[0].contentWindow.document;
+    		    var code = $(doc).find("#code").val().trim();
+				var name = $(doc).find("#name").val().trim();
+				var describes = $(doc).find("#describes").val().trim();
+				var datatypeId = $(doc).find("#datatypeId").val().trim();
+				var enumitemsId = $(doc).find("#enumitemsId").val().trim();
+				if(code==""){
+                alert("请输入代码");
+                return false;
+                }
+                if(name==""){
+                alert("请输入名称");
+                return false;
+                }
+                var metamodelEnumerateVO ={
+                	 	"enumerateId" : id,
+                        "enumerateCode" : code,
+						"enumerateName" : name,
+						"enumerateDescribe" : describes,
+						"datatypeId" : datatypeId,
+						"enumitemsId" : enumitemsId
+				}
+				var params = {
+						"queryType" : "saveEditEnumerate",
+                        "metamodelEnumerate" : metamodelEnumerateVO
+			};
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelEnumerateAction", params, callfunction3);
+			ajaxSendService(metadataControl, params,"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction", callfunction3);
+    		top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	});
+
+}
+
+//删除枚举
+	function removeenumerate(id) {
+		top.layer.confirm('是否确认删除？',{
+		btn:['确定','取消']
+		}, function(index) {
+			var params = {
+				"queryType" : "delEnumerate",
+				"id" : id
+			};
+			//ajaxSendService("/pms-web/ajax/ajaxQueryModelEnumerateAction", params,function call(data){
+			ajaxSendService(metadataControl, params,"metamodelDatatypeEnumerate/ajaxQueryModelEnumerateAction",function call(data){
+				if(data.dataTypeVOs.length!=0||data.enumitemsVOs.length!=0){
+					alert("该枚举正在被使用中，无法删除！");
+				}else{
+					callfunction3();					
+				}			
+			});
+			top.layer.close(index); //如果设定了yes回调，需进行手工关闭
+		}, function() {
+		});
+	}
+
+
+
+
+//枚举项管理
+$("#addenumeitembtn").on("click",function(){
+	//var main = $("#editenumitem");
+	top.layer.open({
+		title:'枚举项管理',
+		closeBtn: 2, 
+		type:2,
+		area:['600px','350px'],
+		shadeClass:true,
+		content:"model-addenumeitem.html",
+		btn:['确定','取消'],
+		btnAlign:'c',
+		closeBtn:1,
+	    success: function(layero, index){
+
+		},		
+		yes: function(index, layero){
+		
+		},
+		btn2: function(index, layero){
+    		//按钮【取消】的回调
+			closeWindows();
+		},
+	  	cancel: function(index){ 
+	  		//【右上角关闭】的回调
+	  		closeWindows();
+	  	}
+	});
+});
+
+
+
+</script>
